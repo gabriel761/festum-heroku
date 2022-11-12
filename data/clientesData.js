@@ -27,5 +27,5 @@ exports.postCliente = function (cliente, idPessoa) {
     }
 }
 exports.loginCliente = function (login){
-        return db.query('select * from cliente inner join pessoa on cliente.fk_cliente_pessoa = pessoa.pk_id where pessoa.email = $1 and pessoa.senha = $2', [login.email, login.senha]);
+        return db.query('select * from cliente inner join pessoa on cliente.fk_cliente_pessoa = pessoa.pk_id where pessoa.email = $1', [login.email, login.senha]);
 }

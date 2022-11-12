@@ -7,9 +7,10 @@ const getIdByCnpj = (cnpj) => {
 }
 
 exports.getFornecedores = function () {
+    console.log("entrou no data")
     return db.query('select * from fornecedor');
 }
-exports.getFornecedores = function () {
+exports.getFornecedoresVip = function () {
     return db.query('select * from fornecedor where vip=true');
 }
 exports.postFornecedores = function (fornecedor, idPessoa) {

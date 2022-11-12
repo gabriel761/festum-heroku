@@ -5,7 +5,9 @@ const getIdByEmail = function (email) {
    return db.query("select pk_id from pessoa where email=$1", [email])
 }
 
-
+exports.getPessoas = function () {
+    return db.query("select * from pessoa")
+ }
 exports.postPessoa = async function(nome, sobrenome, email, senha, tipoPessoa){
     
     let id = await getIdByEmail(email)

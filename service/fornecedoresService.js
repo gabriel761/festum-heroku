@@ -1,6 +1,7 @@
 const fornecedoresData = require('../data/fornecedoresData')
 
 exports.getFornecedores = function () {
+    console.log("entrou no service")
     return fornecedoresData.getFornecedores()
 }
 exports.getFornecedoresVip = function () {
