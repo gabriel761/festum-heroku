@@ -14,10 +14,10 @@ exports.getFornecedoresVip = function () {
     return db.query('select * from fornecedor where vip=true');
 }
 exports.postFornecedores = function (fornecedor, idPessoa) {
-    
+    console.log(fornecedor)
     let id = getIdByCnpj(fornecedor.cnpj)
     if(_.isEmpty(id)){
-        db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, endereco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip) values($1,$2,$3,$4,$5,$6,$7,$8,$9)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.endereco, false, true, idPessoa, fornecedor.vip ])
+        db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categoria, fornecedor.subcategoria, fornecedor.segmento, fornecedor.imagem, fornecedor.preco , false, true, idPessoa, false ])
         id = getIdByCnpj(fornecedor.cnpj)
         if(_.isEmpty(id)){
             return {error: false, message: "Fornecedor cadastrado com sucesso", data: null}

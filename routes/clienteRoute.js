@@ -108,7 +108,7 @@ router.get('/fornecedores/:id', async (req,res) => {
 });
 router.post('/addFornecedor', async (req,res) => {
     const cadastro = req.body
-    const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.email, cadastro.senha, "fornecedor")
+    const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, cadastro.firebaseId, "fornecedor")
     if(!resultPessoa.error){
         const resultFornecedor = fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id)
         res.json(resultFornecedor)

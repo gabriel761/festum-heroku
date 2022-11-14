@@ -8,11 +8,11 @@ const getIdByEmail = function (email) {
 exports.getPessoas = function () {
     return db.query("select * from pessoa")
  }
-exports.postPessoa = async function(nome, sobrenome, email, senha, tipoPessoa){
+exports.postPessoa = async function(nome, sobrenome, email, id_firebase, tipoPessoa){
     
     let id = await getIdByEmail(email)
     if(_.isEmpty(id)){
-        await db.query('insert into pessoa (nome, sobrenome, email, senha, tipo_pessoa) values($1,$2,$3,$4,$5)', [nome, sobrenome, email, senha, tipoPessoa]);
+        await db.query('insert into pessoa (nome, sobrenome, email, id_firebase, tipo_pessoa) values($1,$2,$3,$4,$5)', [nome, sobrenome, email, id_firebase, tipoPessoa]);
         id = await getIdByEmail(email)
         console.log(id)
         if(!_.isEmpty(id) ){
