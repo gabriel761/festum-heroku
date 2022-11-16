@@ -49,7 +49,7 @@ router.get('/clientes/:id', async (req,res) => {
 });
 router.post('/addCliente', async (req,res) => {
     const cadastro = req.body
-    const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, cadastro.senha, "cliente")
+    const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, cadastro.firebaseId, "cliente")
     console.log(resultPessoa);
     if(!resultPessoa.error){
         const resultCliente = clientesService.postCliente(cadastro, resultPessoa.data.id)
