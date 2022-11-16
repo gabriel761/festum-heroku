@@ -8,3 +8,6 @@ exports.postPessoa = function (nome, sobrenome, email, senha, idFirebase, tipoPe
 exports.getPessoas = function (){
     return pessoaData.getPessoas()
 }
+exports.getByEmail = function (pessoa){
+    return pessoaData.getIdByEmailExport(pessoa.email)
+}

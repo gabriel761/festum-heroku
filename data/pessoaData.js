@@ -5,6 +5,18 @@ const getIdByEmail = function (email) {
    return db.query("select pk_id from pessoa where email=$1", [email])
 }
 
+exports.getIdByEmailExport = async function (email) {
+    console.log("pessoa data: ", email)
+    const result = await db.query("select pk_id from pessoa where email=$1", [email])
+    console.log("pessoa data result: ", result)
+    if(!_.isEmpty(result)){
+        return {erorr:false, message: "e-mail econtrado!", data:result[0].pk_id}
+    }else{
+        return {erorr:true, message: "e-mail não cadastrado...", data:null}
+    }
+    
+ }
+
 exports.getPessoas = function () {
     return db.query("select * from pessoa")
  }

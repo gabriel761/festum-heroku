@@ -32,6 +32,13 @@ router.get('/pessoas', async (req,res) => {
     res.json(pessoas)
 });
 
+router.post('/getByEmail', async (req,res) => {
+    console.log("get by email route: ", req.body)
+    const result = await pessoaService.getByEmail(req.body)
+    console.log(result)
+    res.json(result)
+});
+
 // rotas cliente
 router.get('/clientes', async (req,res) => {
     const clientes = await clientesService.getClientes()
@@ -92,7 +99,7 @@ router.post('/pesquisarProdutos', async (req,res) => {
 
 router.get('/fornecedores', async (req,res) => {
     const fornecedores = await fornecedoresService.getFornecedores()
-    console.log(fornecedores)
+    
     res.json(fornecedores)
 });
 router.get('/fornecedores-vip', async (req,res) => {
