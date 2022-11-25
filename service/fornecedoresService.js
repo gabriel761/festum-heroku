@@ -1,8 +1,14 @@
 const fornecedoresData = require('../data/fornecedoresData')
 
 exports.getFornecedores = function () {
-    console.log("entrou no service")
+    console.log("entrou em service")
     return fornecedoresData.getFornecedores()
+}
+exports.getFornecedoresBySegmento = function (segmento) {
+    return fornecedoresData.getFornecedoresBySegmento(segmento)
+}
+exports.getFornecedoresBySegmentoAndCategoria = function (segmento, categoria) {
+    return fornecedoresData.getFornecedoresBySegmentoAndCategoria(segmento, categoria)
 }
 exports.getFornecedoresVip = function () {
     return fornecedoresData.getFornecedoresVip()

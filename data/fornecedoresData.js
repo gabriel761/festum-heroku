@@ -10,6 +10,16 @@ exports.getFornecedores = function () {
     console.log("entrou no data")
     return db.query('select * from fornecedor');
 }
+exports.getFornecedoresBySegmento = function (segmento) {
+    console.log("entrou no data")
+    console.log("segmento: ", segmento)
+    return db.query(`select * from fornecedor where segmento like '%${segmento}%'`)
+}
+exports.getFornecedoresBySegmentoAndCategoria = function (segmento, categoria) {
+    console.log("entrou no data")
+    console.log("categoria: ", categoria)
+    return db.query(`select * from fornecedor where segmento like '%${segmento}%' and categoria like '%${categoria}%'`)
+}
 exports.getFornecedoresVip = function () {
     return db.query('select * from fornecedor where vip=true');
 }

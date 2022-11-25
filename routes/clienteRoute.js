@@ -99,7 +99,17 @@ router.post('/pesquisarProdutos', async (req,res) => {
 
 router.get('/fornecedores', async (req,res) => {
     const fornecedores = await fornecedoresService.getFornecedores()
-    
+    res.json(fornecedores)
+});
+router.get('/fornecedoresBySegmento/:segmento', async (req,res) => {
+    const segmento = req.params.segmento
+    const fornecedores = await fornecedoresService.getFornecedoresBySegmento(segmento)
+    res.json(fornecedores)
+});
+router.get('/fornecedoresBySegmentoAndCategoria/:segmento/:categoria', async (req,res) => {
+    const segmento = req.params.segmento
+    const categoria = req.params.categoria
+    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndCategoria(segmento, categoria)
     res.json(fornecedores)
 });
 router.get('/fornecedores-vip', async (req,res) => {
