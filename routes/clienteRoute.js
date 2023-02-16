@@ -344,7 +344,7 @@ router.get('/getAnuncioFromId/:id', async (req,res) => {
 
 // extra data
 router.get('/segmentos', async (req,res) => {
-    const result = await categoriaService.getSegmentos()
+    //const result = await categoriaService.getSegmentos()
     res.json("funcionou!!!")
 })
 router.get('/categorias', async (req,res) => {
