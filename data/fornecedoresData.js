@@ -1,46 +1,120 @@
 const db = require('../infra/database')
 const _ = require('lodash')
+const { result } = require('lodash')
 
 const getIdByCnpj = (cnpj) => {
     console.log(cnpj)
-    db.query('select pk_id from fornecedor where cnpj= $1', cnpj)
+    return db.query('select pk_id from fornecedor where cnpj= $1', [cnpj])
+}
+exports.getIdByCnpjExport = (cnpj) => {
+    console.log(cnpj)
+    return db.query('select pk_id from fornecedor where cnpj= $1', [cnpj])
 }
 
 exports.getFornecedores = function () {
-    console.log("entrou no data")
-    return db.query('select * from fornecedor');
+   
+    return db.query('select * from fornecedor ');
+}
+exports.getFornecedoresSemDistancia = function () {
+   
+    return db.query('select * from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id');
+}
+exports.getIdFornecedorByIdFirebase = function (firebaseId) {
+    return db.query('select fornecedor.pk_id from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.id_firebase = $1', [firebaseId])
+}
+exports.getFornecedorByIdFirebase = function (firebaseId) {
+    return db.query('select fornecedor.*  from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.id_firebase = $1', [firebaseId])
 }
 exports.getFornecedoresBySegmento = function (segmento) {
-    console.log("entrou no data")
-    console.log("segmento: ", segmento)
-    return db.query(`select * from fornecedor where segmento like '%${segmento}%'`)
+   
+   // console.log("segmento: ", segmento)
+    return db.query(`select * from fornecedor where segmento like $1`,["%"+segmento+"%"])
+}
+exports.getFornecedoresByCategoria = function (categoria) {
+   
+    console.log("categoria: ", categoria)
+    return db.query(`select * from fornecedor where categoria like $1`,["%"+categoria+"%"])
 }
 exports.getFornecedoresBySegmentoAndCategoria = function (segmento, categoria) {
-    console.log("entrou no data")
+   
     console.log("categoria: ", categoria)
-    return db.query(`select * from fornecedor where segmento like '%${segmento}%' and categoria like '%${categoria}%'`)
+    return db.query(`select * from fornecedor where segmento like $1 and categoria like $2`, ["%"+segmento+"%", "%"+categoria+"%"])
+}
+exports.getFornecedoresByNomeAndCategoria = function (nome, categoria) {
+   
+    console.log("categoria: ", categoria)
+    return db.query(`select * from fornecedor where nome_loja ilike $1 and categoria like $2`, ["%"+nome+"%","%"+categoria+"%"])
+}
+
+exports.getFornecedoresByOrdem = function (ordem ) {
+    return db.query(`select * from fornecedor order by $1 asc`,["%"+ordem+"%"])
+}
+exports.getFornecedoresByNome = function (nome ) {
+   
+    console.log("nome ordem:", nome)
+    return db.query(`select * from fornecedor where nome_loja ilike $1`, ["%"+nome+"%"])
+}
+exports.getFornecedoresByNomeOrdem = function (nome, ordem ) {
+   console.log(nome,ordem);
+    
+    return db.query(`select * from fornecedor where nome_loja ilike $1 order by ${ordem} asc`, ["%"+nome+"%"])
+}
+exports.getFornecedoresByNomeCategoriaAndSegmento = function (nome, categoria, segmento) {
+   
+    console.log("categoria: ", categoria)
+    return db.query(`select * from fornecedor where nome_loja ilike $1 and categoria like $2 and segmento like $3`, ["%"+nome+"%","%"+categoria+"%","%"+segmento+"%"])
+}
+exports.getFornecedoresBySegmentoNomeAndOrdem = function (nome, ordem, segmento) {
+   
+    console.log("nome ordem:", ordem)
+    return db.query(`select * from fornecedor where segmento like $1 and nome_loja ilike $2 order by $3 asc`, ["%"+nome+"%","%"+ordem+"%","%"+segmento+"%"])
+}
+exports.getFornecedoresBySegmentoAndOrdem = function (ordem, segmento) {
+    return db.query(`select * from fornecedor where segmento like $1 order by $2 asc`, ["%"+ordem+"%","%"+segmento+"%"])
+}
+exports.getFornecedoresBySegmentoAndNome = function (nome, segmento) {
+   
+    console.log("nome ordem:", nome)
+    return db.query(`select * from fornecedor where nome_loja ilike $1 and segmento like $2`,["%"+nome+"%", "%"+segmento+"%"])
 }
 exports.getFornecedoresVip = function () {
-    return db.query('select * from fornecedor where vip=true');
+    return db.query('select * from fornecedor where vip=true')
 }
-exports.postFornecedores = function (fornecedor, idPessoa) {
-    console.log(fornecedor)
-    let id = getIdByCnpj(fornecedor.cnpj)
-    if(_.isEmpty(id)){
-        db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categoria, fornecedor.subcategoria, fornecedor.segmento, fornecedor.imagem, fornecedor.preco , false, true, idPessoa, false ])
-        id = getIdByCnpj(fornecedor.cnpj)
-        if(_.isEmpty(id)){
-            return {error: false, message: "Fornecedor cadastrado com sucesso", data: null}
-        }else{
-            return {error: true, message: "Erro ao cadastrar fornecedor", data: null}
-        }
+exports.postFornecedores = async function (fornecedor, idPessoa) {
+    
+    let id = await getIdByCnpj(fornecedor.cnpj)
+    
+    let error = true
+    let result = null
+    console.log("id: ", id)
+    if(id.length == 0){
+        
+            console.log("ultimo log antes do query")
+            result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categoria, fornecedor.subcategoria, fornecedor.segmento, fornecedor.imagem, fornecedor.preco , false, true, idPessoa, false, fornecedor.localizacao ])
+            await getIdByCnpj()
+            if(result === null){
+                console.log("houve erro")
+                await db.query("delete from pessoa where pk_id = $1",[idPessoa])
+                return {error: true, message: "Erro ao cadastrar fornecedor", data: null}
+            }else{
+                return {error: false, message: "Fornecedor cadastrado com sucesso", data: null}
+            }
+           
+       
+            
+           
+       
+       
+      
     }else{
+        console.log("já existe cnpj")
+        await db.query("delete from pessoa where pk_id = $1",[idPessoa]);
         return {error: true, message: "Este cnpj já existe no banco de dados"}
     }
 }
 
 exports.loginFornecedor = function (login){
-    return db.query('select * from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.email = $1 and senha = $2', [login.email, login.senha])  
+    return db.query('select fornecedor.*, pessoa.email, pessoa.nome, pessoa.sobrenome, pessoa.tipo_pessoa  from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.email = $1 and id_firebase = $2', [login.email, login.firebaseId])  
 }
 
 exports.pesquisarFornecedoresVip = function({pesquisa}){
@@ -52,5 +126,12 @@ exports.getFornecedoresVip = function(){
 }
 
 exports.getFornecedorById = function (id) {
+    console.log("fornecedor id entrou")
     return db.query('select * from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where fornecedor.pk_id=$1', id);
 }
+exports.deleteEverythingFornecedor = async function (id, idPessoa) {
+    await db.query('delete from anuncio where fk_anuncio_fornecedor = $1', [id])
+    await db.query('delete from produto where fk_produto_fornecedor = $1', [id])
+    await db.query('delete from fornecedor where fk_fornecedor_pessoa = $1', [idPessoa])
+    await db.query('delete from pessoa where pk_id = $1', [idPessoa]);
+ }

@@ -4,8 +4,13 @@ exports.getClientes = function () {
     return clientesData.getClientes()
 }
 exports.postCliente = function (cliente, id) {
-    cliente.endereco = `${cliente.endereco}, ${cliente.bairro}, ${cliente.complemento}`
+    console.log("entrou no service cliente")
+    
     return clientesData.postCliente(cliente, id)
+}
+exports.checkIfCpfExists = async function (cpf) {
+    let  data = await clientesData.getIdByCpfExport(cpf)
+    return data
 }
 
 exports.loginCliente = function (login) {
@@ -13,4 +18,7 @@ exports.loginCliente = function (login) {
 }
 exports.deleteById = function (id) {
     return clientesData.deleteById(id)
+}
+exports.deleteEverythingCliente = function (id){
+    return clientesData.deleteEverythingCliente(id)
 }

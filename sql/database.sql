@@ -29,17 +29,31 @@ create table fornecedor (
 	auth_pag boolean not null,
 	vip boolean not null
 );
-create table produto(
+create table produto (
 	pk_id serial primary key,
-	nome_produto varchar (100) not null,
-	descrição varchar (1000),
-	fotos varchar (2000),
-	preco real,
-	categoria varchar (50)
-);
+	nome varchar (100),
+	descricao varchar (1000),
+	imagem varchar (400),
+	preco_original numeric,
+	preco_final numeric
+)
+create table anuncio(
+	pk_id serial primary key,
+	titulo varchar(500),
+	tipo_anuncio varchar (100),
+	preco_anuncio numeric,
+	para_fornecedor boolean,
+	imagem varchar(1000),
+	status varchar (50),
+	id_produto int,
+	id_fornecedor int
+)
 
 alter table cliente add fk_cliente_pessoa int;
 alter table fornecedor add fk_fornecedor_pessoa int;
 
 alter table cliente add foreign key (fk_cliente_pessoa) references pessoa(pk_id);
 alter table fornecedor add foreign key (fk_fornecedor_pessoa) references pessoa(pk_id);
+
+alter table anuncio add fk_anuncio_fornecedor int;
+alter table anuncio add foreign key (fk_anuncio_fornecedor) references fornecedor(pk_id);
