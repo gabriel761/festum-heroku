@@ -345,7 +345,7 @@ router.get('/getAnuncioFromId/:id', async (req,res) => {
 // extra data
 router.get('/segmentos', async (req,res) => {
     const result = await categoriaService.getSegmentos()
-    res.json(result)
+    res.json("funcionou!!!")
 })
 router.get('/categorias', async (req,res) => {
     const result = await categoriaService.getCategorias();
@@ -361,7 +361,7 @@ router.get('/subcategoriasByFkId/:fk_id', async (req,res) => {
     const result = await categoriaService.getSubcategoriaByFkId(id)
     res.json(result)
 })
-router.get('/cidades', async (req,res) => {
+router.get('/cidades',middleware.decodeToken, async (req,res) => {
     const result = await categoriaService.getCidades()
     res.json(result)
 })
