@@ -17,6 +17,9 @@ exports.getIdByCpfExport = (cpf) => {
 exports.getClientes = function () {
     return db.query('select * from cliente inner join pessoa on cliente.fk_cliente_pessoa = pessoa.pk_id');
 }
+exports.getByFk_id = function (fk_id) {
+    return db.query('select pk_id from cliente where fK_cliente_pessoa = $1', [fk_id]);
+}
 exports.getLocationByFirebaseId = function (idCliente){
     console.log(idCliente)
     return db.query('select localizacao from cliente inner join pessoa on cliente.fk_cliente_pessoa = pessoa.pk_id where pessoa.id_firebase = $1', [idCliente]);
@@ -37,7 +40,7 @@ exports.postCliente = async function (cliente, idPessoa) {
     }
 }
 exports.loginCliente = function (login){
-        return db.query('select * from cliente inner join pessoa on cliente.fk_cliente_pessoa = pessoa.pk_id where pessoa.email = $1', [login.email, login.senha]);
+        return db.query('select * from cliente inner join pessoa on cliente.fk_cliente_pessoa = pessoa.pk_id where pessoa.email = $1 and pessoa.id_firebase = $2', [login.email, login.firebaseId]);
 }
 
 exports.deleteEverythingCliente = async function (id) {

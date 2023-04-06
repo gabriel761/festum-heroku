@@ -9,8 +9,7 @@ const categoriaService = require('../service/categoriasService')
 const router = express.Router()
 const _ = require('lodash');
 const middleware = require('../middleware');
-
-
+const axios = require("axios")
 
 
 //rotas login
@@ -25,7 +24,7 @@ router.post('/login-pessoa', async (req,res) => {
     }   
 })
 router.post('/login-cliente', async (req,res) => {
-    
+
         const cliente = await clientesService.loginCliente(req.body)
         if(!cliente){
             res.send("Login ou senha incorreta")
@@ -34,8 +33,10 @@ router.post('/login-cliente', async (req,res) => {
         }   
 })
 
-router.post('/login-fornecedor', async (req, res)=>{
-    const fornecedor = await fornecedoresService.loginFornecedor(req.body)
+router.get('/login-fornecedor/:email',middleware.decodeToken, async (req, res)=>{
+    const firebaseId = req.user.uid
+    const email = req.params.email
+    const fornecedor = await fornecedoresService.loginFornecedor({firebaseId, email})
     if(!fornecedor){
         res.send("Login ou senha incorreta")
     }else{
@@ -44,13 +45,33 @@ router.post('/login-fornecedor', async (req, res)=>{
 })
 router.get('/pessoas', async (req,res) => {
     const pessoas = await pessoaService.getPessoas()
-    res.json(pessoas)
+    res.json(pessoas);
+});
+router.get('/teste', async (req,res) => {
+    console.log("ipag foi!!!!")
+    const api = axios.default.create({
+        baseURL:'https://sandbox.ipag.com.br',
+        timeout: 3000,
+        auth:{
+            username: "jg.7651@gmail.com",
+            password: "FADB-5B8823C1-4675A774-45776E48-4FAD"
+        },
+        headers:{
+            "Content-Type": "application/json",
+            "x-api-version": 2
+        }
+    })
+    
+});
+router.get('/teste', async (req,res) => {
+    
+    res.json("teste 2");
 });
 router.get('/getUserTypeByUid',middleware.decodeToken,  async ( req, res) => {
     const uid = req.user.uid
     console.log("uid: ", uid)
     const userType = await pessoaService.getUserTypeByUid(uid)
-    console.log("user type: ", userType)
+    console.log("user type: ", userType);
     res.json(userType)
 })
 
@@ -66,6 +87,19 @@ router.post('/checkIfEmailExists', async (req,res) => {
     console.log(result)
     res.json(result)
 });
+
+router.get('/updateEmail/:email',middleware.decodeToken, async (req, res) =>{
+    const idFirebase = req.user.uid
+    const email = req.params.email
+    const result = await pessoaService.updateEmail(email, idFirebase);
+    res.json("update e-mail")
+})
+router.get('/updateFirebaseId/:uid/:email', async (req, res) =>{
+    const idFirebase = req.params.uid
+    const email = req.params.email
+    const result = await pessoaService.updateFirebaseId( idFirebase, email);
+    res.json("update firebase id")
+})
 // rotas cliente
 router.post('/getCpf', async (req,res) => {
     const cpf = req.body.cpf
@@ -82,8 +116,10 @@ router.get('/clientes', async (req,res) => {
     const clientes = await clientesService.getClientes()
     res.json(clientes)
 });
-router.get('/clientes/:id', async (req,res) => {
-
+router.get('/clientesByFk_id/:fk_id', middleware.decodeToken, async (req,res) => {
+    const fk_id = req.params.fk_id
+    const clientes = await clientesService.getByFk_id(fk_id)
+    res.json(clientes)
 });
 router.post('/addCliente', async (req,res) => {
     const cadastro = req.body
@@ -98,6 +134,14 @@ router.post('/addCliente', async (req,res) => {
         res.json(resultPessoa)
         
     }
+});
+router.post('/addClienteForFornecedor', async (req,res) => {
+    const cadastro = req.body
+   
+        const resultCliente = await clientesService.postCliente(cadastro, cadastro.fk_fornecedor_pessoa)
+        res.json(resultCliente)
+        
+   
 });
 router.put('clientes/:id', async (req,res) => {
 
@@ -120,13 +164,13 @@ router.post('/getCnpj', async (req,res) => {
     res.json(response)
 });
 
-router.get('/fornecedores/:idCliente',middleware.decodeToken, async (req,res) => {
+router.get('/fornecedores/:offset',middleware.decodeToken, async (req,res) => {
     
     const token = req.headers.authorization
     const idCliente = req.user.uid
-    console.log("decoded user: ", req.user)
-    console.log("firebase access token: ",token)
-    const fornecedores = await fornecedoresService.getFornecedores(idCliente)
+    const offset = req.params.offset
+    console.log("offset: ", offset)
+    const fornecedores = await fornecedoresService.getFornecedores(idCliente, offset)
     res.json(fornecedores)
 });
 router.get('/fornecedores', async (req,res) => {
@@ -183,9 +227,21 @@ router.get('/fornecedoresByNomeAndCategoria/:nome/:categoria', async (req,res) =
 router.get('/fornecedoresByNomeOrdem/:nome/:ordem',middleware.decodeToken, async (req,res) => {
     const nome = req.params.nome
     const ordem = req.params.ordem
+    const uid = req.user.uid
     console.log("nome: ", nome)
     console.log("ordem: ", ordem)
-    const fornecedores = await fornecedoresService.getFornecedoresByNomeOrdem(nome, ordem) 
+    const fornecedores = await fornecedoresService.getFornecedoresByNomeOrdem(nome, ordem, uid) 
+    res.json(fornecedores)
+});
+router.get('/fornecedoresByNomeFiltro/:nome/:tipoFiltro/:filtro',middleware.decodeToken, async (req,res) => {
+    const nome = req.params.nome
+    const filtro = req.params.filtro
+    const tipoFiltro = req.params.tipoFiltro
+    // const uid = req.user.uid
+    console.log("nome: ", nome)
+    console.log("filtro: ", filtro)
+    console.log("tipo filtro: ", tipoFiltro)
+    const fornecedores = await fornecedoresService.getFornecedoresByNomeFiltro(nome, filtro, tipoFiltro) 
     res.json(fornecedores)
 });
 
@@ -234,23 +290,28 @@ router.get('/fornecedores-vip', async (req,res) => {
     console.log(fornecedores);
     res.json(fornecedores)
 });
-router.get('/fornecedores/:id', async (req,res) => {
-    const id = req.params.id
-    const fornecedor = await fornecedoresService.getFornecedorById(id)
+// router.get('/fornecedores/:id', async (req,res) => {
+//     const id = req.params.id
+//     const fornecedor = await fornecedoresService.getFornecedorById(id)
     
-    res.json(fornecedor)
-});
+//     res.json(fornecedor)
+// });
 router.post('/addFornecedor', async (req,res) => {
     const cadastro = req.body
-    const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, cadastro.firebaseId, "fornecedor")
+    console.log("cadastro fornecedor: ", cadastro)
+    const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
     if(!resultPessoa.error){
         const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
         console.log("sucesso no cadastro do fornecedor")
         res.json(resultFornecedor)
     }else{
         console.log("fornecedor não foi cadastrado")
-        res.json(resultPessoa)
+        res.json(resultPessoa);
     }
+});
+router.get('/fornecedoresTeste', async (req,res) => {
+    const result = fornecedoresService.testeFornecedor()
+    res.json(result)
 });
 router.put('fornecedores/:id', async (req,res) => {
 
@@ -348,17 +409,19 @@ router.get('/segmentos', async (req,res) => {
     res.json(result)
 })
 router.get('/categorias', async (req,res) => {
-    const result = await categoriaService.getCategorias();
-    res.json(result)
+    const result = await categoriaService.getCategorias()
+    res.json(result);
 })
 router.get('/subcategorias', async (req,res) => {
     const result = await categoriaService.getSubcategorias();
     res.json(result)
 })
 router.get('/subcategoriasByFkId/:fk_id', async (req,res) => {
-    const id = req.params.fk_id
-    console.log(id)
-    const result = await categoriaService.getSubcategoriaByFkId(id)
+    // subcategorias by fk_id categorias
+    let ids = req.params.fk_id
+    ids = JSON.parse(ids)
+    
+    const result = await categoriaService.getSubcategoriaByFkId(ids)
     res.json(result)
 })
 router.get('/cidades',middleware.decodeToken, async (req,res) => {

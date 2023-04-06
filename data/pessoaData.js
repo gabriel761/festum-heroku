@@ -17,10 +17,11 @@ exports.getIdByEmailExport = async function (email) {
     
  }
  exports.loginPessoa = function (pessoa) {
+    console.log("pessoa login: ", pessoa)
     return db.query("select tipo_pessoa from pessoa where id_firebase = $1 and email = $2", [pessoa.firebaseId, pessoa.email])
  }
  exports.checkIfEmailExistsExport = async function (email) {
-    console.log("pessoa data: ", email)
+    console.log("pessoa data: ", email);
     const result = await db.query("select pk_id from pessoa where email=$1", [email])
     console.log("pessoa data result: ", result)
     console.log(result.length != 0)
@@ -38,11 +39,20 @@ exports.getPessoas = function () {
  exports.getUserTypeByUid = function (uid) {
     return db.query("select tipo_pessoa from pessoa where id_firebase = $1", [uid])
  }
-exports.postPessoa = async function(nome, sobrenome, email, id_firebase, tipoPessoa){
+ exports.updateEmail = function (email, idFirebase) {
+    console.log("email: ", email)
+    console.log("id firebase: ", idFirebase);
+    return db.query('update pessoa set email = $1 where id_firebase = $2',[email, idFirebase])
+ }
+ exports.updateFirebaseId = function (idFirebase, email) {
+    console.log("id firebase: ", idFirebase, email);
+    return db.query('update pessoa set id_firebase = $1 where email = $2 ',[ idFirebase, email])
+ }
+exports.postPessoa = async function(nome, sobrenome, email,/* id_firebase,*/ tipoPessoa){
     
     let id = await getIdByEmail(email)
     if(_.isEmpty(id)){
-        await db.query('insert into pessoa (nome, sobrenome, email, id_firebase, tipo_pessoa) values($1,$2,$3,$4,$5)', [nome, sobrenome, email, id_firebase, tipoPessoa]);
+        await db.query('insert into pessoa (nome, sobrenome, email, id_firebase, tipo_pessoa) values($1,$2,$3,$4,$5)', [nome, sobrenome, email, null, tipoPessoa])
         id = await getIdByEmail(email)
         console.log(id)
         if(!_.isEmpty(id) ){

@@ -3,6 +3,9 @@ const clientesData = require('../data/clientesData')
 exports.getClientes = function () {
     return clientesData.getClientes()
 }
+exports.getByFk_id = function (fk_id) {
+    return clientesData.getByFk_id(fk_id)
+}
 exports.postCliente = function (cliente, id) {
     console.log("entrou no service cliente")
     

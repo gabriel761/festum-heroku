@@ -24,8 +24,23 @@ exports.calcularDistancia = async (data, idCliente)=> {
         console.log("distancia: ",item.distancia)
         return item
     })
-    
-    
-   return newData
-    
+   return newData 
+}
+exports.ordenarPorDistancia = async (data) => {
+    let newData = data.sort((x,y) => {
+        return x.distancia - y.distancia
+    })
+    return newData
+}
+
+exports.tratarCategorias = (arr) => {
+    let string = ''
+    arr.forEach(item => {
+        if(string.length == 0){
+            string = item.nome
+        }else{
+            string = string + ", " + item.nome
+        }  
+    });
+    return string
 }

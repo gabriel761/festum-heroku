@@ -11,9 +11,9 @@ exports.getIdByCnpjExport = (cnpj) => {
     return db.query('select pk_id from fornecedor where cnpj= $1', [cnpj])
 }
 
-exports.getFornecedores = function () {
+exports.getFornecedores = function (offset) {
    
-    return db.query('select * from fornecedor ');
+    return db.query('select * from fornecedor limit 3 offset $1', [offset]);
 }
 exports.getFornecedoresSemDistancia = function () {
    
@@ -59,9 +59,14 @@ exports.getFornecedoresByNomeOrdem = function (nome, ordem ) {
     
     return db.query(`select * from fornecedor where nome_loja ilike $1 order by ${ordem} asc`, ["%"+nome+"%"])
 }
+exports.getFornecedoresByNomeFiltro = function (nome, filtro, tipoFiltro ) {
+     console.log("filtro", filtro)
+     console.log("tipo filtro", tipoFiltro)
+     return db.query(`select * from fornecedor where nome_loja ilike $1 and ${tipoFiltro} ilike '%${filtro}%'`, ["%"+nome+"%"])
+ }
 exports.getFornecedoresByNomeCategoriaAndSegmento = function (nome, categoria, segmento) {
    
-    console.log("categoria: ", categoria)
+    console.log("categoria: ", categoria);
     return db.query(`select * from fornecedor where nome_loja ilike $1 and categoria like $2 and segmento like $3`, ["%"+nome+"%","%"+categoria+"%","%"+segmento+"%"])
 }
 exports.getFornecedoresBySegmentoNomeAndOrdem = function (nome, ordem, segmento) {
@@ -72,7 +77,7 @@ exports.getFornecedoresBySegmentoNomeAndOrdem = function (nome, ordem, segmento)
 exports.getFornecedoresBySegmentoAndOrdem = function (ordem, segmento) {
     return db.query(`select * from fornecedor where segmento like $1 order by $2 asc`, ["%"+ordem+"%","%"+segmento+"%"])
 }
-exports.getFornecedoresBySegmentoAndNome = function (nome, segmento) {
+exports.getFornecedoresBySegmentoAndNome = function (nome, segmento) {subcategorias
    
     console.log("nome ordem:", nome)
     return db.query(`select * from fornecedor where nome_loja ilike $1 and segmento like $2`,["%"+nome+"%", "%"+segmento+"%"])
@@ -82,15 +87,15 @@ exports.getFornecedoresVip = function () {
 }
 exports.postFornecedores = async function (fornecedor, idPessoa) {
     
-    let id = await getIdByCnpj(fornecedor.cnpj)
+    //let id = await getIdByCnpj(fornecedor.cnpj)
     
     let error = true
-    let result = null
-    console.log("id: ", id)
-    if(id.length == 0){
+    let result = null;
+    
+    //if(id.length == 0){
         
             console.log("ultimo log antes do query")
-            result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categoria, fornecedor.subcategoria, fornecedor.segmento, fornecedor.imagem, fornecedor.preco , false, true, idPessoa, false, fornecedor.localizacao ])
+            result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao, cpf, sugest_subcategoria, galeria, dados_de_interesse, foto_de_fundo, formas_de_pagamento, descricao) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco , false, true, idPessoa, false, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja ])
             await getIdByCnpj()
             if(result === null){
                 console.log("houve erro")
@@ -99,18 +104,12 @@ exports.postFornecedores = async function (fornecedor, idPessoa) {
             }else{
                 return {error: false, message: "Fornecedor cadastrado com sucesso", data: null}
             }
-           
-       
-            
-           
-       
-       
       
-    }else{
+   // }else{
         console.log("já existe cnpj")
         await db.query("delete from pessoa where pk_id = $1",[idPessoa]);
         return {error: true, message: "Este cnpj já existe no banco de dados"}
-    }
+   // }
 }
 
 exports.loginFornecedor = function (login){
