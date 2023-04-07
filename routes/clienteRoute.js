@@ -123,9 +123,7 @@ router.get('/clientesByFk_id/:fk_id', middleware.decodeToken, async (req,res) =>
 });
 router.post('/addCliente', async (req,res) => {
     const cadastro = req.body
-    console.log("add cliente route: ",req.body)
-    const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, cadastro.firebaseId, "cliente")
-    console.log(resultPessoa);
+    const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, "cliente")
     if(!resultPessoa.error){
         const resultCliente = await clientesService.postCliente(cadastro, resultPessoa.data.id)
         res.json(resultCliente)
@@ -300,6 +298,7 @@ router.post('/addFornecedor', async (req,res) => {
     const cadastro = req.body
     console.log("cadastro fornecedor: ", cadastro)
     const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
+    console.log("add fornecedor result pessoa: ", resultPessoa)
     if(!resultPessoa.error){
         const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
         console.log("sucesso no cadastro do fornecedor")

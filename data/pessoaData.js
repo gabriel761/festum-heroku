@@ -51,8 +51,9 @@ exports.getPessoas = function () {
 exports.postPessoa = async function(nome, sobrenome, email,/* id_firebase,*/ tipoPessoa){
     
     let id = await getIdByEmail(email)
+    console.log("tipo pessoa data: ",tipoPessoa)
     if(_.isEmpty(id)){
-        await db.query('insert into pessoa (nome, sobrenome, email, id_firebase, tipo_pessoa) values($1,$2,$3,$4,$5)', [nome, sobrenome, email, null, tipoPessoa])
+        await db.query('insert into pessoa (nome, sobrenome, email, tipo_pessoa) values($1,$2,$3,$4)', [nome, sobrenome, email, tipoPessoa])
         id = await getIdByEmail(email)
         console.log(id)
         if(!_.isEmpty(id) ){

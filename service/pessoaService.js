@@ -3,7 +3,7 @@ const clientesData = require("../data/clientesData")
 const fornecedoresData = require("../data/fornecedoresData")
 const pessoaFunctions = require("../funtions/pessoaFunctions")
 exports.postPessoa = function (nome, sobrenome, email, senha, /*idFirebase,*/ tipoPessoa){
-   
+   console.log("tipo pessoa no service: ", tipoPessoa)
     return pessoaData.postPessoa(nome, sobrenome, email, senha, /*idFirebase,*/ tipoPessoa)
 }   
 
