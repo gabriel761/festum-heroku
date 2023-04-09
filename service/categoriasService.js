@@ -15,6 +15,11 @@ exports.getSubcategoriaByFkId = function (ids) {
     console.log("nomes: ",fks)
     return categoriasData.getSubcategoriaByFkId(query, fks);
 }
+exports.getSubcategoriaByFkIdCategoria = function (id) {
+
+    
+    return categoriasData.getSubcategoriaByFkIdCategoria(id);
+}
 exports.getCidades = function () {
     return categoriasData.getCidades()
 }

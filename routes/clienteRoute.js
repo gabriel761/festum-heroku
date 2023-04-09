@@ -423,6 +423,12 @@ router.get('/subcategoriasByFkId/:fk_id', async (req,res) => {
     const result = await categoriaService.getSubcategoriaByFkId(ids)
     res.json(result)
 })
+router.get('/subcategoriasByFkIdCategoria/:fk_id', async (req,res) => {
+    // subcategorias by fk_id categorias
+    let id = req.params.fk_id
+    const result = await categoriaService.getSubcategoriaByFkIdCategoria(id)
+    res.json(result)
+})
 router.get('/cidades',middleware.decodeToken, async (req,res) => {
     const result = await categoriaService.getCidades()
     res.json(result)
