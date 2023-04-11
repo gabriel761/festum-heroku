@@ -210,6 +210,11 @@ router.get('/fornecedoresByCategoria/:categoria', async (req,res) => {
     const fornecedores = await fornecedoresService.getFornecedoresByCategoria(categoria)
     res.json(fornecedores)
 });
+router.get('/fornecedoresBySubCategoria/:subCategoria', async (req,res) => {
+    const subCategoria = req.params.subCategoria
+    const fornecedores = await fornecedoresService.getFornecedoresBySubCategoria(subCategoria)
+    res.json(fornecedores)
+});
 router.get('/fornecedoresBySegmentoAndCategoria/:segmento/:categoria', async (req,res) => {
     const segmento = req.params.segmento
     const categoria = req.params.categoria

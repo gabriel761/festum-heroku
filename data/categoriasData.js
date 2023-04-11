@@ -18,8 +18,8 @@ exports.getSubcategoriaByFkId = function (query, fks) {
     return db.query(`select distinct nome from subcategoria where fk_subcategoria_categoria in (${query}) order by nome`,fks )
 }
 exports.getSubcategoriaByFkIdCategoria = function (id) {
-    console.log("entrou no segmento")
-    return db.query(`select distinct nome from subcategoria where fk_subcategoria_categoria = $1`,id )
+    console.log("entrou no subcategorias")
+    return db.query(`select * from subcategoria where fk_subcategoria_categoria = $1`,id )
 }
 exports.getCidades = function () {
     return db.query('select * from cidade')   

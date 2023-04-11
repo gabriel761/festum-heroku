@@ -35,6 +35,11 @@ exports.getFornecedoresByCategoria = function (categoria) {
     console.log("categoria: ", categoria)
     return db.query(`select * from fornecedor where categoria like $1`,["%"+categoria+"%"])
 }
+exports.getFornecedoresBySubCategoria = function (subCategoria) {
+   
+    console.log("categoria: ", subCategoria)
+    return db.query(`select * from fornecedor where subcategoria like $1`,["%"+subCategoria+"%"])
+}
 exports.getFornecedoresBySegmentoAndCategoria = function (segmento, categoria) {
    
     console.log("categoria: ", categoria)

@@ -30,6 +30,9 @@ exports.getFornecedoresBySegmento = function (segmento) {
 exports.getFornecedoresByCategoria = function (categoria) {
     return fornecedoresData.getFornecedoresByCategoria(categoria)
 }
+exports.getFornecedoresBySubCategoria = function (subCategoria) {
+    return fornecedoresData.getFornecedoresBySubCategoria(subCategoria)
+}
 exports.getFornecedoresByOrdem = function ( ordem, segmento) {
     return fornecedoresData.getFornecedoresByOrdem( ordem, segmento)
 }
