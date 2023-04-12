@@ -84,7 +84,7 @@ exports.getFornecedoresBySegmentoAndOrdem = function (ordem, segmento) {
 }
 exports.getFornecedoresBySegmentoAndNome = function (nome, segmento) {subcategorias
    
-    console.log("nome ordem:", nome)
+    console.log("nome ordem:", nome);
     return db.query(`select * from fornecedor where nome_loja ilike $1 and segmento like $2`,["%"+nome+"%", "%"+segmento+"%"])
 }
 exports.getFornecedoresVip = function () {
