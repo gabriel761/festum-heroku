@@ -19,6 +19,9 @@ exports.getIdFornecedorByIdFirebase = function (idFirebase) {
 exports.getFornecedorByIdFirebase = function (idFirebase) {
     return fornecedoresData.getFornecedorByIdFirebase(idFirebase)
 }
+exports.getFornecedorAndPessoaByIdFirebase = function (idFirebase) {
+    return fornecedoresData.getFornecedorAndPessoaByIdFirebase(idFirebase)
+}
 exports.checkIfCnpjExists = async function (cnpj) {
     let  dataFornecedores = await fornecedoresData.getIdByCnpjExport(cnpj)
     return dataFornecedores

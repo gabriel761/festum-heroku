@@ -26,9 +26,9 @@ exports.getIdByEmailExport = async function (email) {
     console.log("pessoa data result: ", result)
     console.log(result.length != 0)
     if(result.length == 0){
-        return {error:false, message: "sucesso!", data:null}
+        return {error:false, message: "sucesso!", data:null, emailExists: false}
     }else{
-        return {error:true, message: "Email já existente no cadastro", data:null}
+        return {error:true, message: "Email já existente no cadastro", data:null, emailExists: true}
     }
     
  }

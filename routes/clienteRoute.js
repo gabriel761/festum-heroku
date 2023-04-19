@@ -116,6 +116,11 @@ router.get('/clientes', async (req,res) => {
     const clientes = await clientesService.getClientes()
     res.json(clientes)
 });
+router.get('/getclienteAndPessoaByIdFirebase', middleware.decodeToken, async (req,res) => {
+    const idFirebase = req.user.uid
+    const cliente = await clientesService.getclienteAndPessoaByIdFirebase(idFirebase)
+    res.json(cliente)
+});
 router.get('/clientesByFk_id/:fk_id', middleware.decodeToken, async (req,res) => {
     const fk_id = req.params.fk_id
     const clientes = await clientesService.getByFk_id(fk_id)
@@ -163,7 +168,7 @@ router.post('/getCnpj', async (req,res) => {
 });
 
 router.get('/fornecedores/:offset',middleware.decodeToken, async (req,res) => {
-    
+    console.log("entrou no fornecedores offset")
     const token = req.headers.authorization
     const idCliente = req.user.uid
     const offset = req.params.offset
@@ -172,6 +177,7 @@ router.get('/fornecedores/:offset',middleware.decodeToken, async (req,res) => {
     res.json(fornecedores)
 });
 router.get('/fornecedores', async (req,res) => {
+    console.log("entrou no fornecedores offset")
     const fornecedores = await fornecedoresService.getFornecedores()
     res.json(fornecedores)
 });
@@ -191,6 +197,13 @@ router.get('/getFornecedorByIdFirebase',middleware.decodeToken, async (req,res) 
     const idFirebase = req.user.uid
     console.log('id firebase for the win: ', idFirebase)
    const response = await fornecedoresService.getFornecedorByIdFirebase(idFirebase)
+   console.log("response id fornecedor:", response)
+   res.json(response)
+});
+router.get('/getFornecedorAndPessoaByIdFirebase',middleware.decodeToken, async (req,res) => {
+    const idFirebase = req.user.uid
+    console.log('id firebase for the win: ', idFirebase)
+   const response = await fornecedoresService.getFornecedorAndPessoaByIdFirebase(idFirebase)
    console.log("response id fornecedor:", response)
    res.json(response)
 });

@@ -17,6 +17,9 @@ exports.getIdByCpfExport = (cpf) => {
 exports.getClientes = function () {
     return db.query('select * from cliente inner join pessoa on cliente.fk_cliente_pessoa = pessoa.pk_id');
 }
+exports.getclienteAndPessoaByIdFirebase = function (idFirebase) {
+    return db.query('select * from cliente inner join pessoa on cliente.fk_cliente_pessoa = pessoa.pk_id where id_firebase = $1', [idFirebase]);
+}
 exports.getByFk_id = function (fk_id) {
     return db.query('select pk_id from cliente where fK_cliente_pessoa = $1', [fk_id]);
 }

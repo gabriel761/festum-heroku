@@ -3,6 +3,9 @@ const clientesData = require('../data/clientesData')
 exports.getClientes = function () {
     return clientesData.getClientes()
 }
+exports.getclienteAndPessoaByIdFirebase = function (idFirebase) {
+    return clientesData.getclienteAndPessoaByIdFirebase(idFirebase)
+}
 exports.getByFk_id = function (fk_id) {
     return clientesData.getByFk_id(fk_id)
 }
