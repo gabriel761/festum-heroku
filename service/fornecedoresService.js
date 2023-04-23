@@ -27,20 +27,30 @@ exports.checkIfCnpjExists = async function (cnpj) {
     return dataFornecedores
 }
 
-exports.getFornecedoresBySegmento = function (segmento) {
-    return fornecedoresData.getFornecedoresBySegmento(segmento)
+exports.getFornecedoresBySegmento = async function (segmento, idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresBySegmento(segmento)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
 }
-exports.getFornecedoresByCategoria = function (categoria) {
-    return fornecedoresData.getFornecedoresByCategoria(categoria)
+exports.getFornecedoresByCategoria = async function (categoria, idCliente) {
+    let  dataFornecedores = await fornecedoresData.getFornecedoresByCategoria(categoria)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
 }
-exports.getFornecedoresBySubCategoria = function (subCategoria) {
-    return fornecedoresData.getFornecedoresBySubCategoria(subCategoria)
+exports.getFornecedoresBySubCategoria = async function (subCategoria, idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoria(subCategoria)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
 }
-exports.getFornecedoresByOrdem = function ( ordem, segmento) {
-    return fornecedoresData.getFornecedoresByOrdem( ordem, segmento)
+exports.getFornecedoresByOrdem = async function ( ordem, segmento, idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresByOrdem( ordem, segmento)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
 }
-exports.getFornecedoresByNome = function (nome, segmento) {
-    return fornecedoresData.getFornecedoresByNome(nome, segmento);
+exports.getFornecedoresByNome = async function (nome, segmento, idCliente) {
+     let dataFornecedores = await fornecedoresData.getFornecedoresByNome(nome, segmento);
+    
+    return dataFornecedores
 }
 exports.getFornecedoresByNomeOrdem = async function (nome, ordem, idCliente) {
     let  dataFornecedores = null
@@ -57,26 +67,45 @@ exports.getFornecedoresByNomeOrdem = async function (nome, ordem, idCliente) {
     return dataFornecedores
    
 }
-exports.getFornecedoresByNomeFiltro = async function (nome, filtro, tipoFiltro) {
-    return fornecedoresData.getFornecedoresByNomeFiltro(nome, filtro, tipoFiltro)
+exports.getFornecedoresByNomeFiltro = async function (nome, filtro, tipoFiltro, idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresByNomeFiltro(nome, filtro, tipoFiltro)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
 }
-exports.getFornecedoresBySegmentoAndCategoria = function (segmento, categoria) {
-    return fornecedoresData.getFornecedoresBySegmentoAndCategoria(segmento, categoria)
+exports.getFornecedoresBySegmentoAndCategoria = async function (segmento, categoria, idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoAndCategoria(segmento, categoria)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
 }
-exports.getFornecedoresByNomeAndCategoria = function (nome, categoria) {
-    return fornecedoresData.getFornecedoresByNomeAndCategoria(nome, categoria)
+exports.getFornecedoresBySegmentoAndCategoriaAndSubCategoria = async function (segmento, categoria, subcategoria, idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoAndCategoriaAndSubCategoria(segmento, categoria, subcategoria)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
 }
-exports.getFornecedoresByNomeCategoriaAndSegmento = function (nome, categoria) {
-    return fornecedoresData.getFornecedoresByNomeCategoriaAndSegmento(nome, categoria)
+exports.getFornecedoresByNomeAndCategoria = async function (nome, categoria, idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresByNomeAndCategoria(nome, categoria)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
 }
-exports.getFornecedoresBySegmentoNomeAndOrdem = function (nome, ordem) {
-    return fornecedoresData.getFornecedoresBySegmentoNomeAndOrdem(nome, ordem)
+exports.getFornecedoresByNomeCategoriaAndSegmento = async function (nome, categoria, idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresByNomeCategoriaAndSegmento(nome, categoria)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
 }
-exports.getFornecedoresBySegmentoAndOrdem = function ( ordem, segmento) {
-    return fornecedoresData.getFornecedoresBySegmentoAndOrdem( ordem, segmento)
+exports.getFornecedoresBySegmentoNomeAndOrdem = async function (nome, ordem, idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoNomeAndOrdem(nome, ordem)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
 }
-exports.getFornecedoresBySegmentoAndNome = function (nome, segmento) {
-    return fornecedoresData.getFornecedoresBySegmentoAndNome(nome, segmento);
+exports.getFornecedoresBySegmentoAndOrdem = async function ( ordem, segmento, idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoAndOrdem( ordem, segmento)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
+}
+exports.getFornecedoresBySegmentoAndNome = async function (nome, segmento, idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoAndNome(nome, segmento);
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores 
 }
 exports.getFornecedoresVip = function () {
     return fornecedoresData.getFornecedoresVip()

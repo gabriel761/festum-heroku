@@ -46,7 +46,12 @@ exports.getFornecedoresBySubCategoria = function (subCategoria) {
 exports.getFornecedoresBySegmentoAndCategoria = function (segmento, categoria) {
    
     console.log("categoria: ", categoria)
-    return db.query(`select * from fornecedor where segmento like $1 and categoria like $2`, ["%"+segmento+"%", "%"+categoria+"%"])
+    return db.query(`select * from fornecedor where segmento like $1 and categoria like $2`, ["%"+segmento+"%", "%"+categoria+"%" ])
+}
+exports.getFornecedoresBySegmentoAndCategoriaAndSubCategoria = function (segmento, categoria, subcategoria) {
+   
+    console.log("categoria: ", categoria)
+    return db.query(`select * from fornecedor where segmento like $1 and categoria like $2 and subcategoria like $3`, ["%"+segmento+"%", "%"+categoria+"%", "%"+subcategoria+"%" ])
 }
 exports.getFornecedoresByNomeAndCategoria = function (nome, categoria) {
    
@@ -103,7 +108,7 @@ exports.postFornecedores = async function (fornecedor, idPessoa) {
     //if(id.length == 0){
         
             console.log("ultimo log antes do query")
-            result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao, cpf, sugest_subcategoria, galeria, dados_de_interesse, foto_de_fundo, formas_de_pagamento, descricao) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco , false, true, idPessoa, false, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja ])
+            result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, instagramLink, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao, cpf, sugest_subcategoria, galeria, dados_de_interesse, foto_de_fundo, formas_de_pagamento, descricao) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram,fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco , false, true, idPessoa, false, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja ])
             await getIdByCnpj()
             if(result === null){
                 console.log("houve erro")

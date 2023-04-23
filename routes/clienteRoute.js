@@ -215,29 +215,42 @@ router.get('/fornecedorById/:id', async (req,res) => {
 });
 router.get('/fornecedoresBySegmento/:segmento',middleware.decodeToken, async (req,res) => {
     const segmento = req.params.segmento
-    const fornecedores = await fornecedoresService.getFornecedoresBySegmento(segmento)
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresBySegmento(segmento, uid)
     res.json(fornecedores)
 });
-router.get('/fornecedoresByCategoria/:categoria', async (req,res) => {
+router.get('/fornecedoresByCategoria/:categoria',middleware.decodeToken, async (req,res) => {
     const categoria = req.params.categoria
-    const fornecedores = await fornecedoresService.getFornecedoresByCategoria(categoria)
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresByCategoria(categoria, uid)
     res.json(fornecedores)
 });
-router.get('/fornecedoresBySubCategoria/:subCategoria', async (req,res) => {
+router.get('/fornecedoresBySubCategoria/:subCategoria',middleware.decodeToken, async (req,res) => {
     const subCategoria = req.params.subCategoria
-    const fornecedores = await fornecedoresService.getFornecedoresBySubCategoria(subCategoria)
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresBySubCategoria(subCategoria, uid)
     res.json(fornecedores)
 });
-router.get('/fornecedoresBySegmentoAndCategoria/:segmento/:categoria', async (req,res) => {
+router.get('/fornecedoresBySegmentoAndCategoria/:segmento/:categoria',middleware.decodeToken, async (req,res) => {
     const segmento = req.params.segmento
     const categoria = req.params.categoria
-    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndCategoria(segmento, categoria)
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndCategoria(segmento, categoria, uid)
     res.json(fornecedores)
 });
-router.get('/fornecedoresByNomeAndCategoria/:nome/:categoria', async (req,res) => {
+router.get('/fornecedoresBySegmentoAndCategoriaAndSubCategoria/:segmento/:categoria/:subcategoria',middleware.decodeToken, async (req,res) => {
+    const segmento = req.params.segmento
+    const categoria = req.params.categoria
+    const subcategoria = req.params.subcategoria
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndCategoriaAndSubCategoria(segmento, categoria, subcategoria, uid)
+    res.json(fornecedores)
+});
+router.get('/fornecedoresByNomeAndCategoria/:nome/:categoria',middleware.decodeToken, async (req,res) => {
     const nome = req.params.nome
     const categoria = req.params.categoria
-    const fornecedores = await fornecedoresService.getFornecedoresByNomeAndCategoria(nome, categoria)
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresByNomeAndCategoria(nome, categoria, uid)
     res.json(fornecedores)
 });
 router.get('/fornecedoresByNomeOrdem/:nome/:ordem',middleware.decodeToken, async (req,res) => {
@@ -253,52 +266,58 @@ router.get('/fornecedoresByNomeFiltro/:nome/:tipoFiltro/:filtro',middleware.deco
     const nome = req.params.nome
     const filtro = req.params.filtro
     const tipoFiltro = req.params.tipoFiltro
-    // const uid = req.user.uid
+    const uid = req.user.uid
     console.log("nome: ", nome)
     console.log("filtro: ", filtro)
     console.log("tipo filtro: ", tipoFiltro)
-    const fornecedores = await fornecedoresService.getFornecedoresByNomeFiltro(nome, filtro, tipoFiltro) 
+    const fornecedores = await fornecedoresService.getFornecedoresByNomeFiltro(nome, filtro, tipoFiltro, uid) 
     res.json(fornecedores)
 });
 
 router.get('/fornecedoresByNome/:nome',middleware.decodeToken, async (req,res) => {
     const nome = req.params.nome
-    const fornecedores = await fornecedoresService.getFornecedoresByNome(nome) 
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresByNome(nome, uid) 
     res.json(fornecedores)
 });
 
-router.get('/fornecedoresByOrdem/:ordem', async (req,res) => {
+router.get('/fornecedoresByOrdem/:ordem',middleware.decodeToken, async (req,res) => {
     const ordem = req.params.ordem
-    const fornecedores = await fornecedoresService.getFornecedoresByOrdem(ordem) ;
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresByOrdem(ordem, uid) ;
     res.json(fornecedores)
 });
-router.get('/fornecedoresByNomeCategoriaAndSegmento/:nome/:categoria/:segmento', async (req,res) => {
+router.get('/fornecedoresByNomeCategoriaAndSegmento/:nome/:categoria/:segmento',middleware.decodeToken, async (req,res) => {
     const nome = req.params.nome
     const categoria = req.params.categoria
     const segmento = req.params.segmento
-    const fornecedores = await fornecedoresService.getFornecedoresByNomeCategoriaAndSegmento(nome, categoria, segmento)
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresByNomeCategoriaAndSegmento(nome, categoria, segmento, uid)
     res.json(fornecedores)
 });
-router.get('/fornecedoresBySegmentoNomeAndOrdem/:segmento/:nome/:ordem', async (req,res) => {
+router.get('/fornecedoresBySegmentoNomeAndOrdem/:segmento/:nome/:ordem',middleware.decodeToken, async (req,res) => {
     const segmento = req.params.segmento
     const nome = req.params.nome
     const ordem = req.params.ordem
+    const uid = req.user.uid
     console.log("ordem: ", ordem)
-    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoNomeAndOrdem(nome, ordem, segmento) 
+    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoNomeAndOrdem(nome, ordem, segmento, uid) 
     res.json(fornecedores)
 });
 
-router.get('/fornecedoresBySegmentoAndNome/:segmento/:nome', async (req,res) => {
+router.get('/fornecedoresBySegmentoAndNome/:segmento/:nome',middleware.decodeToken, async (req,res) => {
     const segmento = req.params.segmento
     const nome = req.params.nome
-    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndNome(nome, segmento) ;
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndNome(nome, segmento, uid) ;
     res.json(fornecedores)
 });
 
-router.get('/fornecedoresBySegmentoAndOrdem/:segmento/:ordem', async (req,res) => {
+router.get('/fornecedoresBySegmentoAndOrdem/:segmento/:ordem',middleware.decodeToken, async (req,res) => {
     const segmento = req.params.segmento
     const ordem = req.params.ordem
-    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndOrdem(ordem, segmento) 
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndOrdem(ordem, segmento, uid) 
     res.json(fornecedores)
 });
 router.get('/fornecedores-vip', async (req,res) => {
