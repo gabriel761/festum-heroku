@@ -13,7 +13,7 @@ exports.getIdByCnpjExport = (cnpj) => {
 
 exports.getFornecedores = function (offset) {
    
-    return db.query('select nome_loja, categoria, imagem, localizacao, preco from fornecedor limit 5 offset $1', [offset]);
+    return db.query('select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor limit 5 offset $1', [offset]);
 }
 exports.getFornecedoresSemDistancia = function () {
    

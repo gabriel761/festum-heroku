@@ -484,7 +484,7 @@ router.post('/updateStatusPagamentoFornecedor', middleware.decodeToken, async (r
 })
 router.get("/getStatusPagamentoFornecedorByIdFirebase", middleware.decodeToken, async (req, res) => {
     const uid = req.user.uid
-    const fornecedor = await fornecedoresService.getFornecedorByIdFirebase(uid)
+    const fornecedor = await fornecedoresService.getFornecedorByIdFirebase(uid);
     res.json(fornecedor)
 })
 
