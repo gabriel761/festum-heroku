@@ -13,7 +13,7 @@ exports.getIdByCnpjExport = (cnpj) => {
 
 exports.getFornecedores = function (offset) {
    
-    return db.query('select * from fornecedor limit 5 offset $1', [offset]);
+    return db.query('select nome_loja, categoria, imagem, localizacao, preco from fornecedor limit 5 offset $1', [offset]);
 }
 exports.getFornecedoresSemDistancia = function () {
    
@@ -124,6 +124,9 @@ exports.postFornecedores = async function (fornecedor, idPessoa) {
         return {error: true, message: "Este cnpj já existe no banco de dados"}
    // }
 }
+exports.updateStatusPagamentoFornecedor = function (statusPagamento, fk_id){
+    return db.query('update fornecedor set status_pagamento = $1 where fk_fornecedor_pessoa = $2 ', [statusPagamento, fk_id ])
+}
 
 exports.loginFornecedor = function (login){
     return db.query('select fornecedor.*, pessoa.email, pessoa.nome, pessoa.sobrenome, pessoa.tipo_pessoa  from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.email = $1 and id_firebase = $2', [login.email, login.firebaseId])  
@@ -140,6 +143,10 @@ exports.getFornecedoresVip = function(){
 exports.getFornecedorById = function (id) {
     console.log("fornecedor id entrou")
     return db.query('select * from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where fornecedor.pk_id=$1', id);
+}
+exports.getFornecedorByIdPessoa = function (id) {
+    console.log("fornecedor id entrou")
+    return db.query('select * from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where fornecedor.fk_fornecedor_pessoa=$1', id);
 }
 exports.deleteEverythingFornecedor = async function (id, idPessoa) {
     await db.query('delete from anuncio where fk_anuncio_fornecedor = $1', [id])

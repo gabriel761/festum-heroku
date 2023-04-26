@@ -118,6 +118,9 @@ exports.postFornecedores = function (fornecedor, id) {
     
     return fornecedoresData.postFornecedores(fornecedor, id);
 }
+exports.updateStatusPagamentoFornecedor = function (statusPagamento, fk_id) {
+    return fornecedoresData.updateStatusPagamentoFornecedor(statusPagamento, fk_id)
+}
 exports.testeFornecedor = function () {
     const result = fornecedoresFunctions.tratarCategorias([
         {pk_id:3,nome:"Artigos de Decoração"},
@@ -143,6 +146,11 @@ exports.getFornecedoresVip = function (){
 
 exports.getFornecedorById = function (id){
     return fornecedoresData.getFornecedorById(id)
+}
+exports.getFornecedorByIdPessoa = async function (id, idCliente){
+    let dataFornecedores = await fornecedoresData.getFornecedorByIdPessoa(id)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
 }
 
 exports.deleteEverythingFornecedor = function (id,idPessoa){
