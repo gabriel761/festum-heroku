@@ -146,7 +146,7 @@ exports.getFornecedorById = function (id) {
 }
 exports.getFornecedorByIdPessoa = function (id) {
     console.log("fornecedor id entrou")
-    return db.query('select * from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where fornecedor.fk_fornecedor_pessoa=$1', id);
+    return db.query('select fornecedor.*, pessoa.email from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where fornecedor.fk_fornecedor_pessoa=$1', id);
 }
 exports.deleteEverythingFornecedor = async function (id, idPessoa) {
     await db.query('delete from anuncio where fk_anuncio_fornecedor = $1', [id])
