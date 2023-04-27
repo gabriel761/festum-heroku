@@ -65,7 +65,7 @@ exports.getFornecedoresByOrdem = function (ordem ) {
 exports.getFornecedoresByNome = function (nome ) {
    
     console.log("nome ordem:", nome)
-    return db.query(`select * from fornecedor where nome_loja ilike $1`, ["%"+nome+"%"])
+    return db.query(`select * from fornecedor where nome_loja ilike $1 limit 10`, ["%"+nome+"%"])
 }
 exports.getFornecedoresByNomeOrdem = function (nome, ordem ) {
    console.log(nome,ordem);
