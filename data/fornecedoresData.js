@@ -10,9 +10,11 @@ exports.getIdByCnpjExport = (cnpj) => {
     console.log(cnpj)
     return db.query('select pk_id from fornecedor where cnpj= $1', [cnpj])
 }
+exports.getFornecedores = function () {
+    return db.query('select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor limit 5');
+}
 
-exports.getFornecedores = function (offset) {
-   
+exports.getFornecedoresOffset = function (offset) {
     return db.query('select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor limit 5 offset $1', [offset]);
 }
 exports.getFornecedoresSemDistancia = function () {
@@ -38,6 +40,19 @@ exports.getFornecedoresByCategoria = function (categoria) {
     console.log("categoria: ", categoria)
     return db.query(`select * from fornecedor where categoria like $1`,["%"+categoria+"%"])
 }
+exports.getFornecedoresByCategoriaOffset = function (categoria, offset) {
+   
+    console.log("categoria: ", categoria)
+    console.log("offset: ", offset)
+    return db.query(`select * from fornecedor where categoria like $1 offset $2`,["%"+categoria+"%", offset])
+}
+exports.getFornecedoresByCategoriaOrdemOffset = function (categoria,ordem, offset) {
+   
+    console.log("categoria: ", categoria)
+    console.log("ordem: ", ordem)
+    console.log("offset: ", offset)
+    return db.query(`select * from fornecedor where categoria like $1 order by ${ordem } offset $2 limit 5`,["%"+categoria+"%" , offset])
+}
 exports.getFornecedoresBySubCategoria = function (subCategoria) {
    
     console.log("categoria: ", subCategoria)
@@ -62,6 +77,11 @@ exports.getFornecedoresByNomeAndCategoria = function (nome, categoria) {
 exports.getFornecedoresByOrdem = function (ordem ) {
     return db.query(`select * from fornecedor order by $1 asc`,["%"+ordem+"%"])
 }
+exports.getFornecedoresByOrdemOffset = function (ordem, offset ) {
+    console.log("Ordem: ", ordem)
+    console.log("offset: ", offset)
+    return db.query(`select * from fornecedor order by ${ordem} asc offset $1 limit 5`,[ offset])
+}
 exports.getFornecedoresByNome = function (nome ) {
    
     console.log("nome ordem:", nome)
@@ -77,6 +97,16 @@ exports.getFornecedoresByNomeFiltro = function (nome, filtro, tipoFiltro ) {
      console.log("tipo filtro", tipoFiltro)
      return db.query(`select * from fornecedor where nome_loja ilike $1 and ${tipoFiltro} ilike '%${filtro}%'`, ["%"+nome+"%"])
  }
+ exports.getFornecedoresByFiltroOffset = function (filtro, tipoFiltro, offset ) {
+    console.log("filtro", filtro)
+    console.log("tipo filtro", tipoFiltro)
+    return db.query(`select * from fornecedor where ${tipoFiltro} ilike '%${filtro}%' offset ${offset} limit 5`)
+}
+exports.getFornecedoresByFiltroCategoriaOffset = function (filtro, tipoFiltro,categoria, offset ) {
+    console.log("filtro", filtro)
+    console.log("tipo filtro", tipoFiltro)
+    return db.query(`select * from fornecedor where categoria ilike '%${categoria}%' and ${tipoFiltro} ilike '%${filtro}%' offset ${offset} limit 5`)
+}
 exports.getFornecedoresByNomeCategoriaAndSegmento = function (nome, categoria, segmento) {
    
     console.log("categoria: ", categoria);

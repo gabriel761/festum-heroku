@@ -288,20 +288,27 @@ router.post('/getCnpj', async (req, res) => {
     res.json(response)
 });
 
-router.get('/fornecedores/:offset', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresOffset/:offset', middleware.decodeToken, async (req, res) => {
     console.log("entrou no fornecedores offset")
     const token = req.headers.authorization
     const idCliente = req.user.uid
     const offset = req.params.offset
     console.log("offset: ", offset)
-    const fornecedores = await fornecedoresService.getFornecedores(idCliente, offset)
+    const fornecedores = await fornecedoresService.getFornecedoresOffset(idCliente, offset)
     res.json(fornecedores)
 });
-router.get('/fornecedores', async (req, res) => {
-    console.log("entrou no fornecedores offset")
-    const fornecedores = await fornecedoresService.getFornecedores()
+router.get('/fornecedores', middleware.decodeToken, async (req, res) => {
+    
+    const token = req.headers.authorization
+    const idCliente = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedores(idCliente)
     res.json(fornecedores)
 });
+// router.get('/fornecedores', async (req, res) => {
+//     console.log("entrou no fornecedores offset")
+//     const fornecedores = await fornecedoresService.getFornecedores()
+//     res.json(fornecedores)
+// });
 router.get('/fornecedoresSemDistancia', async (req, res) => {
     const fornecedores = await fornecedoresService.getFornecedoresSemDistancia()
     res.json(fornecedores)
@@ -352,6 +359,21 @@ router.get('/fornecedoresByCategoria/:categoria', middleware.decodeToken, async 
     const fornecedores = await fornecedoresService.getFornecedoresByCategoria(categoria, uid)
     res.json(fornecedores)
 });
+router.get('/fornecedoresByCategoriaOffset/:categoria/:offset', middleware.decodeToken, async (req, res) => {
+    const categoria = req.params.categoria
+    const offset = req.params.offset
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresByCategoriaOffset(categoria, uid, offset)
+    res.json(fornecedores)
+});
+router.get('/fornecedoresByCategoriaOrdemOffset/:categoria/:ordem/:offset', middleware.decodeToken, async (req, res) => {
+    const categoria = req.params.categoria
+    const ordem = req.params.ordem
+    const offset = req.params.offset
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresByCategoriaOrdemOffset(categoria, ordem, uid, offset)
+    res.json(fornecedores)
+});
 router.get('/fornecedoresBySubCategoria/:subCategoria', middleware.decodeToken, async (req, res) => {
     const subCategoria = req.params.subCategoria
     const uid = req.user.uid
@@ -400,6 +422,31 @@ router.get('/fornecedoresByNomeFiltro/:nome/:tipoFiltro/:filtro', middleware.dec
     const fornecedores = await fornecedoresService.getFornecedoresByNomeFiltro(nome, filtro, tipoFiltro, uid)
     res.json(fornecedores)
 });
+router.get('/fornecedoresByFiltroOffset/:tipoFiltro/:filtro/:offset', middleware.decodeToken, async (req, res) => {
+    const filtro = req.params.filtro
+    const tipoFiltro = req.params.tipoFiltro
+    const offset = req.params.offset
+    const uid = req.user.uid
+    console.log("filtro: ", filtro)
+    console.log("tipo filtro: ", tipoFiltro)
+    console.log("offset: ", offset)
+    const fornecedores = await fornecedoresService.getFornecedoresByFiltroOffset(filtro, tipoFiltro,offset, uid)
+    res.json(fornecedores)
+});
+
+router.get('/fornecedoresByFiltroCategoriaOffset/:tipoFiltro/:filtro/:categoria/:offset', middleware.decodeToken, async (req, res) => {
+    const filtro = req.params.filtro
+    const tipoFiltro = req.params.tipoFiltro
+    const categoria = req.params.categoria
+    const offset = req.params.offset
+    const uid = req.user.uid
+    console.log("filtro: ", filtro)
+    console.log("tipo filtro: ", tipoFiltro);
+    console.log("categoria: ", categoria)
+    console.log("offset: ", offset)
+    const fornecedores = await fornecedoresService.getFornecedoresByFiltroCategoriaOffset(filtro, tipoFiltro,categoria,offset, uid)
+    res.json(fornecedores)
+});
 
 router.get('/fornecedoresByNome/:nome', middleware.decodeToken, async (req, res) => {
     const nome = req.params.nome
@@ -412,6 +459,15 @@ router.get('/fornecedoresByOrdem/:ordem', middleware.decodeToken, async (req, re
     const ordem = req.params.ordem
     const uid = req.user.uid
     const fornecedores = await fornecedoresService.getFornecedoresByOrdem(ordem, uid);
+    res.json(fornecedores)
+});
+router.get('/fornecedoresByOrdemOffset/:ordem/:offset', middleware.decodeToken, async (req, res) => {
+    const ordem = req.params.ordem
+    const offset = req.params.offset
+    console.log("ordem: ", ordem)
+    console.log("offset: ", offset);
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresByOrdemOffset(ordem, offset, uid);
     res.json(fornecedores)
 });
 router.get('/fornecedoresByNomeCategoriaAndSegmento/:nome/:categoria/:segmento', middleware.decodeToken, async (req, res) => {
@@ -452,12 +508,7 @@ router.get('/fornecedores-vip', async (req, res) => {
     console.log(fornecedores);
     res.json(fornecedores)
 });
-// router.get('/fornecedores/:id', async (req,res) => {
-//     const id = req.params.id
-//     const fornecedor = await fornecedoresService.getFornecedorById(id)
 
-//     res.json(fornecedor)
-// });
 router.post('/addFornecedor', async (req, res) => {
     const cadastro = req.body
     console.log("cadastro fornecedor: ", cadastro)

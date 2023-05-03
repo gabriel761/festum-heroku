@@ -2,9 +2,17 @@ const fornecedoresData = require('../data/fornecedoresData')
 const fornecedoresFunctions = require('../funtions/fornecedoresFunctions')
 
 
-exports.getFornecedores = async function (idCliente, offset) {
+exports.getFornecedores = async function (idCliente) {
     
-    let  dataFornecedores = await fornecedoresData.getFornecedores(offset)
+    let  dataFornecedores = await fornecedoresData.getFornecedores()
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    
+    return dataFornecedores
+}
+
+exports.getFornecedoresOffset = async function (idCliente, offset) {
+    
+    let  dataFornecedores = await fornecedoresData.getFornecedoresOffset(offset)
     dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
     
     return dataFornecedores
@@ -37,16 +45,41 @@ exports.getFornecedoresByCategoria = async function (categoria, idCliente) {
     dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
     return dataFornecedores
 }
+exports.getFornecedoresByCategoriaOffset = async function (categoria, idCliente, offset) {
+    let  dataFornecedores = await fornecedoresData.getFornecedoresByCategoriaOffset(categoria, offset)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
+}
+exports.getFornecedoresByCategoriaOrdemOffset = async function (categoria, ordem, idCliente, offset) {
+    let  dataFornecedores = await fornecedoresData.getFornecedoresByCategoriaOrdemOffset(categoria,ordem, offset)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
+}
 exports.getFornecedoresBySubCategoria = async function (subCategoria, idCliente) {
     let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoria(subCategoria)
     dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
     return dataFornecedores
 }
-exports.getFornecedoresByOrdem = async function ( ordem, segmento, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresByOrdem( ordem, segmento)
+exports.getFornecedoresByOrdem = async function ( ordem, idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresByOrdem( ordem)
     dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
     return dataFornecedores
 }
+exports.getFornecedoresByOrdemOffset = async function ( ordem, offset, idCliente) {
+    let dataFornecedores
+    if(ordem == "distância"){
+        dataFornecedores = await fornecedoresData.getFornecedoresOffset(offset)
+        console.log("data fornecedores: ", dataFornecedores)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        dataFornecedores = fornecedoresFunctions.ordenarPorDistancia(dataFornecedores)
+    }else{
+        dataFornecedores = await fornecedoresData.getFornecedoresByOrdemOffset(ordem, offset)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        
+    }
+    return dataFornecedores
+}
+
 exports.getFornecedoresByNome = async function (nome, segmento, idCliente) {
      let dataFornecedores = await fornecedoresData.getFornecedoresByNome(nome, segmento);
     
@@ -69,6 +102,16 @@ exports.getFornecedoresByNomeOrdem = async function (nome, ordem, idCliente) {
 }
 exports.getFornecedoresByNomeFiltro = async function (nome, filtro, tipoFiltro, idCliente) {
     let dataFornecedores = await fornecedoresData.getFornecedoresByNomeFiltro(nome, filtro, tipoFiltro)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
+}
+exports.getFornecedoresByFiltroOffset = async function (filtro, tipoFiltro, offset ,idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresByFiltroOffset(filtro, tipoFiltro, offset)
+    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
+}
+exports.getFornecedoresByFiltroCategoriaOffset = async function (filtro, tipoFiltro,categoria, offset ,idCliente) {
+    let dataFornecedores = await fornecedoresData.getFornecedoresByFiltroCategoriaOffset(filtro, tipoFiltro,categoria, offset)
     dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
     return dataFornecedores
 }
