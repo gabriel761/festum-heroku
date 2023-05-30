@@ -7,7 +7,7 @@ exports.tratarPreco = (preco) => {
     let newPreco = preco.replace(".", "")
      newPreco = newPreco.replace(",",".")
     console.log(newPreco)
-    newPreco = newPreco.substr(2)
+    //newPreco = newPreco.substr(2)
     console.log(newPreco)
     newPreco = parseFloat(newPreco)
     console.log(newPreco)

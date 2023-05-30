@@ -42,6 +42,12 @@ exports.postCliente = async function (cliente, idPessoa) {
         return {error: true, message: "cpf já existente", data: null}
     }
 }
+exports.updateCliente = async function (cliente) {
+    await db.query('update cliente set data_nascimento = $1, cpf = $2, telefone = $3, tipo_telefone = $4, instagram = $5, endereco = $6, auth_adm = $7, auth_pag = $8, imagem_perfil = $9, localizacao = $10 where pk_id = $11 ', [ cliente.dataNasc, cliente.cpf, cliente.tel, cliente.tipoTel, cliente.instagram, cliente.endereco, false, true, cliente.imagem, cliente.localizacao, cliente.id ]) 
+}
+exports.getClienteByIdPessoa = function (id) {
+    return db.query('select cliente.*, pessoa.email from cliente inner join pessoa on cliente.fk_cliente_pessoa = pessoa.pk_id where cliente.fk_cliente_pessoa=$1', id);
+}
 exports.loginCliente = function (login){
         return db.query('select * from cliente inner join pessoa on cliente.fk_cliente_pessoa = pessoa.pk_id where pessoa.email = $1 and pessoa.id_firebase = $2', [login.email, login.firebaseId]);
 }

@@ -161,6 +161,13 @@ exports.postFornecedores = function (fornecedor, id) {
     
     return fornecedoresData.postFornecedores(fornecedor, id);
 }
+exports.updateFornecedores = function (fornecedor) {
+    fornecedor.preco = fornecedoresFunctions.tratarPreco(fornecedor.preco)
+    fornecedor.segmentos = fornecedoresFunctions.tratarCategorias(fornecedor.segmentos)
+    fornecedor.categorias = fornecedoresFunctions.tratarCategorias(fornecedor.categorias)
+    fornecedor.subcategorias = fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
+    return fornecedoresData.updateFornecedores(fornecedor);
+}
 exports.updateStatusPagamentoFornecedor = function (statusPagamento, fk_id) {
     return fornecedoresData.updateStatusPagamentoFornecedor(statusPagamento, fk_id)
 }
@@ -172,7 +179,7 @@ exports.testeFornecedor = function () {
         {pk_id:4,nome:"Paulistano"},
         {pk_id:5,nome:"Prestígio"}
     ])
-    console.log(result);
+    console.log(result)
     return result
 }
 
@@ -193,6 +200,10 @@ exports.getFornecedorById = function (id){
 exports.getFornecedorByIdPessoa = async function (id, idCliente){
     let dataFornecedores = await fornecedoresData.getFornecedorByIdPessoa(id)
     dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    return dataFornecedores
+}
+exports.getFornecedorByIdPessoaSemDistancia = async function (id){
+    let dataFornecedores = await fornecedoresData.getFornecedorByIdPessoa(id)
     return dataFornecedores
 }
 

@@ -154,6 +154,9 @@ exports.postFornecedores = async function (fornecedor, idPessoa) {
         return {error: true, message: "Este cnpj já existe no banco de dados"}
    // }
 }
+exports.updateFornecedores = function (fornecedor){
+    return db.query('update fornecedor set  nome_loja = $1, cnpj = $2, telefone = $3, instagram = $4, instagramLink = $5, endereco = $6, cidade = $7, palavras_chave = $8, categoria = $9, subcategoria = $10, segmento = $11, imagem = $12, preco = $13, localizacao = $14, cpf = $15, sugest_subcategoria = $16, galeria = $17, dados_de_interesse = $18, foto_de_fundo = $19, formas_de_pagamento = $20, descricao = $21 where pk_id = $22', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram,fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja, fornecedor.id ])
+}
 exports.updateStatusPagamentoFornecedor = function (statusPagamento, fk_id){
     return db.query('update fornecedor set status_pagamento = $1 where fk_fornecedor_pessoa = $2 ', [statusPagamento, fk_id ])
 }

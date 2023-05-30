@@ -14,6 +14,12 @@ exports.postCliente = function (cliente, id) {
     
     return clientesData.postCliente(cliente, id)
 }
+exports.updateCliente = function (cliente) { 
+    return clientesData.updateCliente(cliente)
+}
+exports.getClienteByIdPessoa = function (id) { 
+    return clientesData.getClienteByIdPessoa(id)
+}
 exports.checkIfCpfExists = async function (cpf) {
     let  data = await clientesData.getIdByCpfExport(cpf)
     return data

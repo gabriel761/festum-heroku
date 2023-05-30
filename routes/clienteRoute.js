@@ -113,16 +113,16 @@ router.get('/teste', async (req, res) => {
             method: "POST",
             data: {
                 "is_active": true,
-                "profile_id": "Gabriel2",
+                "profile_id": "Gabriel3",
                 "plan_id": 2562,
                 "customer_id": responseCliente.data.id,
-                "starting_date": "2023-04-24",
+                "starting_date": "2023-05-10",
                 // "closing_date": "0000-00-00",
                 "callback_url": "https://malhariaoceanica.com.br/",
                 "creditcard_token": responseTokenCartao.data.token
             }
         })
-        
+
         console.log("response assinatura: ", responseAssinatura.data)
         res.json(responseAssinatura.data)
     } catch (e) {
@@ -132,17 +132,17 @@ router.get('/teste', async (req, res) => {
 
 });
 
-router.get("/testeEmailSend", async(req,res) => {
+router.get("/testeEmailSend", async (req, res) => {
     const transporter = nodemailer.createTransport({
         host: "smtp.gmail.com",
         port: 587,
         secure: false,
-        auth:{
+        auth: {
             user: "jg.7651@gmail.com",
             pass: "tvmamspkhtueyapb"
         },
-        tls:{
-         rejectUnauthorized: false   
+        tls: {
+            rejectUnauthorized: false
         }
     })
     const mailSent = await transporter.sendMail({
@@ -155,8 +155,8 @@ router.get("/testeEmailSend", async(req,res) => {
     console.log("mail sent: ", mailSent)
     res.json(mailSent)
 })
-router.post("/orcamentoEmailSend", async(req,res) => {
-    const {nome,emailCliente,telefone,mensagem, emailFornecedor} = req.body
+router.post("/orcamentoEmailSend", async (req, res) => {
+    const { nome, emailCliente, telefone, mensagem, emailFornecedor } = req.body
     const body = req.body
     console.log("email cliente: ", emailCliente)
     console.log("email fornecedor: ", emailFornecedor)
@@ -164,12 +164,12 @@ router.post("/orcamentoEmailSend", async(req,res) => {
         host: "smtp.gmail.com",
         port: 587,
         secure: false,
-        auth:{
+        auth: {
             user: "jg.7651@gmail.com",
             pass: "tvmamspkhtueyapb"
         },
-        tls:{
-         rejectUnauthorized: false   
+        tls: {
+            rejectUnauthorized: false
         }
     })
     const mailSent = await transporter.sendMail({
@@ -213,7 +213,7 @@ router.get('/updateEmail/:email', middleware.decodeToken, async (req, res) => {
     const idFirebase = req.user.uid
     const email = req.params.email
     const result = await pessoaService.updateEmail(email, idFirebase);
-    res.json("update e-mail")
+    res.json("update e-mail");
 })
 router.get('/updateFirebaseId/:uid/:email', async (req, res) => {
     const idFirebase = req.params.uid
@@ -259,6 +259,19 @@ router.post('/addCliente', async (req, res) => {
 
     }
 });
+router.post('/updateCliente', async (req, res) => {
+    const cadastro = req.body
+    console.log(req.body)
+    const resultCliente = await clientesService.updateCliente(cadastro)
+    res.json({ error: false, message: "cliente cadastrado com sucesso", data: null })
+
+})
+router.get('/clienteByIdPessoa/:id', middleware.decodeToken, async (req, res) => {
+    const id = req.params.id
+    const idFirebase = req.user.uid
+    const fornecedores = await clientesService.getClienteByIdPessoa(id);
+    res.json(fornecedores)
+});
 router.post('/addClienteForFornecedor', async (req, res) => {
     const cadastro = req.body
 
@@ -298,7 +311,7 @@ router.get('/fornecedoresOffset/:offset', middleware.decodeToken, async (req, re
     res.json(fornecedores)
 });
 router.get('/fornecedores', middleware.decodeToken, async (req, res) => {
-    
+
     const token = req.headers.authorization
     const idCliente = req.user.uid
     const fornecedores = await fornecedoresService.getFornecedores(idCliente)
@@ -336,15 +349,21 @@ router.get('/getFornecedorAndPessoaByIdFirebase', middleware.decodeToken, async 
     res.json(response)
 });
 
-router.get('/fornecedorById/:id', middleware.decodeToken ,async (req, res) => {
+router.get('/fornecedorById/:id', middleware.decodeToken, async (req, res) => {
     const id = req.params.id
     const fornecedores = await fornecedoresService.getFornecedorById(id)
     res.json(fornecedores)
 });
-router.get('/fornecedorByIdPessoa/:id', middleware.decodeToken ,async (req, res) => {
+router.get('/fornecedorByIdPessoa/:id', middleware.decodeToken, async (req, res) => {
     const id = req.params.id
     const idFirebase = req.user.uid
-    const fornecedores = await fornecedoresService.getFornecedorByIdPessoa(id, idFirebase)
+    const fornecedores = await fornecedoresService.getFornecedorByIdPessoa(id, idFirebase);
+    res.json(fornecedores)
+});
+router.get('/fornecedorByIdPessoaSemDistancia/:id', middleware.decodeToken, async (req, res) => {
+    const id = req.params.id
+    const idFirebase = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedorByIdPessoaSemDistancia(id);
     res.json(fornecedores)
 });
 router.get('/fornecedoresBySegmento/:segmento', middleware.decodeToken, async (req, res) => {
@@ -430,7 +449,7 @@ router.get('/fornecedoresByFiltroOffset/:tipoFiltro/:filtro/:offset', middleware
     console.log("filtro: ", filtro)
     console.log("tipo filtro: ", tipoFiltro)
     console.log("offset: ", offset)
-    const fornecedores = await fornecedoresService.getFornecedoresByFiltroOffset(filtro, tipoFiltro,offset, uid)
+    const fornecedores = await fornecedoresService.getFornecedoresByFiltroOffset(filtro, tipoFiltro, offset, uid)
     res.json(fornecedores)
 });
 
@@ -444,7 +463,7 @@ router.get('/fornecedoresByFiltroCategoriaOffset/:tipoFiltro/:filtro/:categoria/
     console.log("tipo filtro: ", tipoFiltro);
     console.log("categoria: ", categoria)
     console.log("offset: ", offset)
-    const fornecedores = await fornecedoresService.getFornecedoresByFiltroCategoriaOffset(filtro, tipoFiltro,categoria,offset, uid)
+    const fornecedores = await fornecedoresService.getFornecedoresByFiltroCategoriaOffset(filtro, tipoFiltro, categoria, offset, uid)
     res.json(fornecedores)
 });
 
@@ -522,6 +541,13 @@ router.post('/addFornecedor', async (req, res) => {
         console.log("fornecedor não foi cadastrado")
         res.json(resultPessoa);
     }
+});
+router.post('/updateFornecedor', async (req, res) => {
+    const cadastro = req.body
+    console.log("cadastro update fornecedor: ", cadastro)
+    const resultFornecedor = await fornecedoresService.updateFornecedores(cadastro);
+    res.json(resultFornecedor)
+
 });
 router.post('/updateStatusPagamentoFornecedor', middleware.decodeToken, async (req, res) => {
     const { statusPagamento } = req.body
@@ -620,9 +646,19 @@ router.post('/addAnuncio', middleware.decodeToken, async (req, res) => {
     await anuncioService.postAnuncio(anuncio)
     res.json({ error: false, message: "anuncio criado com sucesso", data: null })
 })
+router.post('/updateAnuncio', middleware.decodeToken, async (req, res) => {
+    const anuncio = req.body
+    await anuncioService.updateAnuncio(anuncio)
+    res.json({ error: false, message: "anuncio criado com sucesso", data: null })
+})
 router.get('/getAnuncioTipo/:tipo', middleware.decodeToken, async (req, res) => {
     const tipoAnuncio = req.params.tipo
     const result = await anuncioService.getAnuncioTipo(tipoAnuncio)
+    res.json(result)
+})
+router.get('/getAnuncioByIdFornecedor/:id', middleware.decodeToken, async (req, res) => {
+    const id = req.params.id
+    const result = await anuncioService.getAnuncioByIdFornecedor(id)
     res.json(result)
 })
 router.get('/getAnuncioFromId/:id', async (req, res) => {
@@ -630,6 +666,12 @@ router.get('/getAnuncioFromId/:id', async (req, res) => {
     const result = await anuncioService.getAnuncioFromId(id)
     res.json(result)
 })
+router.get('/deleteAnuncioById/:id', async (req, res) => {
+    const id = req.params.id
+    const result = await anuncioService.deleteAnuncioById(id)
+    res.json(result)
+})
+
 
 
 
@@ -662,7 +704,7 @@ router.get('/subcategoriasByFkIdCategoria/:fk_id', async (req, res) => {
 })
 router.get('/cidades', middleware.decodeToken, async (req, res) => {
     const result = await categoriaService.getCidades()
-    res.json(result)
+    res.json(result);
 })
 
 
