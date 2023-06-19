@@ -168,6 +168,9 @@ exports.updateFornecedores = function (fornecedor) {
     fornecedor.subcategorias = fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
     return fornecedoresData.updateFornecedores(fornecedor);
 }
+exports.updateFornecedorCompletarCadastro = function (cadastro) {
+    return fornecedoresData.updateFornecedorCompletarCadastro(cadastro);
+}
 exports.updateStatusPagamentoFornecedor = function (statusPagamento, fk_id) {
     return fornecedoresData.updateStatusPagamentoFornecedor(statusPagamento, fk_id)
 }

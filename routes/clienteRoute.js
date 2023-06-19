@@ -47,6 +47,7 @@ router.get('/pessoas', async (req, res) => {
     const pessoas = await pessoaService.getPessoas()
     res.json(pessoas);
 });
+
 router.get('/teste', async (req, res) => {
     console.log("ipag foi!!!!")
     try {
@@ -547,6 +548,13 @@ router.post('/updateFornecedor', async (req, res) => {
     console.log("cadastro update fornecedor: ", cadastro)
     const resultFornecedor = await fornecedoresService.updateFornecedores(cadastro);
     res.json(resultFornecedor)
+
+});
+router.post('/updateFornecedorCompletarCadastro', async (req, res) => {
+    const cadastro = req.body
+    console.log("cadastro update fornecedor: ", cadastro)
+    const resultFornecedor = await fornecedoresService.updateFornecedorCompletarCadastro(cadastro);
+    res.json({error: false})
 
 });
 router.post('/updateStatusPagamentoFornecedor', middleware.decodeToken, async (req, res) => {

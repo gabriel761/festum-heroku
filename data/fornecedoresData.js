@@ -19,7 +19,7 @@ exports.getFornecedoresOffset = function (offset) {
 }
 exports.getFornecedoresSemDistancia = function () {
    
-    return db.query('select * from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id');
+    return db.query('select * from fornecedor');
 }
 exports.getIdFornecedorByIdFirebase = function (firebaseId) {
     return db.query('select fornecedor.pk_id from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.id_firebase = $1', [firebaseId])
@@ -138,7 +138,7 @@ exports.postFornecedores = async function (fornecedor, idPessoa) {
     //if(id.length == 0){
         
             console.log("ultimo log antes do query")
-            result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, instagramLink, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao, cpf, sugest_subcategoria, galeria, dados_de_interesse, foto_de_fundo, formas_de_pagamento, descricao) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram,fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco , false, true, idPessoa, false, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja ])
+            result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, instagramLink, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao, cpf, sugest_subcategoria, galeria, dados_de_interesse, foto_de_fundo, formas_de_pagamento, descricao, cep, numero, complemento, status_da_conta) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram,fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco , false, true, idPessoa, false, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja, fornecedor.cep, fornecedor.numero, fornecedor.complemento, "Cadastro incompleto" ])
             await getIdByCnpj()
             if(result === null){
                 console.log("houve erro")
@@ -150,12 +150,16 @@ exports.postFornecedores = async function (fornecedor, idPessoa) {
       
    // }else{
         console.log("já existe cnpj")
-        await db.query("delete from pessoa where pk_id = $1",[idPessoa]);
+        await db.query("delete from pessoa where pk_id = $1",[idPessoa])
         return {error: true, message: "Este cnpj já existe no banco de dados"}
    // }
 }
 exports.updateFornecedores = function (fornecedor){
     return db.query('update fornecedor set  nome_loja = $1, cnpj = $2, telefone = $3, instagram = $4, instagramLink = $5, endereco = $6, cidade = $7, palavras_chave = $8, categoria = $9, subcategoria = $10, segmento = $11, imagem = $12, preco = $13, localizacao = $14, cpf = $15, sugest_subcategoria = $16, galeria = $17, dados_de_interesse = $18, foto_de_fundo = $19, formas_de_pagamento = $20, descricao = $21 where pk_id = $22', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram,fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja, fornecedor.id ])
+}
+exports.updateFornecedorCompletarCadastro = function (fornecedor){
+    console.log("completar cadastro dentro do data: ", fornecedor)
+    return db.query('update fornecedor set galeria = $1, dados_de_interesse = $2, foto_de_fundo = $3, formas_de_pagamento = $4, descricao = $5, status_da_conta = $6 where pk_id = $7', [fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricao, "ativo", fornecedor.pk_id])
 }
 exports.updateStatusPagamentoFornecedor = function (statusPagamento, fk_id){
     return db.query('update fornecedor set status_pagamento = $1 where fk_fornecedor_pessoa = $2 ', [statusPagamento, fk_id ])

@@ -6,6 +6,7 @@ exports.tratarPreco = (preco) => {
     }
     let newPreco = preco.replace(".", "")
      newPreco = newPreco.replace(",",".")
+     newPreco = newPreco.replace("R$", "")
     console.log(newPreco)
     //newPreco = newPreco.substr(2)
     console.log(newPreco)
