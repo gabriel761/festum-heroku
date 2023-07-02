@@ -327,6 +327,10 @@ router.get('/fornecedoresSemDistancia', async (req, res) => {
     const fornecedores = await fornecedoresService.getFornecedoresSemDistancia()
     res.json(fornecedores)
 });
+router.get('/fornecedoresSemDistanciaPreCadastro', async (req, res) => {
+    const fornecedores = await fornecedoresService.fornecedoresSemDistanciaPreCadastro()
+    res.json(fornecedores)
+});
 router.get('/getIdFornecedorByIdFirebase', middleware.decodeToken, async (req, res) => {
     console.log(req.headers.authorization)
     const idFirebase = req.user.uid
@@ -534,12 +538,14 @@ router.post('/addFornecedor', async (req, res) => {
     console.log("cadastro fornecedor: ", cadastro)
     const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
     console.log("add fornecedor result pessoa: ", resultPessoa)
-    if (!resultPessoa.error) {
-        const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
-        console.log("sucesso no cadastro do fornecedor")
-        res.json(resultFornecedor)
-    } else {
-        console.log("fornecedor não foi cadastrado")
+    try {
+        if (!resultPessoa.error) {
+            const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
+            console.log("sucesso no cadastro do fornecedor")
+            res.json(resultFornecedor)
+        }
+    }catch(e){
+        console.log("fornecedor não foi cadastrado: ", e)
         res.json(resultPessoa);
     }
 });
@@ -554,7 +560,7 @@ router.post('/updateFornecedorCompletarCadastro', async (req, res) => {
     const cadastro = req.body
     console.log("cadastro update fornecedor: ", cadastro)
     const resultFornecedor = await fornecedoresService.updateFornecedorCompletarCadastro(cadastro);
-    res.json({error: false})
+    res.json({ error: false })
 
 });
 router.post('/updateStatusPagamentoFornecedor', middleware.decodeToken, async (req, res) => {
