@@ -22,6 +22,7 @@ class MiddleWare {
 
     }
     configHeaders(req, res, next) {
+        console.log("entrou no middleware do cors ")
         res.header("Acce-Control-Allow-Origin", "*")
         res.header("Access-Control-Allow-Meathods", "GET,POST,DELETE,PUT")
         res.header("Access-Control-Allow-Headers", "Access, Content-type, Authorization, Accept, Origin, X-Requested-With")
