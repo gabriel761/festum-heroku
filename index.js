@@ -9,8 +9,10 @@ const bodyParser = require("body-parser")
  
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
-app.options('*', cors())
-app.options
+app.use(cors({
+    origin: "https://festum-site.vercel.app/",
+    methods: ["GET", "POST", "PUT", "DELETE"]
+}))
 
 app.use('/', router)
 
