@@ -9,7 +9,8 @@ const bodyParser = require("body-parser")
  
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
-app.use(cors())
+app.options('*', cors())
+app.options
 
 app.use('/', router)
 
