@@ -13,7 +13,7 @@ app.use(express.urlencoded({extended:false}))
 app.use(cors({
     allowedHeaders: "*",
     allowedMethods: "*",
-    origin: "https://festum-site.vercel.app/"
+    origin: "*"
 }))
 
 app.use('/', router)
