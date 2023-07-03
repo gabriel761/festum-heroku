@@ -4,18 +4,18 @@ const app = express()
 const cors = require("cors")
 const bodyParser = require("body-parser")
 
-app.use((req, res, next)=> {
-    console.log("cors in every request")
-    next()
-})
+app.use (function (req, res, next) {
+    console.log ("inside middleware");
+    next();
+  });
  const port = process.env.PORT || 5000
  
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
-app.use((req, res, next)=> {
-    console.log("cors in some request")
-    next()
-})
+app.use (function (req, res, next) {
+    console.log ("inside middleware");
+    next();
+  });
 app.use(cors({
     allowedHeaders: "*",
     allowedMethods: "*",
