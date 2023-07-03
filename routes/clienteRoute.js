@@ -329,7 +329,7 @@ router.get('/fornecedoresSemDistancia', async (req, res) => {
 });
 router.get('/fornecedoresSemDistanciaPreCadastro', async (req, res) => {
     const fornecedores = await fornecedoresService.fornecedoresSemDistanciaPreCadastro()
-    res.json(fornecedores)
+    res.header({"Access-Control-Allow-Origin": "*"}).json(fornecedores)
 });
 router.get('/getIdFornecedorByIdFirebase', middleware.decodeToken, async (req, res) => {
     console.log(req.headers.authorization)
