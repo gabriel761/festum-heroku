@@ -327,7 +327,7 @@ router.get('/fornecedoresSemDistancia', async (req, res) => {
     const fornecedores = await fornecedoresService.getFornecedoresSemDistancia()
     res.json(fornecedores)
 });
-router.get('/fornecedoresSemDistanciaPreCadastro', async (req, res) => {
+router.get('/fornecedoresSemDistanciaPreCadastro', middleware.configHeaders, async (req, res) => {
     const fornecedores = await fornecedoresService.fornecedoresSemDistanciaPreCadastro()
     res.json(fornecedores)
 });
