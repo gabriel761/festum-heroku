@@ -537,9 +537,10 @@ router.get('/fornecedores-vip', async (req, res) => {
 router.post('/addFornecedor', async (req, res) => {
     const cadastro = req.body
     console.log("cadastro fornecedor: ", cadastro)
+    try {
     const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
     console.log("add fornecedor result pessoa: ", resultPessoa)
-    try {
+    
         if (!resultPessoa.error) {
             const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
             console.log("sucesso no cadastro do fornecedor")

@@ -3,8 +3,12 @@ const clientesData = require("../data/clientesData")
 const fornecedoresData = require("../data/fornecedoresData")
 const pessoaFunctions = require("../funtions/pessoaFunctions")
 exports.postPessoa = function (nome, sobrenome, email, senha, /*idFirebase,*/ tipoPessoa) {
-
+try {
     return pessoaData.postPessoa(nome, sobrenome, email, senha, /*idFirebase,*/ tipoPessoa)
+} catch (error) {
+    throw error
+}
+    
 }
 
 exports.getPessoas = function () {

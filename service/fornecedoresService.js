@@ -158,16 +158,21 @@ exports.getFornecedoresVip = function () {
     return fornecedoresData.getFornecedoresVip()
 }
 exports.postFornecedores = function (fornecedor, id) {
-    if (fornecedor.preco)
-        fornecedor.preco = fornecedoresFunctions.tratarPreco(fornecedor.preco)
-    if (fornecedor.segmento)
-        fornecedor.segmentos = fornecedoresFunctions.tratarCategorias(fornecedor.segmentos)
-    if (fornecedor.categorias)
-        fornecedor.categorias = fornecedoresFunctions.tratarCategorias(fornecedor.categorias)
-    if (fornecedor.subcategorias) {
-        fornecedor.subcategorias = fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
+    try {
+        if (fornecedor.preco)
+            fornecedor.preco = fornecedoresFunctions.tratarPreco(fornecedor.preco)
+        if (fornecedor.segmento)
+            fornecedor.segmentos = fornecedoresFunctions.tratarCategorias(fornecedor.segmentos)
+        if (fornecedor.categorias)
+            fornecedor.categorias = fornecedoresFunctions.tratarCategorias(fornecedor.categorias)
+        if (fornecedor.subcategorias) {
+            fornecedor.subcategorias = fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
+        }
+        return fornecedoresData.postFornecedores(fornecedor, id);
+    } catch (error) {
+        throw error
     }
-    return fornecedoresData.postFornecedores(fornecedor, id);
+
 }
 exports.updateFornecedores = function (fornecedor) {
     fornecedor.preco = fornecedoresFunctions.tratarPreco(fornecedor.preco)

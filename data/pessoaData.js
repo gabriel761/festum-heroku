@@ -53,7 +53,7 @@ exports.getPessoas = function () {
     return db.query('update pessoa set id_firebase = $1 where email = $2 ',[ idFirebase, email])
  }
 exports.postPessoa = async function(nome, sobrenome, email,/* id_firebase,*/ tipoPessoa){
-    
+    try{
     let id = await getIdByEmail(email)
     console.log("tipo pessoa data: ",tipoPessoa)
     if(_.isEmpty(id)){
@@ -68,6 +68,9 @@ exports.postPessoa = async function(nome, sobrenome, email,/* id_firebase,*/ tip
     }else{
         return {error: true, message: "email já existente no cadastro", data: {email}}
     }
+}catch(e){
+    throw e
+}
 
 }
 
