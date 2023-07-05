@@ -27,7 +27,7 @@ router.post('/login-cliente', async (req, res) => {
 
     const cliente = await clientesService.loginCliente(req.body)
     if (!cliente) {
-        res.send("Login ou senha incorreta")
+        res.send("Login ou senha incorreta");
     } else {
         res.send(cliente)
     }

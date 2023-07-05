@@ -17,8 +17,12 @@ exports.getIdByEmailExport = async function (email) {
     
  }
  exports.loginPessoa = function (pessoa) {
+    try{
     console.log("pessoa login: ", pessoa)
-    return db.query("select tipo_pessoa from pessoa where id_firebase = $1 and email = $2", [pessoa.firebaseId, pessoa.email])
+    return db.query("select * from pessoa where id_firebase = $1 and email = $2", [pessoa.firebaseId, pessoa.email])
+    }catch(e){
+        console.log(e)
+    }
  }
  exports.checkIfEmailExistsExport = async function (email) {
     console.log("pessoa data: ", email);
