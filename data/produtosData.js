@@ -5,9 +5,14 @@ exports.getProdutos = function () {
     return db.query('select * from produto');
 }
 exports.postProduto = function (produto) {
+    try {
+        return db.query('insert into produto (nome, descricao, imagem, preco_original, preco_final, fk_produto_fornecedor, status, tipo_produto) values($1,$2,$3,$4,$5, $6,$7, $8)', [produto.nome, produto.descricao, produto.imagem, produto.precoOriginal, produto.precoFinal, produto.idFornecedor, produto.status, produto.tipoProduto])
+    } catch (error) {
+        throw error
+    }
     
-    return db.query('insert into produto (nome, descricao, imagem, preco_original, preco_final, fk_produto_fornecedor, status, tipo_produto) values($1,$2,$3,$4,$5, $6,$7, $8)', [produto.nome, produto.descricao, produto.imagem, produto.precoOriginal, produto.precoFinal, produto.idFornecedor, produto.status, produto.tipoProduto])
 }
+
 exports.updateProduto = async function (produto) {
     console.log("update produto",produto)
     await db.query('update produto set nome=$1, descricao=$2, imagem=$3, preco_original=$4, preco_final=$5, status=$6, tipo_produto=$7 where pk_id = $8', [produto.nome, produto.descricao, produto.imagem, produto.precoOriginal, produto.precoFinal, produto.status, produto.tipoProduto, produto.idProduto]);

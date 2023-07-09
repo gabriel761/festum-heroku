@@ -315,6 +315,7 @@ router.get('/fornecedores', middleware.decodeToken, async (req, res) => {
 
     const token = req.headers.authorization
     const idCliente = req.user.uid
+    console.log("id cliente get fornecedores: ", idCliente)
     const fornecedores = await fornecedoresService.getFornecedores(idCliente)
     res.json(fornecedores)
 });
@@ -330,6 +331,11 @@ router.get('/fornecedoresSemDistancia', async (req, res) => {
 router.get('/fornecedoresSemDistanciaPreCadastro', async (req, res) => {
     console.log("fornecedores sem distancia")
     const fornecedores = await fornecedoresService.fornecedoresSemDistanciaPreCadastro()
+    res.json(fornecedores)
+});
+router.get('/fornecedoresSemDistanciaPreCadastroComStatus/:statusConta', async (req, res) => {
+    const statusConta = req.params.statusConta
+    const fornecedores = await fornecedoresService.fornecedoresSemDistanciaPreCadastroComStatus(statusConta)
     res.json(fornecedores)
 });
 router.get('/getIdFornecedorByIdFirebase', middleware.decodeToken, async (req, res) => {
@@ -509,7 +515,7 @@ router.get('/fornecedoresBySegmentoNomeAndOrdem/:segmento/:nome/:ordem', middlew
     const ordem = req.params.ordem
     const uid = req.user.uid
     console.log("ordem: ", ordem)
-    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoNomeAndOrdem(nome, ordem, segmento, uid)
+    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoNomesegmentoAndOrdem(nome, ordem, segmento, uid)
     res.json(fornecedores)
 });
 
@@ -625,7 +631,23 @@ router.get('/getProdutosFromIdFornecedorCombos/:idFornecedor', middleware.decode
 })
 router.post('/addProduto', middleware.decodeToken, async (req, res) => {
     const produto = req.body
-    await produtosService.postProduto(produto)
+    try{
+        await produtosService.postProduto(produto)
+    }catch(e){
+        console.log("erro ao adicionar produto: ",e)
+    }
+    
+    res.json({ error: false, message: "Produto cadastrado com sucesso", data: null })
+});
+router.post('/addProdutoSite', async (req, res) => {
+    const produto = req.body
+    console.log("adicionar produto", produto)
+    try{
+        await produtosService.postProduto(produto)
+    }catch(e){
+        console.log("erro ao adicionar produto: ",e)
+    }
+    
     res.json({ error: false, message: "Produto cadastrado com sucesso", data: null })
 });
 router.get('/deletarProduto/:id', middleware.decodeToken, async (req, res) => {

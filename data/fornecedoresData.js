@@ -11,11 +11,11 @@ exports.getIdByCnpjExport = (cnpj) => {
     return db.query('select pk_id from fornecedor where cnpj= $1', [cnpj])
 }
 exports.getFornecedores = function () {
-    return db.query('select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor limit 5');
+    return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor where status_da_conta = 'ativo' limit 5 ");
 }
 
 exports.getFornecedoresOffset = function (offset) {
-    return db.query('select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor limit 5 offset $1', [offset]);
+    return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor where status_da_conta = 'ativo' limit 5 offset $1 ", [offset]);
 }
 exports.getFornecedoresSemDistancia = function () {
 
@@ -24,6 +24,10 @@ exports.getFornecedoresSemDistancia = function () {
 exports.fornecedoresSemDistanciaPreCadastro = function () {
 
     return db.query("SELECT f.*, p.email, p.nome, p.sobrenome, p.tipo_pessoa  FROM fornecedor f FULL OUTER JOIN pessoa p ON f.fk_fornecedor_pessoa = p.pk_id WHERE status_da_conta = 'Cadastro incompleto site'");
+}
+exports.fornecedoresSemDistanciaPreCadastroComStatus = function (statusConta) {
+
+    return db.query("SELECT f.*, p.email, p.nome, p.sobrenome, p.tipo_pessoa  FROM fornecedor f FULL OUTER JOIN pessoa p ON f.fk_fornecedor_pessoa = p.pk_id WHERE status_da_conta = $1 ORDER BY pk_id", [statusConta]);
 }
 exports.getIdFornecedorByIdFirebase = function (firebaseId) {
     return db.query('select fornecedor.pk_id from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.id_firebase = $1', [firebaseId])

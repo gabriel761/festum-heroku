@@ -4,10 +4,15 @@ const fornecedoresFunctions = require('../funtions/fornecedoresFunctions')
 
 exports.getFornecedores = async function (idCliente) {
 
-    let dataFornecedores = await fornecedoresData.getFornecedores()
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedores()
+        console.log("data fornecedores antes de calcular distancia: ", dataFornecedores)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (e) {
+        console.log(e)
+    }
 
-    return dataFornecedores
 }
 
 exports.getFornecedoresOffset = async function (idCliente, offset) {
@@ -23,6 +28,10 @@ exports.getFornecedoresSemDistancia = async function () {
 }
 exports.fornecedoresSemDistanciaPreCadastro = async function () {
     let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastro()
+    return dataFornecedores
+}
+exports.fornecedoresSemDistanciaPreCadastroComStatus = async function (statusConta) {
+    let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastroComStatus(statusConta)
     return dataFornecedores
 }
 exports.getIdFornecedorByIdFirebase = function (idFirebase) {
@@ -175,11 +184,15 @@ exports.postFornecedores = function (fornecedor, id) {
 
 }
 exports.updateFornecedores = function (fornecedor) {
-    fornecedor.preco = fornecedoresFunctions.tratarPreco(fornecedor.preco)
-    fornecedor.segmentos = fornecedoresFunctions.tratarCategorias(fornecedor.segmentos)
-    fornecedor.categorias = fornecedoresFunctions.tratarCategorias(fornecedor.categorias)
-    fornecedor.subcategorias = fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
-    return fornecedoresData.updateFornecedores(fornecedor);
+    try {
+        fornecedor.preco = fornecedoresFunctions.tratarPreco(fornecedor.preco)
+        fornecedor.segmentos = fornecedoresFunctions.tratarCategorias(fornecedor.segmentos)
+        fornecedor.categorias = fornecedoresFunctions.tratarCategorias(fornecedor.categorias)
+        fornecedor.subcategorias = fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
+        return fornecedoresData.updateFornecedores(fornecedor);
+    } catch (e) {
+        console.log(e)
+    }
 }
 exports.updateFornecedorCompletarCadastro = function (cadastro) {
     return fornecedoresData.updateFornecedorCompletarCadastro(cadastro);
