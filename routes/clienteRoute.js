@@ -608,7 +608,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastro = req.body
     console.log("cadastro fornecedor: ", cadastro)
     if(cadastro.retorno){
-      const resultEmail =  pessoaService.checkIfEmailExists(cadastro.retorno[0].cliente.email)
+      const resultEmail = await  pessoaService.checkIfEmailExists(cadastro.retorno[0].cliente.email)
       console.log("check email exists: ", resultEmail)
     }
     // console.log("cadastro fornecedor: ", cadastro.retorno[0].cliente)
