@@ -1,5 +1,5 @@
 exports.tratarDadosDoFornecedor = function (fornecedorIpag){
-    const fornecedorReturn = {nome: null, sobrenome: null, cpf: null,cnpj: null, email: null, tel: null}
+    const fornecedorReturn = {nome: null, sobrenome: null, cpf: null,cnpj: null, email: null, tel: null, statusPagamento: null, statusConta: "Cadastro incompleto site"}
     if(typeof fornecedorIpag === 'object'){
         fornecedorReturn.nome = fornecedorIpag.nome.substring(0, fornecedorIpag.nome.indexOf(" "))
         fornecedorReturn.sobrenome = fornecedorIpag.nome.substring(fornecedorIpag.nome.indexOf(" ")+ 1, fornecedorIpag.nome.length)
