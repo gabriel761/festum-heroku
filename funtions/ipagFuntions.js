@@ -8,4 +8,5 @@ exports.tratarDadosDoFornecedor = function (fornecedorIpag){
         fornecedorReturn.cpf = fornecedorIpag.cpf_cnpj.length == 14?fornecedorIpag.cpf_cnpj:null
         fornecedorReturn.cnpj = fornecedorIpag.cpf_cnpj.length == 18?fornecedorIpag.cpf_cnpj:null
     }
+    return fornecedorReturn
 }
