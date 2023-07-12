@@ -607,9 +607,10 @@ router.post('/pesquisarFornecedoresVip', async (req, res) => {
 
 router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastro = req.body
-    console.log("cadastro fornecedor: ", cadastro)
+   
     if(cadastro.retorno){
       const resultEmail = await  fornecedoresService.getFornecedorByEmail(cadastro.retorno[0].cliente.email)
+      console.log("resultado do email: ",resultEmail)
       if(resultEmail.length == 0){
         const cadastro2 = ipagFunctions.tratarDadosDoFornecedor(cadastro.retorno[0].cliente)
         cadastro2.statusPagamento = cadastro.retorno[0].mensagem_transacao
