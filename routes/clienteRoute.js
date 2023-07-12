@@ -5,6 +5,7 @@ const fornecedoresService = require('../service/fornecedoresService')
 const pessoaService = require('../service/pessoaService')
 const anuncioService = require('../service/anuncioService')
 const fornecedoresFunctions = require('../funtions/fornecedoresFunctions')
+const ipagFunctions = require('../funtions/ipagFuntions')
 const categoriaService = require('../service/categoriasService')
 const router = express.Router()
 const _ = require('lodash');
@@ -609,26 +610,29 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     console.log("cadastro fornecedor: ", cadastro)
     if(cadastro.retorno){
       const resultEmail = await  pessoaService.checkIfEmailExists(cadastro.retorno[0].cliente.email)
-      console.log("check email exists: ", resultEmail)
+      if(!resultEmail.emailExists){
+        const cadastro2 = ipagFunctions.tratarDadosDoFornecedor(cadastro.retorno[0].cliente)
+        cadastro2.statusPagamento = cadastro.retorno[0].mensagem_transacao
+        console.log("cadastro 2: ",cadastro2)
+        
+        // try {
+        //     const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
+        //     console.log("add fornecedor result pessoa: ", resultPessoa)
+            
+        //         if (!resultPessoa.error) {
+        //             const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
+        //             console.log("sucesso no cadastro do fornecedor")
+        //             res.json(resultFornecedor)
+        //         }else{
+        //             res.json(resultPessoa)
+        //         }
+        //     }catch(e){
+        //         console.log("fornecedor não foi cadastrado: ", e)
+        //         res.json(resultPessoa);
+        //     }
+      }
     }
-    // console.log("cadastro fornecedor: ", cadastro.retorno[0].cliente)
-    // console.log("email fornecedor: ", cadastro.retorno[0].cliente.email)
-   // pessoaService.checkIfEmailExists()
-    // try {
-    // const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
-    // console.log("add fornecedor result pessoa: ", resultPessoa)
     
-    //     if (!resultPessoa.error) {
-    //         const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
-    //         console.log("sucesso no cadastro do fornecedor")
-    //         res.json(resultFornecedor)
-    //     }else{
-    //         res.json(resultPessoa)
-    //     }
-    // }catch(e){
-    //     console.log("fornecedor não foi cadastrado: ", e)
-    //     res.json(resultPessoa);
-    // }
     res.json(cadastro)
 })
 
