@@ -640,7 +640,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
                 res.redirect("https://festum-site.vercel.app/pagamento-confirmado?funcionou")
             }
         }else{
-            //erro: "Existe uma conta com este email, mas os dados não estão coincidindo. Cheque os dados de sua conta no app festum"
+            console.log( "erro: Existe uma conta com este email, mas os dados não estão coincidindo. Cheque os dados de sua conta no app festum")
         }
 
 
