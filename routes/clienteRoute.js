@@ -656,7 +656,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
         res.send("mais de um email cadastrado")
       }
     }else{
-        res.send("eror no redirecionamento")
+        res.json(cadastroIpag)
     }
     
     
