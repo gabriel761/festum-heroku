@@ -633,12 +633,19 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
             }
       }else if(resultEmail.length == 1){
         const fornecedorDB = resultEmail[0]
+        
+        
         if(fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj)){
+            res.send("entrou no mensagem_transação != cancelado: "+ cadastroIpag.retorno[0].mensagem_transacao)
             if(cadastroIpag.retorno[0].mensagem_transacao != "cancelado"){
                 // update do status
+                
                 fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
                 res.redirect("https://festum-site.vercel.app/pagamento-confirmado?funcionou")
+            }else{
+                res.send("o status é cancelado:")
             }
+            
         }else{
             
             res.send( "erro: Existe uma conta com este email, mas os dados não estão coincidindo. Cheque os dados de sua conta no app festum")
@@ -648,9 +655,11 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
       }else{
         res.send("mais de um email cadastrado")
       }
+    }else{
+        res.send("eror no redirecionamento")
     }
     
-   // res.send("eror no redirecionamento")
+    
 })
 
 //rotas produto
