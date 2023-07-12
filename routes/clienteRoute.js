@@ -623,7 +623,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
                 if (!resultPessoa.error) {
                     const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
                     console.log("sucesso no cadastro do fornecedor")
-                    res.redirect("https://festum-site.vercel.app/pagamento-confirmado")
+                    //res.redirect("https://festum-site.vercel.app/pagamento-confirmado")
                 }else{
                     res.json(resultPessoa)
                 }
@@ -636,27 +636,27 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
         
         
         if(fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj)){
-            res.send("entrou no mensagem_transação != cancelado: "+ cadastroIpag.retorno[0].mensagem_transacao)
+            
             if(cadastroIpag.retorno[0].mensagem_transacao != "cancelado"){
                 // update do status
                 
                 fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
-                res.redirect("https://festum-site.vercel.app/pagamento-confirmado?funcionou")
+                //res.redirect("https://festum-site.vercel.app/pagamento-confirmado?funcionou")
             }else{
-                res.send("o status é cancelado:")
+                //res.send("o status é cancelado:")
             }
             
         }else{
             
-            res.send( "erro: Existe uma conta com este email, mas os dados não estão coincidindo. Cheque os dados de sua conta no app festum")
+            //res.send( "erro: Existe uma conta com este email, mas os dados não estão coincidindo. Cheque os dados de sua conta no app festum")
         }
 
 
       }else{
-        res.send("mais de um email cadastrado")
+       // res.send("mais de um email cadastrado")
       }
     }else{
-        res.json(cadastroIpag)
+        res.redirect("https://festum-site.vercel.app/pagamento-confirmado?funcionou")
     }
     
     
