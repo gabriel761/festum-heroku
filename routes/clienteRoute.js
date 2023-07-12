@@ -645,7 +645,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
       }
     }
     
-    res.json(cadastroIpag)
+    res.json(cadastroIpag).redirect("https://festum-site.vercel.app/pagamento-confirmado")
 })
 
 //rotas produto
