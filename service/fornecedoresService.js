@@ -40,6 +40,9 @@ exports.getIdFornecedorByIdFirebase = function (idFirebase) {
 exports.getFornecedorByIdFirebase = function (idFirebase) {
     return fornecedoresData.getFornecedorByIdFirebase(idFirebase)
 }
+exports.getFornecedorByEmail = function (email) {
+    return fornecedoresData.getFornecedorByEmail(email)
+}
 exports.getFornecedorAndPessoaByIdFirebase = function (idFirebase) {
     return fornecedoresData.getFornecedorAndPessoaByIdFirebase(idFirebase)
 }

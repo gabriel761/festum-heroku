@@ -35,6 +35,9 @@ exports.getIdFornecedorByIdFirebase = function (firebaseId) {
 exports.getFornecedorByIdFirebase = function (firebaseId) {
     return db.query('select fornecedor.*  from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.id_firebase = $1', [firebaseId])
 }
+exports.getFornecedorByEmail = function (email) {
+    return db.query('select fornecedor.*  from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.email = $1', [email])
+}
 exports.getFornecedorAndPessoaByIdFirebase = function (firebaseId) {
     return db.query('select *  from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.id_firebase = $1', [firebaseId])
 }

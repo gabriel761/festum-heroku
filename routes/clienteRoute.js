@@ -609,8 +609,8 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastro = req.body
     console.log("cadastro fornecedor: ", cadastro)
     if(cadastro.retorno){
-      const resultEmail = await  pessoaService.checkIfEmailExists(cadastro.retorno[0].cliente.email)
-      if(!resultEmail.emailExists){
+      const resultEmail = await  fornecedoresService.getFornecedorByEmail(cadastro.retorno[0].cliente.email)
+      if(resultEmail.length == 0){
         const cadastro2 = ipagFunctions.tratarDadosDoFornecedor(cadastro.retorno[0].cliente)
         cadastro2.statusPagamento = cadastro.retorno[0].mensagem_transacao
         console.log("cadastro 2: ",cadastro2)
