@@ -551,6 +551,8 @@ router.post('/addFornecedor', async (req, res) => {
             const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
             console.log("sucesso no cadastro do fornecedor")
             res.json(resultFornecedor)
+        }else{
+            res.json(resultPessoa)
         }
     }catch(e){
         console.log("fornecedor não foi cadastrado: ", e)
@@ -600,6 +602,26 @@ router.delete('fornecedores/:id', async (req, res) => {
 router.post('/pesquisarFornecedoresVip', async (req, res) => {
     const result = await fornecedoresService.pesquisarFornecedoresVip(req.body)
     res.json(result)
+})
+
+router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
+    const cadastro = req.body
+    console.log("cadastro fornecedor: ", cadastro)
+    // try {
+    // const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
+    // console.log("add fornecedor result pessoa: ", resultPessoa)
+    
+    //     if (!resultPessoa.error) {
+    //         const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
+    //         console.log("sucesso no cadastro do fornecedor")
+    //         res.json(resultFornecedor)
+    //     }else{
+    //         res.json(resultPessoa)
+    //     }
+    // }catch(e){
+    //     console.log("fornecedor não foi cadastrado: ", e)
+    //     res.json(resultPessoa);
+    // }
 })
 
 //rotas produto
