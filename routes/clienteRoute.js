@@ -645,7 +645,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
       }
     }
     
-    res.json(cadastro)
+    res.json(cadastroIpag)
 })
 
 //rotas produto
