@@ -623,13 +623,13 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
                 if (!resultPessoa.error) {
                     const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
                     console.log("sucesso no cadastro do fornecedor")
-                    res.json(resultFornecedor)
+                    res.redirect("https://festum-site.vercel.app/pagamento-confirmado")
                 }else{
                     res.json(resultPessoa)
                 }
             }catch(e){
                 console.log("fornecedor não foi cadastrado: ", e)
-                res.json(resultPessoa);
+                res.json(e);
             }
       }else if(resultEmail.length == 1){
         const fornecedorDB = resultEmail[0]
