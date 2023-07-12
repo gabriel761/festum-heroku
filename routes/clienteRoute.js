@@ -606,31 +606,42 @@ router.post('/pesquisarFornecedoresVip', async (req, res) => {
 })
 
 router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
-    const cadastro = req.body
+    const cadastroIpag = req.body
    
-    if(cadastro.retorno){
-      const resultEmail = await  fornecedoresService.getFornecedorByEmail(cadastro.retorno[0].cliente.email)
+    if(cadastroIpag.retorno ){
+      const resultEmail = await  fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
       console.log("resultado do email: ",resultEmail)
       if(resultEmail.length == 0){
-        const cadastro2 = ipagFunctions.tratarDadosDoFornecedor(cadastro.retorno[0].cliente)
-        cadastro2.statusPagamento = cadastro.retorno[0].mensagem_transacao
-        console.log("cadastro 2: ",cadastro2)
+        const cadastro = ipagFunctions.tratarDadosDoFornecedor(cadastroIpag.retorno[0].cliente)
+        cadastro.statusPagamento = cadastroIpag.retorno[0].mensagem_transacao
+        console.log("cadastro 2: ",cadastro)
         
-        // try {
-        //     const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
-        //     console.log("add fornecedor result pessoa: ", resultPessoa)
+        try {
+            const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
+            console.log("add fornecedor result pessoa: ", resultPessoa)
             
-        //         if (!resultPessoa.error) {
-        //             const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
-        //             console.log("sucesso no cadastro do fornecedor")
-        //             res.json(resultFornecedor)
-        //         }else{
-        //             res.json(resultPessoa)
-        //         }
-        //     }catch(e){
-        //         console.log("fornecedor não foi cadastrado: ", e)
-        //         res.json(resultPessoa);
-        //     }
+                if (!resultPessoa.error) {
+                    const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
+                    console.log("sucesso no cadastro do fornecedor")
+                    res.json(resultFornecedor)
+                }else{
+                    res.json(resultPessoa)
+                }
+            }catch(e){
+                console.log("fornecedor não foi cadastrado: ", e)
+                res.json(resultPessoa);
+            }
+      }else if(resultEmail.length == 1){
+        const fornecedorDB = resultEmail[0]
+        if(fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj)){
+            if(cadastroIpag.retorno[0].mensagem_transacao != "cancelado"){
+                // update do status
+            }
+        }else{
+            //erro: "Existe uma conta com este email, mas os dados não estão coincidindo. Cheque os dados de sua conta no app festum"
+        }
+
+
       }
     }
     
