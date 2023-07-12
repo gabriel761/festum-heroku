@@ -622,6 +622,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     //     console.log("fornecedor não foi cadastrado: ", e)
     //     res.json(resultPessoa);
     // }
+    res.json(cadastro)
 })
 
 //rotas produto
