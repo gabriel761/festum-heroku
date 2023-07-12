@@ -606,8 +606,9 @@ router.post('/pesquisarFornecedoresVip', async (req, res) => {
 
 router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastro = req.body
-    console.log("cadastro fornecedor: ", cadastro.retorno[0].cliente)
-    console.log("email fornecedor: ", cadastro.retorno[0].cliente.email)
+    console.log("cadastro fornecedor: ", cadastro)
+    // console.log("cadastro fornecedor: ", cadastro.retorno[0].cliente)
+    // console.log("email fornecedor: ", cadastro.retorno[0].cliente.email)
    // pessoaService.checkIfEmailExists()
     // try {
     // const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
