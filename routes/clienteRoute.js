@@ -645,6 +645,8 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
         }
 
 
+      }else{
+        res.send("mais de um email cadastrado")
       }
     }
     
