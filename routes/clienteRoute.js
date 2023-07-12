@@ -648,7 +648,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
       }
     }
     
-    res.send("eror no redirecionamento")
+   // res.send("eror no redirecionamento")
 })
 
 //rotas produto
