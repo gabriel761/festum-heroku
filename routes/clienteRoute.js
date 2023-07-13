@@ -643,7 +643,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
                 fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
                 res.redirect("https://festum-site.vercel.app/pagamento-confirmado?funcionou")
             }else{
-                //res.send("o status é cancelado:")
+                res.send("o status é cancelado:")
             }
             
         }else{
