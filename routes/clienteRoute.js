@@ -623,13 +623,13 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
                 if (!resultPessoa.error) {
                     const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
                     console.log("sucesso no cadastro do fornecedor")
-                    res.redirect("https://festum-site.vercel.app/pagamento-confirmado")
+                   // res.redirect("https://festum-site.vercel.app/pagamento-confirmado")
                 }else{
-                    res.json(resultPessoa)
+                    //res.json(resultPessoa)
                 }
             }catch(e){
                 console.log("fornecedor não foi cadastrado: ", e)
-                res.json(e);
+                //res.json(e);
             }
       }else if(resultEmail.length == 1){
         const fornecedorDB = resultEmail[0]
@@ -641,20 +641,22 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
                 // update do status
                 
                 fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
-                res.redirect("https://festum-site.vercel.app/pagamento-confirmado?funcionou")
+                //res.redirect("https://festum-site.vercel.app/pagamento-confirmado?funcionou")
             }else{
-                res.send("o status é cancelado:")
+               // res.send("o status é cancelado:")
             }
             
         }else{
             
-            res.send( "erro: Existe uma conta com este email, mas os dados não estão coincidindo. Cheque os dados de sua conta no app festum")
+            //res.send( "erro: Existe uma conta com este email, mas os dados não estão coincidindo. Cheque os dados de sua conta no app festum")
         }
 
 
       }else{
        // res.send("mais de um email cadastrado")
       }
+    }else{
+        res.redirect("https://festum-site.vercel.app/pagamento-confirmado?funcionou")
     }
     
     
