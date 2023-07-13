@@ -27,7 +27,7 @@ exports.fornecedoresSemDistanciaPreCadastro = function () {
 }
 exports.fornecedoresSemDistanciaPreCadastroComStatus = function (statusConta) {
 
-    return db.query("SELECT f.*, p.email, p.nome, p.sobrenome, p.tipo_pessoa  FROM fornecedor f FULL OUTER JOIN pessoa p ON f.fk_fornecedor_pessoa = p.pk_id WHERE status_da_conta = $1 ORDER BY pk_id", [statusConta]);
+    return db.query("SELECT f.*, p.email, p.nome, p.sobrenome, p.tipo_pessoa  FROM fornecedor f FULL OUTER JOIN pessoa p ON f.fk_fornecedor_pessoa = p.pk_id WHERE status_da_conta = $1 ORDER BY pk_id DESC LIMIT 50", [statusConta]);
 }
 exports.getIdFornecedorByIdFirebase = function (firebaseId) {
     return db.query('select fornecedor.pk_id from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.id_firebase = $1', [firebaseId])

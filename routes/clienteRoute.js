@@ -608,6 +608,12 @@ router.post('/pesquisarFornecedoresVip', async (req, res) => {
     res.json(result)
 })
 
+router.get("/getFornecedorByEmail/:email", async (req, res) => {
+    const email = req.params.email
+    const fornecedor = await fornecedoresService.getFornecedorByEmail(email);
+    res.json(fornecedor)
+})
+
 router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastroIpag = req.body
    
