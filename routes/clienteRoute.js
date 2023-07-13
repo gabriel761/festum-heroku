@@ -218,8 +218,11 @@ router.get('/updateEmail/:email', middleware.decodeToken, async (req, res) => {
     res.json("update e-mail");
 })
 router.get('/updateFirebaseId/:uid/:email', async (req, res) => {
+    
     const idFirebase = req.params.uid
     const email = req.params.email
+    console.log("update firebase id: ", idFirebase)
+    console.log("update firebase id: ", email)
     const result = await pessoaService.updateFirebaseId(idFirebase, email);
     res.json("update firebase id")
 })
@@ -623,7 +626,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
                 if (!resultPessoa.error) {
                     const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
                     console.log("sucesso no cadastro do fornecedor")
-                   // res.redirect("https://festum-site.vercel.app/pagamento-confirmado")
+                   // res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
                 }else{
                     //res.json(resultPessoa)
                 }
@@ -641,7 +644,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
                 // update do status
                 
                 fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
-                //res.redirect("https://festum-site.vercel.app/pagamento-confirmado?funcionou")
+                //res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
             }else{
                // res.send("o status é cancelado:")
             }
@@ -656,7 +659,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
        // res.send("mais de um email cadastrado")
       }
     }else{
-        res.json(cadastroIpag)
+        res.redirect('https://festum-site.vercel.app/form-precadastro-firebase')
     }
     
     
