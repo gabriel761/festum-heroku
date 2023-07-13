@@ -656,7 +656,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
        // res.send("mais de um email cadastrado")
       }
     }else{
-        res.redirect("https://festum-site.vercel.app/pagamento-confirmado?funcionou")
+        res.json(cadastroIpag)
     }
     
     
