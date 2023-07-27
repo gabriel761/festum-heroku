@@ -342,6 +342,17 @@ router.get('/fornecedoresSemDistanciaPreCadastroComStatus/:statusConta', async (
     const fornecedores = await fornecedoresService.fornecedoresSemDistanciaPreCadastroComStatus(statusConta)
     res.json(fornecedores)
 });
+router.get('/fornecedoresSemDistanciaPreCadastroComStatusEPlano/:statusConta/:plano', async (req, res) => {
+    const statusConta = req.params.statusConta
+    const plano = req.params.plano
+    const fornecedores = await fornecedoresService.fornecedoresSemDistanciaPreCadastroComStatusEPlano(statusConta, plano)
+    res.json(fornecedores)
+});
+router.get('/fornecedoresSemDistanciaPreCadastroComPlano/:plano', async (req, res) => {
+    const plano = req.params.plano
+    const fornecedores = await fornecedoresService.fornecedoresSemDistanciaPreCadastroComPlano(plano)
+    res.json(fornecedores)
+});
 router.get('/getIdFornecedorByIdFirebase', middleware.decodeToken, async (req, res) => {
     console.log(req.headers.authorization)
     const idFirebase = req.user.uid

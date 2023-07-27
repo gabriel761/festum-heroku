@@ -29,6 +29,14 @@ exports.fornecedoresSemDistanciaPreCadastroComStatus = function (statusConta) {
 
     return db.query("SELECT f.*, p.email, p.nome, p.sobrenome, p.tipo_pessoa  FROM fornecedor f FULL OUTER JOIN pessoa p ON f.fk_fornecedor_pessoa = p.pk_id WHERE status_da_conta = $1 ORDER BY pk_id DESC LIMIT 50", [statusConta]);
 }
+exports.fornecedoresSemDistanciaPreCadastroComStatusEPlano = function (statusConta, plano) {
+
+    return db.query("SELECT f.*, p.email, p.nome, p.sobrenome, p.tipo_pessoa  FROM fornecedor f FULL OUTER JOIN pessoa p ON f.fk_fornecedor_pessoa = p.pk_id WHERE status_da_conta = $1 and planos = $2 ORDER BY pk_id DESC LIMIT 50", [statusConta, plano]);
+}
+exports.fornecedoresSemDistanciaPreCadastroComPlano = function ( plano) {
+
+    return db.query("SELECT f.*, p.email, p.nome, p.sobrenome, p.tipo_pessoa  FROM fornecedor f FULL OUTER JOIN pessoa p ON f.fk_fornecedor_pessoa = p.pk_id WHERE planos = $1 ORDER BY pk_id DESC LIMIT 50", [plano]);
+}
 exports.getIdFornecedorByIdFirebase = function (firebaseId) {
     return db.query('select fornecedor.pk_id from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.id_firebase = $1', [firebaseId])
 }
@@ -150,7 +158,7 @@ exports.postFornecedores = async function (fornecedor, idPessoa) {
     //if(id.length == 0){
     try {
         console.log("ultimo log antes do query")
-        result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, instagramLink, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao, cpf, sugest_subcategoria, galeria, dados_de_interesse, foto_de_fundo, formas_de_pagamento, descricao, cep, numero, complemento, status_da_conta, status_pagamento) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco, false, true, idPessoa, false, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja, fornecedor.cep, fornecedor.numero, fornecedor.complemento, fornecedor.statusConta, fornecedor.statusPagamento])
+        result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, instagramLink, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao, cpf, sugest_subcategoria, galeria, dados_de_interesse, foto_de_fundo, formas_de_pagamento, descricao, cep, numero, complemento, status_da_conta, status_pagamento, planos) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco, false, true, idPessoa, false, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja, fornecedor.cep, fornecedor.numero, fornecedor.complemento, fornecedor.statusConta, fornecedor.statusPagamento, fornecedor.plano])
         return { error: false, message: "Fornecedor cadastrado com sucesso", data: null }
 
 
