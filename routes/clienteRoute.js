@@ -657,7 +657,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
         
         if(fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj)){
             
-            if(cadastroIpag.retorno[0].mensagem_transacao != "cancelado"){
+            if(cadastroIpag.retorno[0].mensagem_transacao != "cancelado" || "CANCELED"){
                 // update do status
                 
                 fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
