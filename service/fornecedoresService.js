@@ -177,17 +177,20 @@ exports.getFornecedoresBySegmentoAndNome = async function (nome, segmento, idCli
 exports.getFornecedoresVip = function () {
     return fornecedoresData.getFornecedoresVip()
 }
-exports.postFornecedores = function (fornecedor, id) {
+exports.postFornecedores = async function (fornecedor, id) {
     try {
         if (fornecedor.preco)
-            fornecedor.preco = fornecedoresFunctions.tratarPreco(fornecedor.preco)
-        if (fornecedor.segmento)
-            fornecedor.segmentos = fornecedoresFunctions.tratarCategorias(fornecedor.segmentos)
+            fornecedor.preco = await fornecedoresFunctions.tratarPreco(fornecedor.preco)
+        if (fornecedor.segmentos)
+            fornecedor.segmentos = await fornecedoresFunctions.tratarCategorias(fornecedor.segmentos)
         if (fornecedor.categorias)
-            fornecedor.categorias = fornecedoresFunctions.tratarCategorias(fornecedor.categorias)
+            fornecedor.categorias = await fornecedoresFunctions.tratarCategorias(fornecedor.categorias)
         if (fornecedor.subcategorias) {
-            fornecedor.subcategorias = fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
+            fornecedor.subcategorias = await fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
         }
+        console.log("segmento antes de cadastrar: ", fornecedor.segmentos)
+        console.log("categorias antes de cadastrar: ", fornecedor.categorias)
+        console.log("subcategorias antes de cadastrar: ", fornecedor.subcategorias)
         return fornecedoresData.postFornecedores(fornecedor, id);
     } catch (error) {
         throw error
