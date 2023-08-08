@@ -1,4 +1,5 @@
 const fornecedoresData = require('../data/fornecedoresData')
+const pessoaService = require('../service/pessoaService')
 const fornecedoresFunctions = require('../funtions/fornecedoresFunctions')
 
 
@@ -208,8 +209,20 @@ exports.updateFornecedores = function (fornecedor) {
         console.log(e)
     }
 }
+exports.updateFornecedoresNebulosa = async function (fornecedor) {
+    try {
+        fornecedor.preco = fornecedoresFunctions.tratarPreco(fornecedor.preco)
+        fornecedor.segmentos = fornecedoresFunctions.tratarCategorias(fornecedor.segmentos)
+        fornecedor.categorias = fornecedoresFunctions.tratarCategorias(fornecedor.categorias)
+        fornecedor.subcategorias = fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
+        await pessoaService.updateEmailNebulosa(fornecedor.email, fornecedor.idPessoa)
+        return fornecedoresData.updateFornecedores(fornecedor);
+    } catch (e) {
+        console.log(e)
+    }
+}
 exports.updateFornecedorCompletarCadastro = function (cadastro) {
-    return fornecedoresData.updateFornecedorCompletarCadastro(cadastro);
+    return fornecedoresData.updateFornecedorCompletarCadastro(cadastro)
 }
 exports.updateStatusPagamentoFornecedor = function (statusPagamento, fk_id) {
     return fornecedoresData.updateStatusPagamentoFornecedor(statusPagamento, fk_id)

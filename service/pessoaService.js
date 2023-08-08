@@ -40,6 +40,9 @@ exports.checkIfEmailExists = function (pessoa) {
 exports.updateEmail = function (email, idFirebase) {
     return pessoaData.updateEmail(email, idFirebase)
 }
+exports.updateEmailNebulosa = function (email, id) {
+    return pessoaData.updateEmailNebulosa(email, id)
+}
 exports.updateFirebaseId = function (idFirebase, email) {
     return pessoaData.updateFirebaseId(idFirebase, email)
 }

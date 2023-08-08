@@ -48,6 +48,11 @@ exports.getPessoas = function () {
     console.log("id firebase: ", idFirebase);
     return db.query('update pessoa set email = $1 where id_firebase = $2',[email, idFirebase])
  }
+  exports.updateEmailNebulosa = function (email, id) {
+    console.log("email: ", email)
+    console.log("id firebase: ", id);
+    return db.query('update pessoa set email = $1 where pk_id = $2',[email, id])
+ }
  exports.updateFirebaseId = function (idFirebase, email) {
     console.log("id firebase: ", idFirebase, email);
     return db.query('update pessoa set id_firebase = $1 where email = $2 ',[ idFirebase, email])

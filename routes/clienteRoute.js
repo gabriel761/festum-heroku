@@ -576,8 +576,15 @@ router.post('/addFornecedor', async (req, res) => {
 });
 router.post('/updateFornecedor', async (req, res) => {
     const cadastro = req.body
-    console.log("cadastro update fornecedor: ", cadastro)
+    console.log("update fornecedor: ", cadastro)
     const resultFornecedor = await fornecedoresService.updateFornecedores(cadastro);
+    res.json(resultFornecedor)
+
+});
+router.post('/updateFornecedorNebulosa', async (req, res) => {
+    const cadastro = req.body
+    console.log("update fornecedor: ", cadastro)
+    const resultFornecedor = await fornecedoresService.updateFornecedoresNebulosa(cadastro);
     res.json(resultFornecedor)
 
 });
@@ -699,6 +706,11 @@ router.get('/getProdutosFromIdFornecedor/:idFornecedor', middleware.decodeToken,
     const produtos = await produtosService.getProdutosFromIdFornecedor(idFornecedor)
     res.json(produtos)
 })
+router.get('/getProdutosFromIdFornecedorSite/:idFornecedor', async (req, res) => {
+    const idFornecedor = req.params.idFornecedor
+    const produtos = await produtosService.getProdutosFromIdFornecedor(idFornecedor)
+    res.json(produtos)
+})
 router.get('/getProdutosFromIdFornecedorProdutos/:idFornecedor', middleware.decodeToken, async (req, res) => {
     const idFornecedor = req.params.idFornecedor
     const produtos = await produtosService.getProdutosFromIdFornecedorProdutos(idFornecedor)
@@ -735,7 +747,17 @@ router.get('/deletarProduto/:id', middleware.decodeToken, async (req, res) => {
     await produtosService.deleteProduto(id)
     res.json({ error: false, message: "Produto excluído com sucesso", data: null })
 });
+router.get('/deletarProdutoSite/:id', async (req, res) => {
+    const id = req.params.id
+    await produtosService.deleteProduto(id)
+    res.json({ error: false, message: "Produto excluído com sucesso", data: null })
+});
 router.post('/updateProduto', middleware.decodeToken, async (req, res) => {
+    const produto = req.body
+    const newProduto = await produtosService.updateProduto(produto)
+    res.json({ error: false, message: "Produto editado com sucesso", data: newProduto })
+});
+router.post('/updateProdutoSite', async (req, res) => {
     const produto = req.body
     const newProduto = await produtosService.updateProduto(produto)
     res.json({ error: false, message: "Produto editado com sucesso", data: newProduto })
