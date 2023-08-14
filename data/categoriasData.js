@@ -11,7 +11,7 @@ exports.getCategorias = function () {
 }
 exports.getSubCategorias = function () {
     console.log("entrou no subcategoria")
-    return db.query('select * from subcategoria order by pk_id');
+    return db.query('select nome, imagem from subcategoria order by pk_id');
 }
 exports.getSubcategoriaByFkId = function (query, fks) {
     console.log("entrou no segmento")

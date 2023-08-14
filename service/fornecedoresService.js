@@ -15,6 +15,18 @@ exports.getFornecedores = async function (idCliente) {
     }
 
 }
+exports.getFornecedoresDestaque = async function (idCliente) {
+
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresDestaque()
+        console.log("data fornecedores antes de calcular distancia: ", dataFornecedores)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (e) {
+        console.log(e)
+    }
+
+}
 
 exports.getFornecedoresOffset = async function (idCliente, offset) {
 

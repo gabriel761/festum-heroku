@@ -5,6 +5,7 @@ const fornecedoresService = require('../service/fornecedoresService')
 const pessoaService = require('../service/pessoaService')
 const anuncioService = require('../service/anuncioService')
 const fornecedoresFunctions = require('../funtions/fornecedoresFunctions')
+const categoriasFunctions = require('../funtions/categoriasFunctions')
 const ipagFunctions = require('../funtions/ipagFuntions')
 const categoriaService = require('../service/categoriasService')
 const router = express.Router()
@@ -321,6 +322,14 @@ router.get('/fornecedores', middleware.decodeToken, async (req, res) => {
     const idCliente = req.user.uid
     console.log("id cliente get fornecedores: ", idCliente)
     const fornecedores = await fornecedoresService.getFornecedores(idCliente)
+    res.json(fornecedores)
+});
+router.get('/fornecedoresDestaque', middleware.decodeToken, async (req, res) => {
+
+    const token = req.headers.authorization
+    const idCliente = req.user.uid
+    console.log("id cliente get fornecedores: ", idCliente)
+    const fornecedores = await fornecedoresService.getFornecedoresDestaque(idCliente)
     res.json(fornecedores)
 });
 // router.get('/fornecedores', async (req, res) => {
@@ -777,6 +786,16 @@ router.get("/deleteEverythingFornecedor/:id/:idPessoa", middleware.decodeToken, 
     const id = req.params.id
     const idPessoa = req.params.idPessoa
     fornecedoresService.deleteEverythingFornecedor(id, idPessoa)
+    console.log("deu bom")
+    res.json({ message: "deu bom" })
+})
+router.get("/deleteEverythingFornecedorSite/:id/:idPessoa", async (req, res) => {
+    const id = req.params.id
+    const idPessoa = req.params.idPessoa
+    console.log("id fornecedor:", id)
+    console.log("id pessoa: ", idPessoa)
+     await fornecedoresService.deleteEverythingFornecedor(id, idPessoa)
+    console.log("deu bom")
     res.json({ message: "deu bom" })
 })
 
@@ -826,6 +845,9 @@ router.get('/categorias', async (req, res) => {
 })
 router.get('/subcategorias', async (req, res) => {
     const result = await categoriaService.getSubcategorias();
+    const resultTratado = categoriasFunctions.criarStringObjetoImagensSubcategorias(result)
+    console.log("restultado tratado: ", resultTratado)
+   // res.json(result)
     res.json(result)
 })
 router.get('/subcategoriasByFkId/:fk_id', async (req, res) => {

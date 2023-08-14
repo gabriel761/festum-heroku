@@ -11,11 +11,14 @@ exports.getIdByCnpjExport = (cnpj) => {
     return db.query('select pk_id from fornecedor where cnpj= $1', [cnpj])
 }
 exports.getFornecedores = function () {
-    return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor where status_da_conta = 'ativo' or status_da_conta = 'conta gratuita' limit 5 ");
+    return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor where status_da_conta = 'ativo' or status_da_conta = 'conta gratuita' limit 20 ");
+}
+exports.getFornecedoresDestaque = function () {
+    return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor where status_da_conta = 'ativo' limit 20 ");
 }
 
 exports.getFornecedoresOffset = function (offset) {
-    return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor where status_da_conta = 'ativo' or status_da_conta = 'conta gratuita' limit 5 offset $1 ", [offset]);
+    return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor where status_da_conta = 'ativo' or status_da_conta = 'conta gratuita' limit 20 offset $1 ", [offset]);
 }
 exports.getFornecedoresSemDistancia = function () {
 
@@ -70,7 +73,7 @@ exports.getFornecedoresByCategoriaOrdemOffset = function (categoria, ordem, offs
     console.log("categoria: ", categoria)
     console.log("ordem: ", ordem)
     console.log("offset: ", offset)
-    return db.query(`select * from fornecedor where categoria like $1 order by ${ordem} offset $2 limit 5`, ["%" + categoria + "%", offset])
+    return db.query(`select * from fornecedor where categoria like $1 order by ${ordem} offset $2 limit 20`, ["%" + categoria + "%", offset])
 }
 exports.getFornecedoresBySubCategoria = function (subCategoria) {
 
@@ -99,7 +102,7 @@ exports.getFornecedoresByOrdem = function (ordem) {
 exports.getFornecedoresByOrdemOffset = function (ordem, offset) {
     console.log("Ordem: ", ordem)
     console.log("offset: ", offset)
-    return db.query(`select * from fornecedor order by ${ordem} asc offset $1 limit 5`, [offset])
+    return db.query(`select * from fornecedor order by ${ordem} asc offset $1 limit 20`, [offset])
 }
 exports.getFornecedoresByNome = function (nome) {
 
@@ -119,12 +122,12 @@ exports.getFornecedoresByNomeFiltro = function (nome, filtro, tipoFiltro) {
 exports.getFornecedoresByFiltroOffset = function (filtro, tipoFiltro, offset) {
     console.log("filtro", filtro)
     console.log("tipo filtro", tipoFiltro)
-    return db.query(`select * from fornecedor where ${tipoFiltro} ilike '%${filtro}%' offset ${offset} limit 5`)
+    return db.query(`select * from fornecedor where ${tipoFiltro} ilike '%${filtro}%' offset ${offset} limit 20`)
 }
 exports.getFornecedoresByFiltroCategoriaOffset = function (filtro, tipoFiltro, categoria, offset) {
     console.log("filtro", filtro)
     console.log("tipo filtro", tipoFiltro)
-    return db.query(`select * from fornecedor where categoria ilike '%${categoria}%' and ${tipoFiltro} ilike '%${filtro}%' offset ${offset} limit 5`)
+    return db.query(`select * from fornecedor where categoria ilike '%${categoria}%' and ${tipoFiltro} ilike '%${filtro}%' offset ${offset} limit 20`)
 }
 exports.getFornecedoresByNomeCategoriaAndSegmento = function (nome, categoria, segmento) {
 
@@ -212,8 +215,13 @@ exports.getFornecedorByIdPessoa = function (id) {
     return db.query('select fornecedor.*, pessoa.email from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where fornecedor.fk_fornecedor_pessoa=$1', id);
 }
 exports.deleteEverythingFornecedor = async function (id, idPessoa) {
+   
+    try {
     await db.query('delete from anuncio where fk_anuncio_fornecedor = $1', [id])
     await db.query('delete from produto where fk_produto_fornecedor = $1', [id])
     await db.query('delete from fornecedor where fk_fornecedor_pessoa = $1', [idPessoa])
     await db.query('delete from pessoa where pk_id = $1', [idPessoa]);
+    }catch(e){
+        console.log(e)
+    }
 }
