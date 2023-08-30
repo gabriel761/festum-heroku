@@ -6,12 +6,12 @@ exports.getProdutos = function () {
     return produtosData.getProdutos()
 }
 exports.postProduto = async function (produto) {
-try {
-     produto.precoOriginal = await fornecedoresFunctions.tratarPreco(produto.precoOriginal)
-     console.log("preco final", produto.precoFinal)
-     produto.precoFinal = await fornecedoresFunctions.tratarPreco(produto.precoFinal)
-    return produtosData.postProduto(produto);
-} catch (error) {
+    try {
+        produto.precoOriginal = await fornecedoresFunctions.tratarPreco(produto.precoOriginal)
+        console.log("preco final", produto.precoFinal)
+        produto.precoFinal = await fornecedoresFunctions.tratarPreco(produto.precoFinal)
+        return produtosData.postProduto(produto);
+    } catch (error) {
         throw error;
     }
 
@@ -24,7 +24,7 @@ exports.updateProduto = async function (produto) {
     produto.precoOriginal = await fornecedoresFunctions.tratarPreco(produto.precoOriginal)
     console.log("preco final", produto.precoFinal)
     produto.precoFinal = await fornecedoresFunctions.tratarPreco(produto.precoFinal)
-   return produtosData.updateProduto(produto);
+    return produtosData.updateProduto(produto);
 }
 
 exports.getProdutosFromIdFornecedor = function (idFornecedor) {

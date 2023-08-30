@@ -17,10 +17,10 @@ exports.getIdByEmailExport = async function (email) {
     
  }
  exports.loginPessoa = function (pessoa) {
-try{
+    try{
     console.log("pessoa login: ", pessoa)
     return db.query("select * from pessoa where id_firebase = $1 and email = $2", [pessoa.firebaseId, pessoa.email])
-}catch(e){
+    }catch(e){
         console.log(e)
     }
  }
@@ -48,7 +48,7 @@ exports.getPessoas = function () {
     console.log("id firebase: ", idFirebase);
     return db.query('update pessoa set email = $1 where id_firebase = $2',[email, idFirebase])
  }
-exports.updateEmailNebulosa = function (email, id) {
+  exports.updateEmailNebulosa = function (email, id) {
     console.log("email: ", email)
     console.log("id firebase: ", id);
     return db.query('update pessoa set email = $1 where pk_id = $2',[email, id])

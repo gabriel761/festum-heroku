@@ -7,8 +7,8 @@ try {
     return pessoaData.postPessoa(nome, sobrenome, email, senha, /*idFirebase,*/ tipoPessoa)
 } catch (error) {
     throw error
-}   
-
+}
+    
 }
 
 exports.getPessoas = function () {
@@ -29,9 +29,9 @@ exports.loginPessoa = async function (pessoa) {
     } else if (tipoPessoa == "fornecedor") {
         return fornecedoresData.loginFornecedor(pessoa)
     } else if (tipoPessoa == "admin") {
-       return result[0]
+        return result[0]
     } else {
-        return { error: true, message: "Login ou senha incorreta", data: null } 
+        return { error: true, message: "Login ou senha incorreta", data: null }
     }
 }
 exports.checkIfEmailExists = function (pessoa) {

@@ -585,7 +585,7 @@ router.get('/fornecedoresBySubCategoriaAndSegmentoOrdemOffset/:subCategoria/:seg
         res.status(500).send(error.message)
     }
 });
-router.get('/fornecedoresBySubCategoriaAndSegmentoFiltro/:subCategoria/:segmento/:tipoFiltro/:filtro', async (req, res) => {
+router.get('/fornecedoresBySubCategoriaAndSegmentoFiltro/:subCategoria/:segmento/:tipoFiltro/:filtro', middleware.decodeToken, async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
         const segmento = req.params.segmento
@@ -626,12 +626,17 @@ router.get('/fornecedoresBySegmentoAndCategoria/:segmento/:categoria', middlewar
     res.json(fornecedores)
 });
 router.get('/fornecedoresBySegmentoAndCategoriaOffset/:segmento/:categoria/:offset', middleware.decodeToken, async (req, res) => {
-    const segmento = req.params.segmento
-    const categoria = req.params.categoria
-    const offset = req.params.offset
-    const uid = req.user.uid
-    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndCategoriaOffset(segmento, categoria, uid, offset)
-    res.json(fornecedores)
+    try {
+        const segmento = req.params.segmento
+        const categoria = req.params.categoria
+        const offset = req.params.offset
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndCategoriaOffset(segmento, categoria, uid, offset)
+        res.json(fornecedores) 
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+    
 });
 router.get('/fornecedoresDestaqueBySegmentoAndCategoria/:segmento/:categoria', middleware.decodeToken, async (req, res) => {
     const segmento = req.params.segmento
@@ -863,7 +868,6 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastroIpag = req.body
 
     if (cadastroIpag.retorno) {
-        // primeiro pagamento no banco de dados
         const resultEmail = await fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
         console.log("resultado do email: ", resultEmail)
         if (resultEmail.length == 0) {
@@ -898,7 +902,6 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
                     fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
                     //res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
                 } else {
-                    // atualizar banco de dados para primiero pagamento ==  falso
                     // res.send("o status é cancelado:")
                 }
 
