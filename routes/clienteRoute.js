@@ -863,6 +863,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastroIpag = req.body
 
     if (cadastroIpag.retorno) {
+        // primeiro pagamento no banco de dados
         const resultEmail = await fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
         console.log("resultado do email: ", resultEmail)
         if (resultEmail.length == 0) {
@@ -897,6 +898,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
                     fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
                     //res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
                 } else {
+                    // atualizar banco de dados para primiero pagamento ==  falso
                     // res.send("o status é cancelado:")
                 }
 

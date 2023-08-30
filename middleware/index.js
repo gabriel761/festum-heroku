@@ -2,12 +2,12 @@ const admin = require('../infra/firebase-config')
 class MiddleWare {
     async decodeToken(req, res, next) {
         let token = req.headers.authorization
-
+        
         if (token) {
-            token = req.headers.authorization.split(' ')[1]
+             token = req.headers.authorization.split(' ')[1]
             try {
                 const decodeValue = await admin.auth().verifyIdToken(token);
-
+                
                 if (decodeValue) {
                     req.user = decodeValue
                     return next()
@@ -20,7 +20,7 @@ class MiddleWare {
             return res.json({ error: true, message: "não autorizado" })
         }
 
-    }
+}
     async corsSetup(req, res, next){
           // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');

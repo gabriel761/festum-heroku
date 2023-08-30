@@ -5,8 +5,8 @@ exports.tratarPreco = (preco) => {
         return preco
     }
     let newPreco = preco.replace(".", "")
-    newPreco = newPreco.replace(",", ".")
-    newPreco = newPreco.replace("R$", "")
+     newPreco = newPreco.replace(",", ".")
+     newPreco = newPreco.replace("R$", "")
     console.log(newPreco)
     //newPreco = newPreco.substr(2)
     console.log(newPreco)
@@ -19,22 +19,22 @@ exports.calcularDistancia = async (data, idCliente) => {
 
     try {
         localizacaoCliente = JSON.parse(localizacaoCliente[0].localizacao)
-
-        let newData = data.map((item) => {
-            try {
-                let distancia = geolib.getPreciseDistance(JSON.parse(item.localizacao), localizacaoCliente)
-                item = { ...item, distancia: (distancia / 1000).toFixed(1) }
+        
+    let newData = data.map((item) => {
+try {
+        let distancia = geolib.getPreciseDistance(JSON.parse(item.localizacao), localizacaoCliente)
+        item = { ...item, distancia: (distancia / 1000).toFixed(1) }
                 console.log("distancia: ", item.distancia)
                 return item
             } catch (e) {
                 item = { ...item, distancia: "Sem distância" }
-                console.log("distancia: ", item.distancia)
-                return item
-            }
+        console.log("distancia: ", item.distancia)
+        return item
+}
 
-        })
-        return newData
-    } catch (e) {
+    })
+   return newData 
+} catch (e) {
         return
     }
 
@@ -53,7 +53,7 @@ exports.tratarCategorias = (arr) => {
             string = item.nome
         } else {
             string = string + ", " + item.nome
-        }
+        }  
     });
     return string
 }

@@ -5,13 +5,13 @@ exports.getProdutos = function () {
     return db.query('select * from produto');
 }
 exports.postProduto = function (produto) {
-    try {
+try {
         return db.query('insert into produto (nome, descricao, imagem, preco_original, preco_final, fk_produto_fornecedor, status, tipo_produto) values($1,$2,$3,$4,$5, $6,$7, $8)', [produto.nome, produto.descricao, produto.imagem, produto.precoOriginal, produto.precoFinal, produto.idFornecedor, produto.status, produto.tipoProduto])
     } catch (error) {
         throw error
     }
     
-}
+    }
 
 exports.updateProduto = async function (produto) {
     console.log("update produto",produto)
