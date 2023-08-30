@@ -219,7 +219,7 @@ router.get('/updateEmail/:email', middleware.decodeToken, async (req, res) => {
     res.json("update e-mail");
 })
 router.get('/updateFirebaseId/:uid/:email', async (req, res) => {
-    
+
     const idFirebase = req.params.uid
     const email = req.params.email
     console.log("update firebase id: ", idFirebase)
@@ -414,6 +414,12 @@ router.get('/fornecedoresByCategoria/:categoria', middleware.decodeToken, async 
     const fornecedores = await fornecedoresService.getFornecedoresByCategoria(categoria, uid)
     res.json(fornecedores)
 });
+router.get('/fornecedoresDestaqueByCategoria/:categoria', middleware.decodeToken, async (req, res) => {
+    const categoria = req.params.categoria
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresDestaqueByCategoria(categoria, uid)
+    res.json(fornecedores)
+});
 router.get('/fornecedoresByCategoriaOffset/:categoria/:offset', middleware.decodeToken, async (req, res) => {
     const categoria = req.params.categoria
     const offset = req.params.offset
@@ -421,7 +427,8 @@ router.get('/fornecedoresByCategoriaOffset/:categoria/:offset', middleware.decod
     const fornecedores = await fornecedoresService.getFornecedoresByCategoriaOffset(categoria, uid, offset)
     res.json(fornecedores)
 });
-router.get('/fornecedoresByCategoriaOrdemOffset/:categoria/:ordem/:offset', middleware.decodeToken, async (req, res) => {
+
+router.get('/fornecedoresBySegmentoOffset/:categoria/:ordem/:offset', middleware.decodeToken, async (req, res) => {
     const categoria = req.params.categoria
     const ordem = req.params.ordem
     const offset = req.params.offset
@@ -429,10 +436,186 @@ router.get('/fornecedoresByCategoriaOrdemOffset/:categoria/:ordem/:offset', midd
     const fornecedores = await fornecedoresService.getFornecedoresByCategoriaOrdemOffset(categoria, ordem, uid, offset)
     res.json(fornecedores)
 });
+router.get('/fornecedoresByCategoriaOrdemOffset/:categoria/:ordem/:offset', middleware.decodeToken, async (req, res) => {
+    try {
+        const categoria = req.params.categoria
+        const ordem = req.params.ordem
+        const offset = req.params.offset
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresByCategoriaOrdemOffset(categoria, ordem, uid, offset)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+    
+});
+router.get('/fornecedoresByCategoriaFiltroOffset/:categoria/:tipoFiltro/:filtro/:offset', middleware.decodeToken, async (req, res) => {
+    try {
+        const categoria = req.params.categoria
+        const tipoFiltro = req.params.tipoFiltro
+        const filtro = req.params.filtro
+        const offset = req.params.offset
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresByCategoriaFiltroOffset(categoria, tipoFiltro, filtro, uid, offset)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+
+});
 router.get('/fornecedoresBySubCategoria/:subCategoria', middleware.decodeToken, async (req, res) => {
+    try {
+        const subCategoria = req.params.subCategoria
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoria(subCategoria, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+});
+router.get('/fornecedoresBySubCategoriaOffset/:subCategoria/:offset', middleware.decodeToken, async (req, res) => {
+    try {
+        const subCategoria = req.params.subCategoria
+        const offset = req.params.offset
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaOffset(subCategoria, uid, offset)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+});
+router.get('/fornecedoresBySubCategoriaOrdem/:subCategoria/:ordem', middleware.decodeToken, async (req, res) => {
+    try {
+        const subCategoria = req.params.subCategoria
+        const ordem = req.params.ordem;
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaOrdem(subCategoria, ordem, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+
+});
+router.get('/fornecedoresBySubCategoriaOrdemOffset/:subCategoria/:ordem/:offset', middleware.decodeToken, async (req, res) => {
+    try {
+        const subCategoria = req.params.subCategoria
+        const ordem = req.params.ordem;
+        const offset = req.params.offset
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaOrdemOffset(subCategoria, ordem, offset, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+
+});
+router.get('/fornecedoresBySubCategoriaFiltro/:subCategoria/:tipoFiltro/:filtro', middleware.decodeToken, async (req, res) => {
+    try {
+        const subCategoria = req.params.subCategoria
+        const filtro = req.params.filtro;
+        const tipoFiltro = req.params.tipoFiltro
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaFiltro(subCategoria, tipoFiltro, filtro, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+
+});
+router.get('/fornecedoresBySubCategoriaFiltroOffset/:subCategoria/:tipoFiltro/:filtro/:offset', middleware.decodeToken, async (req, res) => {
+    try {
+        const subCategoria = req.params.subCategoria
+        const filtro = req.params.filtro;
+        const tipoFiltro = req.params.tipoFiltro
+        const offset = req.params.offset
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaFiltroOffset(subCategoria, tipoFiltro, filtro, offset, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+
+});
+
+router.get('/fornecedoresBySubCategoriaAndSegmento/:subCategoria/:segmento', middleware.decodeToken, async (req, res) => {
+    try {
+        const subCategoria = req.params.subCategoria
+        const segmento = req.params.segmento
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmento(subCategoria, segmento, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+});
+router.get('/fornecedoresBySubCategoriaAndSegmentoOffset/:subCategoria/:segmento/:offset', middleware.decodeToken, async (req, res) => {
+    try {
+        const subCategoria = req.params.subCategoria
+        const segmento = req.params.segmento
+        const offset = req.params.offset
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoOffset(subCategoria, segmento, offset, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message);
+    }
+});
+router.get('/fornecedoresBySubCategoriaAndSegmentoOrdem/:subCategoria/:segmento/:ordem', middleware.decodeToken, async (req, res) => {
+    try {
+        const subCategoria = req.params.subCategoria
+        const segmento = req.params.segmento
+        const ordem = req.params.ordem
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoOrdem(subCategoria, segmento, ordem, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+});
+router.get('/fornecedoresBySubCategoriaAndSegmentoOrdemOffset/:subCategoria/:segmento/:ordem/:offset', middleware.decodeToken, async (req, res) => {
+    try {
+        const subCategoria = req.params.subCategoria
+        const segmento = req.params.segmento
+        const ordem = req.params.ordem
+        const offset = req.params.offset
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoOrdemOffset(subCategoria, segmento, ordem, offset, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+});
+router.get('/fornecedoresBySubCategoriaAndSegmentoFiltro/:subCategoria/:segmento/:tipoFiltro/:filtro', async (req, res) => {
+    try {
+        const subCategoria = req.params.subCategoria
+        const segmento = req.params.segmento
+        const tipoFiltro = req.params.tipoFiltro
+        const filtro = req.params.filtro
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoFiltro(subCategoria, segmento,tipoFiltro, filtro, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+});
+router.get('/fornecedoresBySubCategoriaAndSegmentoFiltroOffset/:subCategoria/:segmento/:tipoFiltro/:filtro/:offset', middleware.decodeToken, async (req, res) => {
+    try {
+        const subCategoria = req.params.subCategoria
+        const segmento = req.params.segmento
+        const tipoFiltro = req.params.tipoFiltro
+        const filtro = req.params.filtro
+        const offset = req.params.offset
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoFiltroOffset(subCategoria, segmento, tipoFiltro, filtro, offset, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+});
+router.get('/fornecedoresDestaqueBySubCategoria/:subCategoria', middleware.decodeToken, async (req, res) => {
     const subCategoria = req.params.subCategoria
     const uid = req.user.uid
-    const fornecedores = await fornecedoresService.getFornecedoresBySubCategoria(subCategoria, uid)
+    const fornecedores = await fornecedoresService.getFornecedoresDestaqueBySubCategoria(subCategoria, uid)
     res.json(fornecedores)
 });
 router.get('/fornecedoresBySegmentoAndCategoria/:segmento/:categoria', middleware.decodeToken, async (req, res) => {
@@ -440,6 +623,21 @@ router.get('/fornecedoresBySegmentoAndCategoria/:segmento/:categoria', middlewar
     const categoria = req.params.categoria
     const uid = req.user.uid
     const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndCategoria(segmento, categoria, uid)
+    res.json(fornecedores)
+});
+router.get('/fornecedoresBySegmentoAndCategoriaOffset/:segmento/:categoria/:offset', middleware.decodeToken, async (req, res) => {
+    const segmento = req.params.segmento
+    const categoria = req.params.categoria
+    const offset = req.params.offset
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndCategoriaOffset(segmento, categoria, uid, offset)
+    res.json(fornecedores)
+});
+router.get('/fornecedoresDestaqueBySegmentoAndCategoria/:segmento/:categoria', middleware.decodeToken, async (req, res) => {
+    const segmento = req.params.segmento
+    const categoria = req.params.categoria
+    const uid = req.user.uid
+    const fornecedores = await fornecedoresService.getFornecedoresDestaqueBySegmentoAndCategoria(segmento, categoria, uid)
     res.json(fornecedores)
 });
 router.get('/fornecedoresBySegmentoAndCategoriaAndSubCategoria/:segmento/:categoria/:subcategoria', middleware.decodeToken, async (req, res) => {
@@ -499,7 +697,7 @@ router.get('/fornecedoresByFiltroCategoriaOffset/:tipoFiltro/:filtro/:categoria/
     console.log("tipo filtro: ", tipoFiltro);
     console.log("categoria: ", categoria)
     console.log("offset: ", offset)
-    const fornecedores = await fornecedoresService.getFornecedoresByFiltroCategoriaOffset(filtro, tipoFiltro, categoria, offset, uid)
+    const fornecedores = await fornecedoresService.getFornecedoresByFiltroCategoriaOffset(filtro, tipoFiltro, categoria, offset, uid, uid)
     res.json(fornecedores)
 });
 
@@ -551,13 +749,33 @@ router.get('/fornecedoresBySegmentoAndNome/:segmento/:nome', middleware.decodeTo
     res.json(fornecedores)
 });
 
-router.get('/fornecedoresBySegmentoAndOrdem/:segmento/:ordem', middleware.decodeToken, async (req, res) => {
-    const segmento = req.params.segmento
-    const ordem = req.params.ordem
-    const uid = req.user.uid
-    const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndOrdem(ordem, segmento, uid)
-    res.json(fornecedores)
+router.get('/fornecedoresBySegmentoAndOrdemOffset/:segmento/:ordem/:offset', middleware.decodeToken, async (req, res) => {
+    try {
+        const segmento = req.params.segmento
+        const ordem = req.params.ordem
+        const offset = req.params.offset
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndOrdemOffset(ordem, segmento, offset, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+    
 });
+router.get('/fornecedoresBySegmentoAndFiltroOffset/:segmento/:tipoFiltro/:filtro/:offset', middleware.decodeToken, async (req, res) => {
+    try {
+        const segmento = req.params.segmento
+        const tipoFiltro = req.params.tipoFiltro
+        const filtro = req.params.filtro
+        const offset = req.params.offset
+        const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndFiltroOffset(tipoFiltro, filtro, segmento, offset, uid)
+        res.json(fornecedores)
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+
+})
 router.get('/fornecedores-vip', async (req, res) => {
     const fornecedores = await fornecedoresService.getFornecedoresVip()
     console.log(fornecedores);
@@ -568,17 +786,17 @@ router.post('/addFornecedor', async (req, res) => {
     const cadastro = req.body
     console.log("cadastro fornecedor: ", cadastro)
     try {
-    const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
-    console.log("add fornecedor result pessoa: ", resultPessoa)
-    
+        const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
+        console.log("add fornecedor result pessoa: ", resultPessoa)
+
         if (!resultPessoa.error) {
             const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
             console.log("sucesso no cadastro do fornecedor")
             res.json(resultFornecedor)
-        }else{
+        } else {
             res.json(resultPessoa)
         }
-    }catch(e){
+    } catch (e) {
         console.log("fornecedor não foi cadastrado: ", e)
         res.json(resultPessoa);
     }
@@ -643,59 +861,59 @@ router.get("/getFornecedorByEmail/:email", async (req, res) => {
 
 router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastroIpag = req.body
-   
-    if(cadastroIpag.retorno ){
-      const resultEmail = await  fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
-      console.log("resultado do email: ",resultEmail)
-      if(resultEmail.length == 0){
-        const cadastro = ipagFunctions.tratarDadosDoFornecedor(cadastroIpag.retorno[0].cliente)
-        cadastro.statusPagamento = cadastroIpag.retorno[0].mensagem_transacao
-        console.log("cadastro 2: ",cadastro)
-        
-        try {
-            const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
-            console.log("add fornecedor result pessoa: ", resultPessoa)
-            
+
+    if (cadastroIpag.retorno) {
+        const resultEmail = await fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
+        console.log("resultado do email: ", resultEmail)
+        if (resultEmail.length == 0) {
+            const cadastro = ipagFunctions.tratarDadosDoFornecedor(cadastroIpag.retorno[0].cliente)
+            cadastro.statusPagamento = cadastroIpag.retorno[0].mensagem_transacao
+            console.log("cadastro 2: ", cadastro)
+
+            try {
+                const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
+                console.log("add fornecedor result pessoa: ", resultPessoa)
+
                 if (!resultPessoa.error) {
                     const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
                     console.log("sucesso no cadastro do fornecedor")
-                   // res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
-                }else{
+                    // res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
+                } else {
                     //res.json(resultPessoa)
                 }
-            }catch(e){
+            } catch (e) {
                 console.log("fornecedor não foi cadastrado: ", e)
                 //res.json(e);
             }
-      }else if(resultEmail.length == 1){
-        const fornecedorDB = resultEmail[0]
-        
-        
-        if(fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj)){
-            
-            if(cadastroIpag.retorno[0].mensagem_transacao != "cancelado" || "CANCELED"){
-                // update do status
-                
-                fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
-                //res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
-            }else{
-               // res.send("o status é cancelado:")
+        } else if (resultEmail.length == 1) {
+            const fornecedorDB = resultEmail[0]
+
+
+            if (fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj)) {
+
+                if (cadastroIpag.retorno[0].mensagem_transacao != "cancelado" && cadastroIpag.retorno[0].mensagem_transacao != "CANCELED") {
+                    // update do status
+
+                    fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
+                    //res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
+                } else {
+                    // res.send("o status é cancelado:")
+                }
+
+            } else {
+
+                //res.send( "erro: Existe uma conta com este email, mas os dados não estão coincidindo. Cheque os dados de sua conta no app festum")
             }
-            
-        }else{
-            
-            //res.send( "erro: Existe uma conta com este email, mas os dados não estão coincidindo. Cheque os dados de sua conta no app festum")
+
+
+        } else {
+            // res.send("mais de um email cadastrado")
         }
-
-
-      }else{
-       // res.send("mais de um email cadastrado")
-      }
-    }else{
+    } else {
         res.redirect('https://festum-site.vercel.app/form-precadastro-firebase')
     }
-    
-    
+
+
 })
 
 //rotas produto
@@ -732,23 +950,23 @@ router.get('/getProdutosFromIdFornecedorCombos/:idFornecedor', middleware.decode
 })
 router.post('/addProduto', middleware.decodeToken, async (req, res) => {
     const produto = req.body
-    try{
+    try {
         await produtosService.postProduto(produto)
-    }catch(e){
-        console.log("erro ao adicionar produto: ",e)
+    } catch (e) {
+        console.log("erro ao adicionar produto: ", e.mensagem)
     }
-    
+
     res.json({ error: false, message: "Produto cadastrado com sucesso", data: null })
 });
 router.post('/addProdutoSite', async (req, res) => {
     const produto = req.body
     console.log("adicionar produto", produto)
-    try{
+    try {
         await produtosService.postProduto(produto)
-    }catch(e){
-        console.log("erro ao adicionar produto: ",e)
+    } catch (e) {
+        console.log("erro ao adicionar produto: ", e.message)
     }
-    
+
     res.json({ error: false, message: "Produto cadastrado com sucesso", data: null })
 });
 router.get('/deletarProduto/:id', middleware.decodeToken, async (req, res) => {
@@ -794,7 +1012,7 @@ router.get("/deleteEverythingFornecedorSite/:id/:idPessoa", async (req, res) => 
     const idPessoa = req.params.idPessoa
     console.log("id fornecedor:", id)
     console.log("id pessoa: ", idPessoa)
-     await fornecedoresService.deleteEverythingFornecedor(id, idPessoa)
+    await fornecedoresService.deleteEverythingFornecedor(id, idPessoa)
     console.log("deu bom")
     res.json({ message: "deu bom" })
 })
@@ -847,7 +1065,7 @@ router.get('/subcategorias', async (req, res) => {
     const result = await categoriaService.getSubcategorias();
     const resultTratado = categoriasFunctions.criarStringObjetoImagensSubcategorias(result)
     console.log("restultado tratado: ", resultTratado)
-   // res.json(result)
+    // res.json(result)
     res.json(result)
 })
 router.get('/subcategoriasByFkId/:fk_id', async (req, res) => {

@@ -36,7 +36,7 @@ exports.fornecedoresSemDistanciaPreCadastroComStatusEPlano = function (statusCon
 
     return db.query("SELECT f.*, p.email, p.nome, p.sobrenome, p.tipo_pessoa  FROM fornecedor f FULL OUTER JOIN pessoa p ON f.fk_fornecedor_pessoa = p.pk_id WHERE status_da_conta = $1 and planos = $2 ORDER BY pk_id DESC LIMIT 100", [statusConta, plano]);
 }
-exports.fornecedoresSemDistanciaPreCadastroComPlano = function ( plano) {
+exports.fornecedoresSemDistanciaPreCadastroComPlano = function (plano) {
 
     return db.query("SELECT f.*, p.email, p.nome, p.sobrenome, p.tipo_pessoa  FROM fornecedor f FULL OUTER JOIN pessoa p ON f.fk_fornecedor_pessoa = p.pk_id WHERE planos = $1 ORDER BY pk_id DESC LIMIT 100", [plano]);
 }
@@ -60,30 +60,149 @@ exports.getFornecedoresBySegmento = function (segmento) {
 exports.getFornecedoresByCategoria = function (categoria) {
 
     console.log("categoria: ", categoria)
-    return db.query(`select * from fornecedor where categoria like $1`, ["%" + categoria + "%"])
+    return db.query(`select * from fornecedor where categoria like $1 limit 20`, ["%" + categoria + "%"])
+}
+exports.getFornecedoresDestaqueByCategoria = function (categoria) {
+
+    console.log("categoria: ", categoria)
+    return db.query(`select * from fornecedor where categoria like $1 and planos = 'Pacote Estrelar' limit 20`, ["%" + categoria + "%"])
 }
 exports.getFornecedoresByCategoriaOffset = function (categoria, offset) {
 
     console.log("categoria: ", categoria)
     console.log("offset: ", offset)
-    return db.query(`select * from fornecedor where categoria like $1 offset $2`, ["%" + categoria + "%", offset])
+    return db.query(`select * from fornecedor where categoria like $1 offset $2 limit 20`, ["%" + categoria + "%", offset])
 }
 exports.getFornecedoresByCategoriaOrdemOffset = function (categoria, ordem, offset) {
-
-    console.log("categoria: ", categoria)
-    console.log("ordem: ", ordem)
-    console.log("offset: ", offset)
-    return db.query(`select * from fornecedor where categoria like $1 order by ${ordem} offset $2 limit 20`, ["%" + categoria + "%", offset])
+    try {
+        console.log("categoria: ", categoria)
+        console.log("ordem: ", ordem)
+        console.log("offset: ", offset)
+        return db.query(`select * from fornecedor where categoria like $1 order by ${ordem} offset $2 limit 20`, ["%" + categoria + "%", offset])
+    } catch (error) {
+        throw (error)
+    }
+}
+exports.getFornecedoresByCategoriaFiltroOffset = function (categoria, tipoFiltro, filtro, offset) {
+    try {
+        return db.query(`select * from fornecedor where categoria like $1 and ${tipoFiltro} like '%${filtro}%' offset $2 limit 20`, ["%" + categoria + "%", offset])
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresBySubCategoria = function (subCategoria) {
+    try {
+        console.log("subcategoria: ", subCategoria)
+        return db.query(`select * from fornecedor where subcategoria like $1 limit 20`, ["%" + subCategoria + "%"])
+    } catch (error) {
+        throw(error)
+    }
+}
+exports.getFornecedoresBySubCategoriaOffset = function (subCategoria, offset) {
+    try {
+    console.log("subcategoria: ", subCategoria)
+    return db.query(`select * from fornecedor where subcategoria like $1 offset $2 limit 20`, ["%" + subCategoria + "%", offset])
+    } catch (error) {
+        throw(error)
+    }
+}
+exports.getFornecedoresBySubCategoriaOrdem = function (subCategoria, ordem) {
+    try {
+        console.log("subcategoria: ", subCategoria)
+        console.log("ordem: ", ordem)
+        return db.query(`select * from fornecedor where subcategoria like $1 order by ${ordem} limit 20`, ["%" + subCategoria + "%"])
+    } catch (error) {
+        throw (error)
+    }
+
+}
+exports.getFornecedoresBySubCategoriaOrdemOffset = function (subCategoria, ordem, offset) {
+    try {
+        console.log("subcategoria: ", subCategoria)
+        console.log("ordem: ", ordem)
+        return db.query(`select * from fornecedor where subcategoria like $1 order by ${ordem} offset ${offset} limit 20`, ["%" + subCategoria + "%"])
+    } catch (error) {
+        throw (error)
+    }
+
+}
+exports.getFornecedoresBySubCategoriaFiltro = function (subCategoria, tipoFiltro, filtro) {
+    try {
+        console.log("subcategoria: ", subCategoria)
+        return db.query(`select * from fornecedor where subcategoria like $1 and ${tipoFiltro} ilike '%${filtro}%' limit 20`, ["%" + subCategoria + "%"])
+    } catch (error) {
+        throw (error)
+    }
+
+}
+exports.getFornecedoresBySubCategoriaFiltroOffset = function (subCategoria, tipoFiltro, filtro, offset) {
+    try {
+        console.log("subcategoria: ", subCategoria)
+        return db.query(`select * from fornecedor where subcategoria like $1 and ${tipoFiltro} ilike '%${filtro}%' offset ${offset} limit 20`, ["%" + subCategoria + "%"])
+    } catch (error) {
+        throw (error)
+    }
+
+}
+exports.getFornecedoresBySubCategoriaAndSegmentoOffset = function (subCategoria, segmento, offset) {
+    try {
+        console.log("subcategoria: ", subCategoria)
+        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 limit 20 offset $3`, ["%" + subCategoria + "%", "%" + segmento + "%", offset])
+    } catch (error) {
+        throw (error)
+    }
+}
+exports.getFornecedoresBySubCategoriaAndSegmentoOrdem = function (subCategoria, segmento, ordem) {
+    try {
+        console.log("subcategoria: ", subCategoria)
+        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 order by ${ordem} limit 20`, ["%" + subCategoria + "%", "%" + segmento + "%"])
+    } catch (error) {
+        throw (error)
+    }
+}
+exports.getFornecedoresBySubCategoriaAndSegmentoOrdemOffset = function (subCategoria, segmento, ordem, offset) {
+    try {
+        console.log("subcategoria: ", subCategoria)
+        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 order by ${ordem} offset $3 limit 20`, ["%" + subCategoria + "%", "%" + segmento + "%", offset])
+    } catch (error) {
+        throw (error)
+    }
+}
+exports.getFornecedoresBySubCategoriaAndSegmentoFiltro = function (subCategoria, segmento, tipoFiltro, filtro) {
+    try {
+        console.log("subcategoria: ", subCategoria)
+        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 and ${tipoFiltro} ilike $3 limit 20`, ["%" + subCategoria + "%", "%" + segmento + "%", "%"+filtro+"%"])
+    } catch (error) {
+        throw (error)
+    }
+}
+exports.getFornecedoresBySubCategoriaAndSegmentoFiltroOffset = function (subCategoria, segmento, tipoFiltro, filtro, offset) {
+    try {
+        console.log("subcategoria: ", subCategoria)
+        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 and ${tipoFiltro} ilike $3 offset ${offset} limit 20`, ["%" + subCategoria + "%", "%" + segmento + "%", "%" + filtro + "%"])
+    } catch (error) {
+        throw (error)
+    }
+}
+exports.getFornecedoresDestaqueBySubCategoria = function (subCategoria) {
 
     console.log("categoria: ", subCategoria)
-    return db.query(`select * from fornecedor where subcategoria like $1`, ["%" + subCategoria + "%"])
+    return db.query(`select * from fornecedor where subcategoria like $1 and planos = 'Pacote Estrelar' limit 20`, ["%" + subCategoria + "%"])
 }
 exports.getFornecedoresBySegmentoAndCategoria = function (segmento, categoria) {
 
     console.log("categoria: ", categoria)
-    return db.query(`select * from fornecedor where segmento like $1 and categoria like $2`, ["%" + segmento + "%", "%" + categoria + "%"])
+    return db.query(`select * from fornecedor where segmento like $1 and categoria like $2 limit 10`, ["%" + segmento + "%", "%" + categoria + "%"])
+}
+exports.getFornecedoresBySegmentoAndCategoriaOffset = function (segmento, categoria, offset) {
+
+    console.log("categoria: ", categoria)
+    return db.query(`select * from fornecedor where segmento like $1 and categoria like $2 offset $3 limit 20`, ["%" + segmento + "%", "%" + categoria + "%", offset])
+}
+exports.getFornecedoresDestaqueBySegmentoAndCategoria = function (segmento, categoria) {
+
+    console.log("categoria: ", categoria)
+    return db.query(`select * from fornecedor where segmento like $1 and categoria like $2 and planos = 'Pacote Estrelar' limit 20`, ["%" + segmento + "%", "%" + categoria + "%"])
 }
 exports.getFornecedoresBySegmentoAndCategoriaAndSubCategoria = function (segmento, categoria, subcategoria) {
 
@@ -139,8 +258,24 @@ exports.getFornecedoresBySegmentoNomeAndOrdem = function (nome, ordem, segmento)
     console.log("nome ordem:", ordem)
     return db.query(`select * from fornecedor where segmento like $1 and nome_loja ilike $2 order by $3 asc`, ["%" + nome + "%", "%" + ordem + "%", "%" + segmento + "%"])
 }
-exports.getFornecedoresBySegmentoAndOrdem = function (ordem, segmento) {
-    return db.query(`select * from fornecedor where segmento like $1 order by $2 asc`, ["%" + ordem + "%", "%" + segmento + "%"])
+exports.getFornecedoresBySegmentoAndOrdemOffset = function (ordem, segmento, offset) {
+    try {
+        console.log("ordem: ", ordem)
+        console.log("segmento: ", segmento)
+        console.log(offset)
+        return db.query(`select * from fornecedor where segmento like $1 order by ${ordem} asc offset ${offset}`, ["%" + segmento + "%" ])
+    } catch (error) {
+        throw(error)
+    }
+    
+}
+exports.getFornecedoresBySegmentoAndFiltroOffset = function (tipoFiltro,filtro, segmento, offset) {
+    try {
+        return db.query(`select * from fornecedor where segmento like $1 and ${tipoFiltro} like '%${filtro}%' offset ${offset}`, ["%" + segmento + "%"])
+    } catch (error) {
+        throw (error)
+    }
+
 }
 exports.getFornecedoresBySegmentoAndNome = function (nome, segmento) {
     subcategorias
@@ -215,13 +350,13 @@ exports.getFornecedorByIdPessoa = function (id) {
     return db.query('select fornecedor.*, pessoa.email from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where fornecedor.fk_fornecedor_pessoa=$1', id);
 }
 exports.deleteEverythingFornecedor = async function (id, idPessoa) {
-   
+
     try {
-    await db.query('delete from anuncio where fk_anuncio_fornecedor = $1', [id])
-    await db.query('delete from produto where fk_produto_fornecedor = $1', [id])
-    await db.query('delete from fornecedor where fk_fornecedor_pessoa = $1', [idPessoa])
-    await db.query('delete from pessoa where pk_id = $1', [idPessoa]);
-    }catch(e){
+        await db.query('delete from anuncio where fk_anuncio_fornecedor = $1', [id])
+        await db.query('delete from produto where fk_produto_fornecedor = $1', [id])
+        await db.query('delete from fornecedor where fk_fornecedor_pessoa = $1', [idPessoa])
+        await db.query('delete from pessoa where pk_id = $1', [idPessoa]);
+    } catch (e) {
         console.log(e)
     }
 }
