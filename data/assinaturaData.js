@@ -11,7 +11,7 @@ exports.postAssinatura = function (assinatura) {
 exports.updateAssinatura = function (assinatura) {
     console.log("update assinatura: ",assinatura)
     try {
-        return db.query(`update assinatura set dados_assinatura = $1, card_token = $2 where id = $3 `, [assinatura.dadosAssinatura, assinatura.cardToken, assinatura.idAssinatura])
+        return db.query(`update assinatura set dados_assinatura = $1, card_token = $2, data_contagem_bloqueio = $3 where id = $4 `, [assinatura.dadosAssinatura, assinatura.cardToken, assinatura.dataBloqueio, assinatura.idAssinatura])
     } catch (error) {
         throw (error)
     }

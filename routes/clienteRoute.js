@@ -15,6 +15,7 @@ const axios = require("axios")
 const nodemailer = require("nodemailer")
 const pagamentoService = require("../service/pagamentoService")
 const assinaturaService = require("../service/assinaturaService")
+const pagamentosFunctions = require("../funtions/pagamentoFunctions")
 
 //rotas login
 
@@ -386,13 +387,13 @@ router.get('/getFornecedorAndPessoaByIdFirebase', middleware.decodeToken, async 
     console.log("response id fornecedor:", response)
     res.json(response)
 });
-router.get('/getFornecedorAndPessoaByIdFirebase/:idFirebase', async (req, res) => {
-    const idFirebase = req.params.idFirebase
-    console.log('id firebase for the win: ', idFirebase)
-    const response = await fornecedoresService.getFornecedorAndPessoaByIdFirebase(idFirebase)
-    console.log("response id fornecedor:", response)
-    res.json(response)
-});
+// router.get('/getFornecedorAndPessoaByIdFirebase/:idFirebase', async (req, res) => {
+//     const idFirebase = req.params.idFirebase
+//     console.log('id firebase for the win: ', idFirebase)
+//     const response = await fornecedoresService.getFornecedorAndPessoaByIdFirebase(idFirebase)
+//     console.log("response id fornecedor:", response)
+//     res.json(response)
+// });
 router.get('/fornecedorById/:id', middleware.decodeToken, async (req, res) => {
     const id = req.params.id
     const fornecedores = await fornecedoresService.getFornecedorById(id)
@@ -877,7 +878,12 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     console.log("resultado ipag webhook: ",cadastroIpag.retorno[0])
     if (cadastroIpag.retorno) {
         const resultEmail = await fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
+        const fornecedorDB = resultEmail[0]
         console.log("resultado do email: ", resultEmail)
+        const data_bloqueioDate = pagamentosFunctions.checarSePrecisaDeDataBloqueio(cadastroIpag.retorno[0].mensagem_transacao)
+        const cartaoIpag = { dadosCartao: JSON.stringify(cadastroIpag.retorno[0].cartao) , numero: cadastroIpag.retorno[0].cartao.numero, token: cadastroIpag.retorno[0].assinatura.card_token, bandeira: cadastroIpag.retorno[0].cartao.bandeira, fkCartaoFornecedor: fornecedorDB.pk_id}
+        const assinaturaIpag = { dadosAssinatura: JSON.stringify(cadastroIpag.retorno[0].assinatura), dataPrimeiraCobranca: new Date(), idAssinatura: cadastroIpag.retorno[0].assinatura.id + "", cardToken: cadastroIpag.retorno[0].assinatura.card_token, fkAssinaturaFornecedor: fornecedorDB.pk_id, dataBloqueio: data_bloqueioDate}
+       
         if (resultEmail.length == 0) {
             const cadastro = ipagFunctions.tratarDadosDoFornecedor(cadastroIpag.retorno[0].cliente)
             cadastro.statusPagamento = cadastroIpag.retorno[0].mensagem_transacao
@@ -889,8 +895,12 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
 
                 if (!resultPessoa.error) {
                     const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
+                    if(!resultFornecedor.error){
+                        assinaturaService.postAssinatura(assinatura)
+                        pagamentoService.postCartao(cartaoIpag)
+                    }
                     console.log("sucesso no cadastro do fornecedor")
-                    // res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
+                    res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
                 } else {
                     //res.json(resultPessoa)
                 }
@@ -899,22 +909,44 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
                 //res.json(e);
             }
         } else if (resultEmail.length == 1) {
-            const fornecedorDB = resultEmail[0]
+            
 
 
             if (fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj)) {
 
                 if (cadastroIpag.retorno[0].mensagem_transacao != "cancelado" && cadastroIpag.retorno[0].mensagem_transacao != "CANCELED") {
                     // update do status
+                    console.log("webhook entrando no if que faz update no pagamento do fornecedor")
+                    try {
+                        await fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
+                        const assinatura = await assinaturaService.getAssinaturaByIdFornecedor(fornecedorDB.pk_id).catch((e) => {throw("erro get assinatura fornecedor: "+ e)})
+                        const cartao = await pagamentoService.getCartaoByNumeroAndIdFornecedor(cartaoIpag.numero,fornecedorDB.pk_id).catch((e) => { throw ("erro get cartao fornecedor: "+ e) })
+                        console.log("cartao ta no db: ", cartao)
+                        if (!!assinatura) {
+                            await assinaturaService.updateAssinatura(assinaturaIpag).catch((e) => { throw ("erro no update assinatura: "+ e) })
+                        } else {
+                            await assinaturaService.postAssinatura(assinaturaIpag).catch((e) => { throw ("erro no post assinatura: "+ e) })
+                        }
+                        if (cartao.length == 0) {
+                            await pagamentoService.postCartao(cartaoIpag).catch((e) => { throw ("erro no post cartao: "+ e) })
+                        }
 
-                    fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
-                    //res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
+                        res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
+                    } catch (error) {
+                        console.log(error)
+                    }
+                    
+
                 } else {
                     // res.send("o status é cancelado:")
+                    res.json(cadastroIpag.retorno[0].mensagem_transacao)
+                    console.log("webhook entrando no else do status cancelado")
                 }
 
             } else {
-
+                console.log("cpf ou cnpj vindo do ipag: "+ cadastroIpag.retorno[0].cliente.cpf_cnpj)
+                res.json({ cpf_cnpj: cadastroIpag.retorno[0].cliente.cpf_cnpj, cpf: fornecedorDB.cpf, condicional: fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj) })
+                console.log("webhook entrando no else onde o cpf ou cnpj não é igual ao do banco de dados")
                 //res.send( "erro: Existe uma conta com este email, mas os dados não estão coincidindo. Cheque os dados de sua conta no app festum")
             }
 

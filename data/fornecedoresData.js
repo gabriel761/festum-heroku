@@ -330,9 +330,16 @@ exports.updateFornecedorCompletarCadastro = function (fornecedor) {
     return db.query('update fornecedor set galeria = $1, dados_de_interesse = $2, foto_de_fundo = $3, formas_de_pagamento = $4, descricao = $5, status_da_conta = $6 where fk_fornecedor_pessoa = $7', [fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricao, "ativo", fornecedor.fk_fornecedor_pessoa])
 }
 exports.updateStatusPagamentoFornecedor = function (statusPagamento, fk_id) {
-    return db.query('update fornecedor set status_pagamento = $1 where fk_fornecedor_pessoa = $2 ', [statusPagamento, fk_id])
+    console.log("update status fornecedor: ", fk_id)
+    console.log("update status fornecedor: ", statusPagamento)
+    try {
+        return db.query('update fornecedor set status_pagamento = $1 where fk_fornecedor_pessoa = $2 ', [statusPagamento, fk_id])
+    
+    } catch (error) {
+     console.log("erro no update status de pagamento fornecedor: ", error)   
+    }
+    
 }
-
 exports.loginFornecedor = function (login) {
     return db.query('select fornecedor.*, pessoa.email, pessoa.nome, pessoa.sobrenome, pessoa.tipo_pessoa  from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.email = $1 and id_firebase = $2', [login.email, login.firebaseId])
 }
