@@ -1,0 +1,26 @@
+const db = require('../infra/database')
+
+exports.postAssinatura = function (assinatura) {
+    try {
+        return db.query(`insert into assinatura (dados_assinatura, data_primeira_cobranca, id, card_token, data_contagem_bloqueio, fk_assinatura_fornecedor, profile_id) values($1,$2,$3,$4,$5,$6,$7)`, [assinatura.dadosAssinatura, assinatura.dataPrimeraCobranca, assinatura.idUnico, assinatura.cardToken, null, assinatura.fkAssinaturaFornecedor, assinatura.profile_id])
+    } catch (error) {
+        throw (error)
+    }
+}
+
+exports.updateAssinatura = function (assinatura) {
+    console.log("update assinatura: ",assinatura)
+    try {
+        return db.query(`update assinatura set dados_assinatura = $1, card_token = $2 where id = $3 `, [assinatura.dadosAssinatura, assinatura.cardToken, assinatura.idAssinatura])
+    } catch (error) {
+        throw (error)
+    }
+}
+
+exports.getAssinaturaByIdFornecedor = function (idFornecedor) {
+    try {
+        return db.query(`select * from assinatura where fk_assinatura_fornecedor = $1`, [idFornecedor])
+    } catch (error) {
+        throw (error)
+    }
+}

@@ -13,6 +13,8 @@ const _ = require('lodash');
 const middleware = require('../middleware');
 const axios = require("axios")
 const nodemailer = require("nodemailer")
+const pagamentoService = require("../service/pagamentoService")
+const assinaturaService = require("../service/assinaturaService")
 
 //rotas login
 
@@ -384,7 +386,13 @@ router.get('/getFornecedorAndPessoaByIdFirebase', middleware.decodeToken, async 
     console.log("response id fornecedor:", response)
     res.json(response)
 });
-
+router.get('/getFornecedorAndPessoaByIdFirebase/:idFirebase', async (req, res) => {
+    const idFirebase = req.params.idFirebase
+    console.log('id firebase for the win: ', idFirebase)
+    const response = await fornecedoresService.getFornecedorAndPessoaByIdFirebase(idFirebase)
+    console.log("response id fornecedor:", response)
+    res.json(response)
+});
 router.get('/fornecedorById/:id', middleware.decodeToken, async (req, res) => {
     const id = req.params.id
     const fornecedores = await fornecedoresService.getFornecedorById(id)
@@ -447,7 +455,7 @@ router.get('/fornecedoresByCategoriaOrdemOffset/:categoria/:ordem/:offset', midd
     } catch (error) {
         res.status(500).send(error.message)
     }
-    
+
 });
 router.get('/fornecedoresByCategoriaFiltroOffset/:categoria/:tipoFiltro/:filtro/:offset', middleware.decodeToken, async (req, res) => {
     try {
@@ -592,7 +600,7 @@ router.get('/fornecedoresBySubCategoriaAndSegmentoFiltro/:subCategoria/:segmento
         const tipoFiltro = req.params.tipoFiltro
         const filtro = req.params.filtro
         const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoFiltro(subCategoria, segmento,tipoFiltro, filtro, uid)
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoFiltro(subCategoria, segmento, tipoFiltro, filtro, uid)
         res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message)
@@ -632,11 +640,11 @@ router.get('/fornecedoresBySegmentoAndCategoriaOffset/:segmento/:categoria/:offs
         const offset = req.params.offset
         const uid = req.user.uid
         const fornecedores = await fornecedoresService.getFornecedoresBySegmentoAndCategoriaOffset(segmento, categoria, uid, offset)
-        res.json(fornecedores) 
+        res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message);
     }
-    
+
 });
 router.get('/fornecedoresDestaqueBySegmentoAndCategoria/:segmento/:categoria', middleware.decodeToken, async (req, res) => {
     const segmento = req.params.segmento
@@ -765,7 +773,7 @@ router.get('/fornecedoresBySegmentoAndOrdemOffset/:segmento/:ordem/:offset', mid
     } catch (error) {
         res.status(500).send(error.message)
     }
-    
+
 });
 router.get('/fornecedoresBySegmentoAndFiltroOffset/:segmento/:tipoFiltro/:filtro/:offset', middleware.decodeToken, async (req, res) => {
     try {
@@ -866,7 +874,7 @@ router.get("/getFornecedorByEmail/:email", async (req, res) => {
 
 router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastroIpag = req.body
-
+    console.log("resultado ipag webhook: ",cadastroIpag.retorno[0])
     if (cadastroIpag.retorno) {
         const resultEmail = await fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
         console.log("resultado do email: ", resultEmail)
@@ -1090,6 +1098,80 @@ router.get('/subcategoriasByFkIdCategoria/:fk_id', async (req, res) => {
 router.get('/cidades', middleware.decodeToken, async (req, res) => {
     const result = await categoriaService.getCidades()
     res.json(result);
+})
+
+// cartao
+router.post('/cadastrarCartao', async (req, res) => {
+    try {
+        const cartao = req.body
+        console.log("cartao: ", cartao)
+        const result = await pagamentoService.postCartao(cartao)
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+})
+router.get('/listarCartoesByIdFornecedor/:idFornecedor', async (req, res) => {
+    try {
+        const idFornecedor = req.params.idFornecedor
+        console.log("idFornecedor: ", idFornecedor)
+        const result = await pagamentoService.listarCartoesByIdFornecedor(idFornecedor)
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+})
+
+router.get('/getCartaoByNumeroAndIdFornecedor/:numero/:idFornecedor', async (req, res) => {
+    try {
+        const idFornecedor = req.params.idFornecedor
+        const numero = req.params.numero
+        console.log("idFornecedor: ", idFornecedor)
+        console.log("numero: ", numero)
+        const result = await pagamentoService.getCartaoByNumeroAndIdFornecedor(numero,idFornecedor)
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+})
+
+// assinatura
+router.post('/cadastrarAssinatura', async (req, res) => {
+    try {
+        const assinatura = req.body
+        console.log("assinatura: ", assinatura)
+        const result = await assinaturaService.postAssinatura(assinatura)
+        res.status(200).json(result);
+    } catch (error) {
+        console.log("error: ", error.message)
+        res.status(500).send(error.message)
+    }
+
+})
+
+router.post('/updateAssinatura', async (req, res) => {
+    try {
+        const assinatura = req.body
+        console.log("assinatura: ", assinatura)
+        const result = await assinaturaService.updateAssinatura(assinatura)
+        res.status(200).json(result);
+    } catch (error) {
+        console.log("error: ", error.message)
+        res.status(500).send(error.message)
+    }
+
+})
+
+
+router.get('/getAssinaturaByIdFornecedor/:idFornecedor', async (req, res) => {
+    try {
+        const idFornecedor = req.params.idFornecedor
+        console.log("idFornecedor: ", idFornecedor)
+        const result = await assinaturaService.getAssinaturaByIdFornecedor(idFornecedor)
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
 })
 
 

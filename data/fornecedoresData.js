@@ -50,7 +50,7 @@ exports.getFornecedorByEmail = function (email) {
     return db.query('select fornecedor.*  from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.email = $1', [email])
 }
 exports.getFornecedorAndPessoaByIdFirebase = function (firebaseId) {
-    return db.query('select *  from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.id_firebase = $1', [firebaseId])
+    return db.query('select fornecedor.*, pessoa.email, pessoa.nome, pessoa.sobrenome  from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where pessoa.id_firebase = $1', [firebaseId])
 }
 exports.getFornecedoresBySegmento = function (segmento) {
 
@@ -351,7 +351,7 @@ exports.getFornecedorById = function (id) {
 }
 exports.getFornecedorByIdPessoa = function (id) {
     console.log("fornecedor id entrou")
-    return db.query('select fornecedor.*, pessoa.email from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where fornecedor.fk_fornecedor_pessoa=$1', id);
+    return db.query('select fornecedor.*, pessoa.email, assinatura.data_contagem_bloqueio from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id inner join assinatura on fornecedor.pk_id = assinatura.fk_assinatura_fornecedor where fornecedor.fk_fornecedor_pessoa=$1', id);
 }
 exports.deleteEverythingFornecedor = async function (id, idPessoa) {
 

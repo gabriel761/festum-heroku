@@ -1,6 +1,7 @@
 const fornecedoresData = require('../data/fornecedoresData')
 const pessoaService = require('../service/pessoaService')
 const fornecedoresFunctions = require('../funtions/fornecedoresFunctions')
+const assinaturaData = require("../data/assinaturaData")
 
 
 exports.getFornecedores = async function (idCliente) {
@@ -58,8 +59,12 @@ exports.fornecedoresSemDistanciaPreCadastroComPlano = async function (plano) {
 exports.getIdFornecedorByIdFirebase = function (idFirebase) {
     return fornecedoresData.getIdFornecedorByIdFirebase(idFirebase)
 }
-exports.getFornecedorByIdFirebase = function (idFirebase) {
-    return fornecedoresData.getFornecedorByIdFirebase(idFirebase)
+exports.getFornecedorByIdFirebase = async function (idFirebase) {
+    let fornecedor = await fornecedoresData.getFornecedorByIdFirebase(idFirebase)
+    let assinatura = await assinaturaData.getAssinaturaByIdFornecedor(fornecedor[0].pk_id)
+    assinatura = assinatura[0]
+    fornecedor = fornecedor[0]
+    return {...fornecedor, ...assinatura}
 }
 exports.getFornecedorByEmail = function (email) {
     return fornecedoresData.getFornecedorByEmail(email)
