@@ -357,8 +357,10 @@ exports.getFornecedorById = function (id) {
     return db.query('select * from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where fornecedor.pk_id=$1', id);
 }
 exports.getFornecedorByIdPessoa = function (id) {
+    id = parseInt(id)
+    console.log("id fk fornecedor pessoa: ", id)
     console.log("fornecedor id entrou")
-    return db.query('select fornecedor.*, pessoa.email, assinatura.data_contagem_bloqueio from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id inner join assinatura on fornecedor.pk_id = assinatura.fk_assinatura_fornecedor where fornecedor.fk_fornecedor_pessoa=$1', id);
+    return db.query("select fornecedor.*, pessoa.email from fornecedor inner join pessoa on fornecedor.fk_fornecedor_pessoa = pessoa.pk_id where fornecedor.fk_fornecedor_pessoa = '$1'", id);
 }
 exports.deleteEverythingFornecedor = async function (id, idPessoa) {
 

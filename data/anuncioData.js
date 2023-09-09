@@ -8,7 +8,7 @@ exports.updateAnuncio = function ( anuncio) {
 }
 exports.getAnuncioTipo = function ( tipoAnuncio) {
     console.log(tipoAnuncio)
-    return db.query('select * from anuncio where tipo_anuncio = $1',tipoAnuncio)
+    return db.query('select * from anuncio where tipo_anuncio = $1 and data_inicio <= now() and data_final >= now()',tipoAnuncio)
 }
 exports.getAnuncioByIdFornecedor = function (id) {
     

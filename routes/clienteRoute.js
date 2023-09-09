@@ -16,6 +16,7 @@ const nodemailer = require("nodemailer")
 const pagamentoService = require("../service/pagamentoService")
 const assinaturaService = require("../service/assinaturaService")
 const pagamentosFunctions = require("../funtions/pagamentoFunctions")
+const logsData = require("../data/logsData")
 
 //rotas login
 
@@ -166,32 +167,39 @@ router.post("/orcamentoEmailSend", async (req, res) => {
     const body = req.body
     console.log("email cliente: ", emailCliente)
     console.log("email fornecedor: ", emailFornecedor)
-    const transporter = nodemailer.createTransport({
-        host: "smtp.gmail.com",
-        port: 587,
-        secure: false,
-        auth: {
-            user: "jg.7651@gmail.com",
-            pass: "tvmamspkhtueyapb"
-        },
-        tls: {
-            rejectUnauthorized: false
-        }
-    })
-    const mailSent = await transporter.sendMail({
-        text: `
+    try {
+        const transporter =  nodemailer.createTransport({
+            host: "email-ssl.com.br",
+            port: 465,
+            secure: true,
+            // auth: {
+            //     user: "jg.7651@gmail.com",
+            //     pass: "tvmamspkhtueyapb"
+            // },
+            auth: {
+                user: "suporte@festum.com.br",
+                pass: "Gabi@123"
+            },
+
+        })
+        const mailSent = await transporter.sendMail({
+            text: `
         Nome: ${nome} \n
         Email: ${emailCliente} \n
         Telefone: ${telefone} \n
         Mensagem: ${mensagem} 
         `,
-        subject: "Solicitação de orçamento app festum",
-        from: emailCliente,
-        replyTo: emailCliente,
-        to: emailFornecedor
-    })
-    console.log("mail sent: ", mailSent)
-    res.json(body)
+            subject: "Solicitação de orçamento app festum",
+            from: 'suporte@festum.com.br',
+            replyTo: emailCliente,
+            to: emailFornecedor
+        })
+        console.log("mail sent: ", mailSent)
+        res.json(body)
+    } catch (error) {
+        res.json(error)
+    }
+    
 })
 
 router.get('/getUserTypeByUid', middleware.decodeToken, async (req, res) => {
@@ -837,13 +845,13 @@ router.post('/updateFornecedorCompletarCadastro', async (req, res) => {
 
 });
 router.post('/updateStatusPagamentoFornecedor', middleware.decodeToken, async (req, res) => {
-    const { statusPagamento } = req.body
+    const { status_pagamento } = req.body
     const uid = req.user.uid
-    console.log("status pagamento: ", statusPagamento, "uid: ", uid)
+    console.log("status pagamento: ", status_pagamento, "uid: ", uid)
     const fornecedor = await fornecedoresService.getFornecedorByIdFirebase(uid)
     console.log("fornecedor: ", fornecedor)
-    await fornecedoresService.updateStatusPagamentoFornecedor(statusPagamento, fornecedor[0].fk_fornecedor_pessoa)
-    console.log("update de pagamento funcionou")
+    await fornecedoresService.updateStatusPagamentoFornecedor(status_pagamento, fornecedor.fk_fornecedor_pessoa)
+    console.log("update de pagamento funcionou");
     res.json("funcionou")
 })
 router.get("/getStatusPagamentoFornecedorByIdFirebase", middleware.decodeToken, async (req, res) => {
@@ -875,7 +883,8 @@ router.get("/getFornecedorByEmail/:email", async (req, res) => {
 
 router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastroIpag = req.body
-    console.log("resultado ipag webhook: ",cadastroIpag.retorno[0])
+    await logsData.insertLog(JSON.stringify(cadastroIpag))
+    //console.log("resultado ipag webhook: ",cadastroIpag.retorno[0])
     if (cadastroIpag.retorno) {
         const resultEmail = await fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
         const fornecedorDB = resultEmail[0]
@@ -1133,7 +1142,7 @@ router.get('/cidades', middleware.decodeToken, async (req, res) => {
 })
 
 // cartao
-router.post('/cadastrarCartao', async (req, res) => {
+router.post('/cadastrarCartao',  async (req, res) => {
     try {
         const cartao = req.body
         console.log("cartao: ", cartao)
@@ -1195,11 +1204,21 @@ router.post('/updateAssinatura', async (req, res) => {
 })
 
 
-router.get('/getAssinaturaByIdFornecedor/:idFornecedor', async (req, res) => {
+router.get('/getAssinaturaByIdFornecedor/:idFornecedor', middleware.decodeToken, async (req, res) => {
     try {
         const idFornecedor = req.params.idFornecedor
         console.log("idFornecedor: ", idFornecedor)
         const result = await assinaturaService.getAssinaturaByIdFornecedor(idFornecedor)
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+})
+router.get('/deleteAssinaturaByIdUnico/:idUnico', middleware.decodeToken, async (req, res) => {
+    try {
+        const idUnico = req.params.idUnico
+        console.log("idUnico: ", idUnico)
+        const result = await assinaturaService.deleteAssinaturaByIdUnico(idUnico)
         res.status(200).json(result);
     } catch (error) {
         res.status(500).send(error.message)

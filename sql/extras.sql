@@ -33,3 +33,9 @@ alter table assinatura add foreign key (fk_assinatura_fornecedor) references for
 
 alter table cartao add fk_cartao_fornecedor int;
 alter table cartao add foreign key (fk_cartao_fornecedor) references fornecedor(pk_id);
+
+create table webhook_logs (
+	pk_id serial primary key,
+	created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+	JSONdata varchar(500000)
+)

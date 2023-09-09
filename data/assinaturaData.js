@@ -24,3 +24,10 @@ exports.getAssinaturaByIdFornecedor = function (idFornecedor) {
         throw (error)
     }
 }
+exports.deleteAssinaturaByIdUnico = function (idUnico) {
+    try {
+        return db.query(`delete from assinatura where id = $1`, [idUnico])
+    } catch (error) {
+        throw (error)
+    }
+}

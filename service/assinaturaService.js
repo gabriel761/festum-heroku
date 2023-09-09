@@ -26,3 +26,11 @@ exports.getAssinaturaByIdFornecedor = function (idFornecedor) {
     }
 
 }
+exports.deleteAssinaturaByIdUnico = function (idUnico) {
+    try {
+        return assinaturaData.deleteAssinaturaByIdUnico(idUnico)
+    } catch (error) {
+        throw (error)
+    }
+
+}
