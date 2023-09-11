@@ -970,6 +970,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
 
     if (cadastroIpag.resource == "subscriptions") {
         // tratando status code e message
+        await logsData.insertLog(JSON.stringify(cadastroIpag))
         const statusCode = cadastroIpag.attributes.last_transaction.attributes.status.code
         const mensagemStatus = pagamentosFunctions.mensagemStatusContaIpag(statusCode)
         console.log("status ipag: ", mensagemStatus)
@@ -1021,9 +1022,9 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
         
         const textToEncript =  cadastroIpag.attributes.status.code+""
         const encryptStatusCode =  CryptoJS.AES.encrypt(textToEncript, "Web033F1")
-        res.send("status code:"+ encryptStatusCode)
-       // res.redirect(res.redirect('https://festum-site.vercel.app/form-precadastro-firebase'+"?code="+encryptStatusCode))
+       res.redirect(res.redirect('https://festum-site.vercel.app/form-precadastro-firebase'+"?code="+encryptStatusCode))
     }
+    res.json(cadastroIpag)
     res.end()
 })
 
