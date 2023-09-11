@@ -3,6 +3,7 @@
     "axios": "^0.26.1",
     "body-parser": "^1.19.2",
     "cors": "^2.8.5",
+    "crypto-js": "^4.1.1",
     "express": "^4.17.3",
     "firebase-admin": "^11.5.0",
     "geolib": "^3.3.3",
