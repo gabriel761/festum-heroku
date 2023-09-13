@@ -34,3 +34,20 @@ exports.deleteAssinaturaByIdUnico = function (idUnico) {
     }
 
 }
+exports.cancelarAssinaturaByIdUnico = function (idUnico) {
+    try {
+        return assinaturaData.cancelarAssinaturaByIdUnico(idUnico)
+    } catch (error) {
+        throw (error)
+    }
+
+}
+
+exports.reativarAssinaturaByIdUnico = function (idUnico) {
+    try {
+        return assinaturaData.reativarAssinaturaByIdUnico(idUnico)
+    } catch (error) {
+        throw (error)
+    }
+
+}

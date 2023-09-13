@@ -1018,14 +1018,18 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
         }
 
         res.send(mensagemStatus)
-    } else if (cadastroIpag.resource == "transactions"){
         
-        const textToEncript =  cadastroIpag.attributes.status.code+""
+    } else if (!cadastroIpag.resource){
+       
+        const textToEncript =  cadastroIpag.status_pagamento+""
         const encryptStatusCode =  CryptoJS.AES.encrypt(textToEncript, "Web033F1")
-       res.redirect(res.redirect('https://festum-site.vercel.app/form-precadastro-firebase'+"?code="+encryptStatusCode))
+        res.redirect('https://festum-site.vercel.app/form-precadastro-firebase'+"?code="+encryptStatusCode)
+        
+    }else{
+        res.json(cadastroIpag)
     }
-    res.json(cadastroIpag)
-    res.end()
+   
+    
 })
 
 //rotas produto
@@ -1252,7 +1256,7 @@ router.post('/updateAssinatura', async (req, res) => {
     try {
         const assinatura = req.body
         console.log("assinatura: ", assinatura)
-        const result = await assinaturaService.updateAssinatura(assinatura)
+        const result = await assinaturaService.updateAssinatura(assinatura);
         res.status(200).json(result);
     } catch (error) {
         console.log("error: ", error.message)
@@ -1269,6 +1273,7 @@ router.get('/getAssinaturaByIdFornecedor/:idFornecedor', middleware.decodeToken,
         const result = await assinaturaService.getAssinaturaByIdFornecedor(idFornecedor)
         res.status(200).json(result);
     } catch (error) {
+        console.error("erro ao pegar assinatura: ",error)
         res.status(500).send(error.message)
     }
 })
@@ -1278,6 +1283,54 @@ router.get('/deleteAssinaturaByIdUnico/:idUnico', middleware.decodeToken, async 
         console.log("idUnico: ", idUnico)
         const result = await assinaturaService.deleteAssinaturaByIdUnico(idUnico)
         res.status(200).json(result);
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+})
+
+router.get('/cancelarAssinaturaByIdUnico/:idUnico', middleware.decodeToken, async (req, res) => {
+    try {
+        const idUnico = req.params.idUnico
+        console.log("idUnico: ", idUnico)
+        const result = await assinaturaService.cancelarAssinaturaByIdUnico(idUnico)
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+})
+
+router.get('/reativarAssinaturaByIdUnico/:idUnico', middleware.decodeToken, async (req, res) => {
+    try {
+        const idUnico = req.params.idUnico
+        console.log("idUnico: ", idUnico)
+        const result = await assinaturaService.reativarAssinaturaByIdUnico(idUnico)
+        res.status(200).json(result);
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+})
+
+router.get('/pegarTransacao', async (req, res) => {
+    try {
+        console.log("pegar transacao")
+        const api = axios.default.create({
+            baseURL: 'https://api.ipag.com.br',
+            timeout: 3000,
+            auth: {
+                username: "festumbrasil@gmail.com",
+                password: "F043-B605F28B-77B89EF6-91CDC155-6012"
+            },
+            headers: {
+                "Content-Type": "application/json",
+                "x-api-version": 2
+            }
+        }) 
+        const result = await api.request({
+            url: "/service/resources/transactions?id=6888071",
+            method:"GET"  
+        })
+
+        res.status(200).json(result.data);
     } catch (error) {
         res.status(500).send(error.message)
     }

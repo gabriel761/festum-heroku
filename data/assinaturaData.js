@@ -11,7 +11,7 @@ exports.postAssinatura = function (assinatura) {
 exports.updateAssinatura = function (assinatura) {
     console.log("update assinatura: ",assinatura)
     try {
-        return db.query(`update assinatura set dados_assinatura = $1, card_token = $2, data_contagem_bloqueio = $3 where id = $4 `, [assinatura.dadosAssinatura, assinatura.cardToken, assinatura.dataBloqueio, assinatura.idAssinatura])
+        return db.query(`update assinatura set dados_assinatura = $1, card_token = $2, data_contagem_bloqueio = $3, cancelado = $4 where id = $5 `, [assinatura.dadosAssinatura, assinatura.cardToken, assinatura.dataBloqueio,assinatura.cancelado, assinatura.idAssinatura])
     } catch (error) {
         throw (error)
     }
@@ -19,6 +19,7 @@ exports.updateAssinatura = function (assinatura) {
 
 exports.getAssinaturaByIdFornecedor = function (idFornecedor) {
     try {
+        console.log("fk fornecedor dentro do data assinatura: ", idFornecedor)
         return db.query(`select * from assinatura where fk_assinatura_fornecedor = $1`, [idFornecedor])
     } catch (error) {
         throw (error)
@@ -27,6 +28,21 @@ exports.getAssinaturaByIdFornecedor = function (idFornecedor) {
 exports.deleteAssinaturaByIdUnico = function (idUnico) {
     try {
         return db.query(`delete from assinatura where id = $1`, [idUnico])
+    } catch (error) {
+        throw (error)
+    }
+}
+exports.cancelarAssinaturaByIdUnico = function (idUnico) {
+    try {
+        return db.query(`update assinatura set cancelado = true where id = $1`, [idUnico])
+    } catch (error) {
+        throw (error)
+    }
+}
+
+exports.reativarAssinaturaByIdUnico = function (idUnico) {
+    try {
+        return db.query(`update assinatura set cancelado = true where id = $1`, [idUnico])
     } catch (error) {
         throw (error)
     }
