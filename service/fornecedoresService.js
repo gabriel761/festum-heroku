@@ -62,10 +62,17 @@ exports.getIdFornecedorByIdFirebase = function (idFirebase) {
 exports.getFornecedorByIdFirebase = async function (idFirebase) {
     let fornecedor = await fornecedoresData.getFornecedorByIdFirebase(idFirebase)
     let assinatura = await assinaturaData.getAssinaturaByIdFornecedor(fornecedor[0].pk_id)
-    assinatura = assinatura[0]
-    delete assinatura.pk_id
     fornecedor = fornecedor[0]
-    return { ...fornecedor, ...assinatura }
+    if(assinatura.length > 0){
+        assinatura = assinatura[0]
+        delete assinatura.pk_id
+        
+        return { ...fornecedor, ...assinatura }
+    }else{
+        return fornecedor
+    }
+    
+    
 }
 exports.getFornecedorByEmail = function (email) {
     return fornecedoresData.getFornecedorByEmail(email)
