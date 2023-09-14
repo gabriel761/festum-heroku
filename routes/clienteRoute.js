@@ -1310,27 +1310,38 @@ router.get('/reativarAssinaturaByIdUnico/:idUnico', middleware.decodeToken, asyn
     }
 })
 
-router.get('/pegarTransacao', async (req, res) => {
+router.get('/levarAssinaturaIpagParaBD/:idAssinatura', async (req, res) => {
     try {
         console.log("pegar transacao")
-        const api = axios.default.create({
-            baseURL: 'https://api.ipag.com.br',
-            timeout: 3000,
+        const idAssinatura = req.params.idAssinatura
+        const api = axios.create({
+            baseURL: 'https://sandbox.ipag.com.br',
+            timeout: 6000,
             auth: {
-                username: "festumbrasil@gmail.com",
-                password: "F043-B605F28B-77B89EF6-91CDC155-6012"
+                username: "jg.7651@gmail.com",
+                password: "426B-10A599EA-0BD38435-FF3843BD-05BE"
             },
             headers: {
                 "Content-Type": "application/json",
                 "x-api-version": 2
             }
         }) 
-        const result = await api.request({
-            url: "/service/resources/transactions?id=6888071",
+        const resultSubscriptionIpag = await api.request({
+            url: "/service/resources/subscriptions?id=" + idAssinatura,
             method:"GET"  
         })
 
-        res.status(200).json(result.data);
+        const fornecedorByEmail = await fornecedoresService.getFornecedorByEmail(resultSubscriptionIpag.data.attributes.customer.attributes.email)
+
+        const assinaturaParaDB = {
+            dadosAssinatura: JSON.stringify( resultSubscriptionIpag.data),
+            idUnico: resultSubscriptionIpag.data.id,
+            cardToken: resultSubscriptionIpag.data.attributes.creditcard.token,
+            fkAssinaturaFornecedor: fornecedorByEmail[0].pk_id,
+            profile_id: resultSubscriptionIpag.data.attributes.profile_id
+        }
+        await assinaturaService.postAssinatura(assinaturaParaDB)
+        res.status(200).json(assinaturaParaDB);
     } catch (error) {
         res.status(500).send(error.message)
     }
