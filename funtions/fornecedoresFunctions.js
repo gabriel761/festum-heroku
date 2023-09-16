@@ -15,9 +15,10 @@ exports.tratarPreco = (preco) => {
     return newPreco
 }
 exports.calcularDistancia = async (data, idCliente) => {
-    let localizacaoCliente = await clientesData.getLocationByFirebaseId(idCliente)
+    
 
     try {
+        let localizacaoCliente = await clientesData.getLocationByFirebaseId(idCliente)
         localizacaoCliente = JSON.parse(localizacaoCliente[0].localizacao)
 
         let newData = data.map((item) => {
@@ -35,7 +36,7 @@ exports.calcularDistancia = async (data, idCliente) => {
         })
         return newData
     } catch (e) {
-        return
+        throw(e)
     }
 
 }

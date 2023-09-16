@@ -8,7 +8,6 @@ exports.getFornecedores = async function (idCliente) {
 
     try {
         let dataFornecedores = await fornecedoresData.getFornecedores()
-        console.log("data fornecedores antes de calcular distancia: ", dataFornecedores)
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (e) {
@@ -67,16 +66,16 @@ exports.getFornecedorByIdFirebase = async function (idFirebase) {
     let fornecedor = await fornecedoresData.getFornecedorByIdFirebase(idFirebase)
     let assinatura = await assinaturaData.getAssinaturaByIdFornecedor(fornecedor[0].pk_id)
     fornecedor = fornecedor[0]
-    if(assinatura.length > 0){
+    if (assinatura.length > 0) {
         assinatura = assinatura[0]
         delete assinatura.pk_id
-        
+
         return { ...fornecedor, ...assinatura }
-    }else{
+    } else {
         return fornecedor
     }
-    
-    
+
+
 }
 exports.getFornecedorByEmail = function (email) {
     return fornecedoresData.getFornecedorByEmail(email)
@@ -420,45 +419,77 @@ exports.updateStatusPagamentoFornecedor = function (statusPagamento, fk_id) {
     try {
         return fornecedoresData.updateStatusPagamentoFornecedor(statusPagamento, fk_id)
     } catch (error) {
-        throw(error)
+        throw (error)
     }
 }
 exports.testeFornecedor = function () {
-    const result = fornecedoresFunctions.tratarCategorias([
-        { pk_id: 3, nome: "Artigos de Decoração" },
-        { pk_id: 2, nome: "Casamento" },
-        { pk_id: 1, nome: "Música" },
-        { pk_id: 4, nome: "Paulistano" },
-        { pk_id: 5, nome: "Prestígio" }
-    ])
-    console.log(result)
-    return result
+    try {
+        const result = fornecedoresFunctions.tratarCategorias([
+            { pk_id: 3, nome: "Artigos de Decoração" },
+            { pk_id: 2, nome: "Casamento" },
+            { pk_id: 1, nome: "Música" },
+            { pk_id: 4, nome: "Paulistano" },
+            { pk_id: 5, nome: "Prestígio" }
+        ])
+        console.log(result)
+        return result
+    } catch (error) {
+        throw (error)
+    }
 }
 
 exports.loginFornecedor = function (login) {
-    return fornecedoresData.loginFornecedor(login)
+    try {
+        return fornecedoresData.loginFornecedor(login)
+    } catch (error) {
+        throw (error)
+    }
 }
 
 exports.pesquisarFornecedoresVip = function (pesquisa) {
-    return fornecedoresData.pesquisarFornecedoresVip(pesquisa)
+    try {
+        return fornecedoresData.pesquisarFornecedoresVip(pesquisa)
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresVip = function () {
-    return fornecedoresData.getFornecedoresVip()
+    try {
+        return fornecedoresData.getFornecedoresVip()
+    } catch (error) {
+        throw (error)
+    }
 }
 
 exports.getFornecedorById = function (id) {
-    return fornecedoresData.getFornecedorById(id)
+    try {
+        return fornecedoresData.getFornecedorById(id)
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedorByIdPessoa = async function (id, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedorByIdPessoa(id)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedorByIdPessoa(id)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedorByIdPessoaSemDistancia = async function (id) {
-    let dataFornecedores = await fornecedoresData.getFornecedorByIdPessoa(id)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedorByIdPessoa(id)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 
 exports.deleteEverythingFornecedor = function (id, idPessoa) {
-    return fornecedoresData.deleteEverythingFornecedor(id, idPessoa)
+    try {
+        return fornecedoresData.deleteEverythingFornecedor(id, idPessoa)
+    } catch (error) {
+        throw (error)
+    }
 }

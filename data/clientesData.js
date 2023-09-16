@@ -57,20 +57,10 @@ exports.getLocationByFirebaseId = function (idCliente) {
 }
 exports.postCliente = async function (cliente, idPessoa) {
     try {
-        console.log("id pessoa: ", idPessoa)
-        let id = getIdByCpf(cliente.cpf)
-        if (!id) {
             await db.query('insert into cliente ( data_nascimento, cpf, telefone, tipo_telefone, instagram, endereco, auth_adm, auth_pag, fk_cliente_pessoa, imagem_perfil, localizacao) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)', [cliente.dataNasc, cliente.cpf, cliente.tel, cliente.tipoTel, cliente.instagram, cliente.endereco, false, true, idPessoa, cliente.imagem, cliente.localizacao])
-            id = getIdByCpf(cliente.cpf)
-            if (_.isEmpty(id)) {
-                return { error: false, message: "cliente cadastrado com sucesso", data: null }
-            } else {
-                return { erro: true, message: "erro ao cadastrar cliente", data: { id } }
-            }
-        } else {
-            return { error: true, message: "cpf já existente", data: null }
-        }
+           
     } catch (error) {
+        console.log("erro ao cadastrar cliente: ", error)
         throw (error)
     }
 }

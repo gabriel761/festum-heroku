@@ -330,9 +330,12 @@ router.get('/clientesByFk_id/:fk_id', middleware.decodeToken, async (req, res) =
 router.post('/addCliente', async (req, res) => {
     try {
         const cadastro = req.body
+        console.log("obj antes do cadastro cliente: ", cadastro)
         const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, "cliente")
+        console.log("result pessoa route: ",resultPessoa)
         if (!resultPessoa.error) {
             const resultCliente = await clientesService.postCliente(cadastro, resultPessoa.data.id)
+            console.log("result cliente route: ", resultCliente)
             res.json(resultCliente)
         } else {
             clientesService.deleteById(resultPessoa.data.id)
@@ -429,6 +432,7 @@ router.get('/fornecedores', middleware.decodeToken, async (req, res) => {
         const idCliente = req.user.uid
         console.log("id cliente get fornecedores: ", idCliente)
         const fornecedores = await fornecedoresService.getFornecedores(idCliente)
+        console.log('fornecedores:', fornecedores);
         res.json(fornecedores)
     } catch (error) {
         console.error(error)
