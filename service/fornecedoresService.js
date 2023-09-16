@@ -56,6 +56,10 @@ exports.fornecedoresSemDistanciaPreCadastroComPlano = async function (plano) {
     let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastroComPlano(plano)
     return dataFornecedores
 }
+exports.fornecedoresSemDistanciaPreCadastroComPlanoAsc = async function (plano) {
+    let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastroComPlanoAsc(plano)
+    return dataFornecedores
+}
 exports.getIdFornecedorByIdFirebase = function (idFirebase) {
     return fornecedoresData.getIdFornecedorByIdFirebase(idFirebase)
 }
