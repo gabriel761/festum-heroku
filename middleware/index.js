@@ -14,7 +14,7 @@ class MiddleWare {
                 }
                 return res.json({ error: true, message: "não autorizado" })
             } catch (e) {
-                return res.json({ error: true, message: "erro interno" })
+                return res.status(401).json({ error: true, message: "Sessão expirada. Faça login novamente!" })
             }
         } else {
             return res.json({ error: true, message: "não autorizado" })
