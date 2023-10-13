@@ -678,73 +678,79 @@ router.get('/fornecedoresByCategoriaFiltroOffset/:categoria/:tipoFiltro/:filtro/
     }
 
 });
-router.get('/fornecedoresBySubCategoria/:subCategoria', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresBySubCategoria/:subCategoria/:categoria', middleware.decodeToken,  async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
+        const categoria = req.params.categoria
         const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoria(subCategoria, uid)
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoria(subCategoria, categoria, uid)
         res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message)
     }
 });
-router.get('/fornecedoresBySubCategoriaOffset/:subCategoria/:offset', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresBySubCategoriaOffset/:subCategoria/:offset/:categoria', middleware.decodeToken, async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
         const offset = req.params.offset
         const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaOffset(subCategoria, uid, offset)
+        const categoria = req.params.categoria
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaOffset(subCategoria, uid, offset, categoria)
         res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message)
     }
 });
-router.get('/fornecedoresBySubCategoriaOrdem/:subCategoria/:ordem', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresBySubCategoriaOrdem/:subCategoria/:ordem/:categoria', middleware.decodeToken, async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
         const ordem = req.params.ordem;
+        const categoria = req.params.categoria
         const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaOrdem(subCategoria, ordem, uid)
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaOrdem(subCategoria, ordem, categoria, uid)
         res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message)
     }
 
 });
-router.get('/fornecedoresBySubCategoriaOrdemOffset/:subCategoria/:ordem/:offset', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresBySubCategoriaOrdemOffset/:subCategoria/:ordem/:offset/:categoria',middleware.decodeToken, async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
         const ordem = req.params.ordem;
         const offset = req.params.offset
+        const categoria = req.params.categoria
         const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaOrdemOffset(subCategoria, ordem, offset, uid)
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaOrdemOffset(subCategoria, ordem, offset,categoria,uid)
         res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message)
     }
 
 });
-router.get('/fornecedoresBySubCategoriaFiltro/:subCategoria/:tipoFiltro/:filtro', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresBySubCategoriaFiltro/:subCategoria/:tipoFiltro/:filtro/:categoria', middleware.decodeToken, async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
         const filtro = req.params.filtro;
         const tipoFiltro = req.params.tipoFiltro
+        const categoria = req.params.categoria
         const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaFiltro(subCategoria, tipoFiltro, filtro, uid)
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaFiltro(subCategoria, tipoFiltro, filtro, categoria , uid)
         res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message)
     }
 
 });
-router.get('/fornecedoresBySubCategoriaFiltroOffset/:subCategoria/:tipoFiltro/:filtro/:offset', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresBySubCategoriaFiltroOffset/:subCategoria/:tipoFiltro/:filtro/:offset/:categoria', middleware.decodeToken, async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
         const filtro = req.params.filtro;
         const tipoFiltro = req.params.tipoFiltro
         const offset = req.params.offset
+        const categoria = req.params.categoria
         const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaFiltroOffset(subCategoria, tipoFiltro, filtro, offset, uid)
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaFiltroOffset(subCategoria, tipoFiltro, filtro, offset, categoria, uid)
         res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message)
@@ -763,75 +769,81 @@ router.get('/fornecedoresBySubCategoriaAndSegmento/:subCategoria/:segmento', mid
         res.status(500).send(error.message)
     }
 });
-router.get('/fornecedoresBySubCategoriaAndSegmentoOffset/:subCategoria/:segmento/:offset', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresBySubCategoriaAndSegmentoOffset/:subCategoria/:segmento/:offset/:categoria', middleware.decodeToken, async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
         const segmento = req.params.segmento
         const offset = req.params.offset
+        const categoria = req.params.categoria
         const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoOffset(subCategoria, segmento, offset, uid)
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoOffset(subCategoria, segmento, offset,categoria, uid)
         res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message);
     }
 });
-router.get('/fornecedoresBySubCategoriaAndSegmentoOrdem/:subCategoria/:segmento/:ordem', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresBySubCategoriaAndSegmentoOrdem/:subCategoria/:segmento/:ordem/:categoria', middleware.decodeToken, async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
         const segmento = req.params.segmento
         const ordem = req.params.ordem
+        const categoria = req.params.categoria
         const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoOrdem(subCategoria, segmento, ordem, uid)
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoOrdem(subCategoria, segmento, ordem,categoria , uid)
         res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message)
     }
 });
-router.get('/fornecedoresBySubCategoriaAndSegmentoOrdemOffset/:subCategoria/:segmento/:ordem/:offset', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresBySubCategoriaAndSegmentoOrdemOffset/:subCategoria/:segmento/:ordem/:offset/:categoria', /* middleware.decodeToken,*/ async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
         const segmento = req.params.segmento
         const ordem = req.params.ordem
         const offset = req.params.offset
-        const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoOrdemOffset(subCategoria, segmento, ordem, offset, uid)
+        const categoria = req.params.categoria
+        //const uid = req.user.uid
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoOrdemOffset(subCategoria, segmento, ordem, offset, categoria /*, uid*/)
         res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message)
     }
 });
-router.get('/fornecedoresBySubCategoriaAndSegmentoFiltro/:subCategoria/:segmento/:tipoFiltro/:filtro', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresBySubCategoriaAndSegmentoFiltro/:subCategoria/:segmento/:tipoFiltro/:filtro/:categoria', middleware.decodeToken, async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
         const segmento = req.params.segmento
         const tipoFiltro = req.params.tipoFiltro
         const filtro = req.params.filtro
+        const categoria = req.params.categoria
         const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoFiltro(subCategoria, segmento, tipoFiltro, filtro, uid)
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoFiltro(subCategoria, segmento, tipoFiltro, filtro, categoria ,uid)
         res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message)
     }
 });
-router.get('/fornecedoresBySubCategoriaAndSegmentoFiltroOffset/:subCategoria/:segmento/:tipoFiltro/:filtro/:offset', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresBySubCategoriaAndSegmentoFiltroOffset/:subCategoria/:segmento/:tipoFiltro/:filtro/:offset/:categoria', middleware.decodeToken, async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
         const segmento = req.params.segmento
         const tipoFiltro = req.params.tipoFiltro
         const filtro = req.params.filtro
         const offset = req.params.offset
+        const categoria = req.params.categoria
         const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoFiltroOffset(subCategoria, segmento, tipoFiltro, filtro, offset, uid)
+        const fornecedores = await fornecedoresService.getFornecedoresBySubCategoriaAndSegmentoFiltroOffset(subCategoria, segmento, tipoFiltro, filtro, offset, categoria, uid)
         res.json(fornecedores)
     } catch (error) {
         res.status(500).send(error.message)
     }
 });
-router.get('/fornecedoresDestaqueBySubCategoria/:subCategoria', middleware.decodeToken, async (req, res) => {
+router.get('/fornecedoresDestaqueBySubCategoria/:subCategoria/:categoria',middleware.decodeToken, async (req, res) => {
     try {
         const subCategoria = req.params.subCategoria
+        const categoria = req.params.categoria
         const uid = req.user.uid
-        const fornecedores = await fornecedoresService.getFornecedoresDestaqueBySubCategoria(subCategoria, uid)
+        const fornecedores = await fornecedoresService.getFornecedoresDestaqueBySubCategoria(subCategoria, categoria , uid)
         res.json(fornecedores)
     } catch (error) {
         console.error(error)
@@ -1092,7 +1104,7 @@ router.post('/addFornecedor', async (req, res) => {
         }
     } catch (e) {
         console.log("fornecedor não foi cadastrado: ", e)
-        res.json(resultPessoa);
+        res.status(500).send(e.message);
     }
 });
 router.post('/updateFornecedor', async (req, res) => {
@@ -1193,7 +1205,7 @@ router.get("/getFornecedorByEmail/:email", async (req, res) => {
 
 router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastroIpag = req.body
-    // await logsData.insertLog(JSON.stringify(cadastroIpag))
+    await logsData.insertLog(JSON.stringify(cadastroIpag))
     //console.log("resultado ipag webhook: ",cadastroIpag.retorno[0])
     // if (cadastroIpag.retorno) {
     //     const resultEmail = await fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
@@ -1277,66 +1289,66 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     //     res.redirect('https://festum-site.vercel.app/form-precadastro-firebase')
     // }
 
-    if (cadastroIpag.resource == "subscriptions") {
-        // tratando status code e message
-        await logsData.insertLog(JSON.stringify(cadastroIpag))
-        const statusCode = cadastroIpag.attributes.last_transaction.attributes.status.code
-        const mensagemStatus = pagamentosFunctions.mensagemStatusContaIpag(statusCode)
-        console.log("status ipag: ", mensagemStatus)
-        const emailIpag = cadastroIpag.attributes.customer.attributes.email
-        const resultEmail = await fornecedoresService.getFornecedorByEmail(emailIpag)
-        const fornecedorDB = resultEmail[0]
-        const resultAssinatura = await assinaturaService.getAssinaturaByIdFornecedor(fornecedorDB.pk_id)
-        const assinaturaDB = resultAssinatura[0]
-        console.log("resultado da assinatura: ", !assinaturaDB && statusCode == 8)
-        if (!assinaturaDB && statusCode == 8) {
-            const assinaturaIpag = cadastroIpag
-            const assinaturaParaCriar = {
-                dadosAssinatura: JSON.stringify(assinaturaIpag),
-                dataPrimeiraCobranca: cadastroIpag.attributes.starting_date,
-                idUnico: cadastroIpag.id,
-                cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
-                fkAssinaturaFornecedor: fornecedorDB.pk_id,
-                profile_id: cadastroIpag.attributes.profile_id
-            }
-            console.log("assinatura para criar: ", assinaturaParaCriar)
-            await assinaturaService.postAssinatura(assinaturaParaCriar)
-            await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
-        } else if (!!assinaturaDB && statusCode == 8) {
-            const assinaturaIpag = cadastroIpag
-            const assinaturaParaUpdate = {
-                dadosAssinatura: JSON.stringify(assinaturaIpag),
-                idAssinatura: cadastroIpag.id + "",
-                dataBloqueio: null,
-                cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
-            }
-            await assinaturaService.updateAssinatura(assinaturaParaUpdate)
-            await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
-        } else if (!!assinaturaDB && statusCode != 8) {
-            const assinaturaIpag = cadastroIpag
-            const assinaturaParaUpdate = {
-                dadosAssinatura: JSON.stringify(assinaturaIpag),
-                idAssinatura: cadastroIpag.id + "",
-                dataBloqueio: pagamentosFunctions.gerarDataBloqueio(),
-                cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
-            }
-            await assinaturaService.updateAssinatura(assinaturaParaUpdate)
-            await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
-        } else if (!assinaturaDB && statusCode != 8) {
-            await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
-        }
+    // if (cadastroIpag.resource == "subscriptions") {
+    //     // tratando status code e message
+    //     await logsData.insertLog(JSON.stringify(cadastroIpag))
+    //     const statusCode = cadastroIpag.attributes.last_transaction.attributes.status.code
+    //     const mensagemStatus = pagamentosFunctions.mensagemStatusContaIpag(statusCode)
+    //     console.log("status ipag: ", mensagemStatus)
+    //     const emailIpag = cadastroIpag.attributes.customer.attributes.email
+    //     const resultEmail = await fornecedoresService.getFornecedorByEmail(emailIpag)
+    //     const fornecedorDB = resultEmail[0]
+    //     const resultAssinatura = await assinaturaService.getAssinaturaByIdFornecedor(fornecedorDB.pk_id)
+    //     const assinaturaDB = resultAssinatura[0]
+    //     console.log("resultado da assinatura: ", !assinaturaDB && statusCode == 8)
+    //     if (!assinaturaDB && statusCode == 8) {
+    //         const assinaturaIpag = cadastroIpag
+    //         const assinaturaParaCriar = {
+    //             dadosAssinatura: JSON.stringify(assinaturaIpag),
+    //             dataPrimeiraCobranca: cadastroIpag.attributes.starting_date,
+    //             idUnico: cadastroIpag.id,
+    //             cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
+    //             fkAssinaturaFornecedor: fornecedorDB.pk_id,
+    //             profile_id: cadastroIpag.attributes.profile_id
+    //         }
+    //         console.log("assinatura para criar: ", assinaturaParaCriar)
+    //         await assinaturaService.postAssinatura(assinaturaParaCriar)
+    //         await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
+    //     } else if (!!assinaturaDB && statusCode == 8) {
+    //         const assinaturaIpag = cadastroIpag
+    //         const assinaturaParaUpdate = {
+    //             dadosAssinatura: JSON.stringify(assinaturaIpag),
+    //             idAssinatura: cadastroIpag.id + "",
+    //             dataBloqueio: null,
+    //             cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
+    //         }
+    //         await assinaturaService.updateAssinatura(assinaturaParaUpdate)
+    //         await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
+    //     } else if (!!assinaturaDB && statusCode != 8) {
+    //         const assinaturaIpag = cadastroIpag
+    //         const assinaturaParaUpdate = {
+    //             dadosAssinatura: JSON.stringify(assinaturaIpag),
+    //             idAssinatura: cadastroIpag.id + "",
+    //             dataBloqueio: pagamentosFunctions.gerarDataBloqueio(),
+    //             cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
+    //         }
+    //         await assinaturaService.updateAssinatura(assinaturaParaUpdate)
+    //         await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
+    //     } else if (!assinaturaDB && statusCode != 8) {
+    //         await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
+    //     }
 
-        res.send(mensagemStatus)
+    //     res.send(mensagemStatus)
 
-    } else if (!cadastroIpag.resource) {
+    // } else if (!cadastroIpag.resource) {
 
-        const textToEncript = cadastroIpag.status_pagamento + ""
-        const encryptStatusCode = CryptoJS.AES.encrypt(textToEncript, "Web033F1")
-        res.redirect('https://festum-site.vercel.app/form-precadastro-firebase' + "?code=" + encryptStatusCode)
+    //     const textToEncript = cadastroIpag.status_pagamento + ""
+    //     const encryptStatusCode = CryptoJS.AES.encrypt(textToEncript, "Web033F1")
+    //     res.redirect('https://festum-site.vercel.app/form-precadastro-firebase' + "?code=" + encryptStatusCode)
 
-    } else {
-        res.json(cadastroIpag)
-    }
+    // } else {
+    //     res.json(cadastroIpag)
+    // }
 
 
 })

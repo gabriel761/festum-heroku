@@ -39,3 +39,12 @@ create table webhook_logs (
 	created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
 	JSONdata varchar(500000)
 )
+
+create table cupom (
+	pk_id serial primary key,
+	porcentagem int,
+	codigo varchar (50),
+	fk_cupom_fornecedor int
+)
+alter table cupom add fk_cupom_fornecedor int;
+alter table cupom add foreign key (fk_cupom_fornecedor) references fornecedor(pk_id);

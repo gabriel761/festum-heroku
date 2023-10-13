@@ -20,14 +20,14 @@ exports.getIdByCnpjExport = (cnpj) => {
 }
 exports.getFornecedores = function () {
     try {
-        return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor where status_da_conta = 'ativo' or status_da_conta = 'conta gratuita' limit 20 ");
+        return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa, planos from fornecedor where status_da_conta = 'ativo' or status_da_conta = 'conta gratuita' limit 20 ");
     } catch (error) {
         throw (error)
     }
 }
 exports.getFornecedoresDestaque = function () {
     try {
-        return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor where status_da_conta = 'ativo' limit 20 ");
+        return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa, planos from fornecedor where status_da_conta = 'ativo' limit 20 ");
     } catch (error) {
         throw (error)
     }
@@ -35,7 +35,7 @@ exports.getFornecedoresDestaque = function () {
 
 exports.getFornecedoresOffset = function (offset) {
     try {
-        return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa from fornecedor where status_da_conta = 'ativo' or status_da_conta = 'conta gratuita' limit 20 offset $1 ", [offset]);
+        return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa, planos from fornecedor where status_da_conta = 'ativo' or status_da_conta = 'conta gratuita' limit 20 offset $1 ", [offset]);
     } catch (error) {
         throw (error)
     }
@@ -160,104 +160,107 @@ exports.getFornecedoresByCategoriaFiltroOffset = function (categoria, tipoFiltro
         throw (error)
     }
 }
-exports.getFornecedoresBySubCategoria = function (subCategoria) {
+exports.getFornecedoresBySubCategoria = function (subCategoria, categoria) {
     try {
         console.log("subcategoria: ", subCategoria)
-        return db.query(`select * from fornecedor where subcategoria like $1 limit 20`, ["%" + subCategoria + "%"])
+        return db.query(`select * from fornecedor where subcategoria like $1 and categoria like $2 limit 20`, ["%" + subCategoria + "%", "%" + categoria + "%"])
     } catch (error) {
         throw (error)
     }
 }
-exports.getFornecedoresBySubCategoriaOffset = function (subCategoria, offset) {
+exports.getFornecedoresBySubCategoriaOffset = function (subCategoria, offset, categoria) {
     try {
-        console.log("subcategoria: ", subCategoria)
-        return db.query(`select * from fornecedor where subcategoria like $1 offset $2 limit 20`, ["%" + subCategoria + "%", offset])
+        
+        return db.query(`select * from fornecedor where subcategoria like $1 and categoria like $2 offset $3 limit 20`, ["%" + subCategoria + "%", "%" + categoria + "%", offset])
     } catch (error) {
         throw (error)
     }
 }
-exports.getFornecedoresBySubCategoriaOrdem = function (subCategoria, ordem) {
-    try {
-        console.log("subcategoria: ", subCategoria)
-        console.log("ordem: ", ordem)
-        return db.query(`select * from fornecedor where subcategoria like $1 order by ${ordem} limit 20`, ["%" + subCategoria + "%"])
-    } catch (error) {
-        throw (error)
-    }
-
-}
-exports.getFornecedoresBySubCategoriaOrdemOffset = function (subCategoria, ordem, offset) {
+exports.getFornecedoresBySubCategoriaOrdem = function (subCategoria, ordem, categoria) {
     try {
         console.log("subcategoria: ", subCategoria)
         console.log("ordem: ", ordem)
-        return db.query(`select * from fornecedor where subcategoria like $1 order by ${ordem} offset ${offset} limit 20`, ["%" + subCategoria + "%"])
+        return db.query(`select * from fornecedor where subcategoria like $1 and categoria like $2 order by ${ordem} limit 20`, ["%" + subCategoria + "%", "%" + categoria + "%"])
     } catch (error) {
         throw (error)
     }
 
 }
-exports.getFornecedoresBySubCategoriaFiltro = function (subCategoria, tipoFiltro, filtro) {
+exports.getFornecedoresBySubCategoriaOrdemOffset = function (subCategoria, ordem, offset, categoria) {
     try {
         console.log("subcategoria: ", subCategoria)
-        return db.query(`select * from fornecedor where subcategoria like $1 and ${tipoFiltro} ilike '%${filtro}%' limit 20`, ["%" + subCategoria + "%"])
+        console.log("ordem: ", ordem)
+        return db.query(`select * from fornecedor where subcategoria like $1 and categoria like $2 order by ${ordem} offset ${offset} limit 20`, ["%" + subCategoria + "%", "%" + categoria + "%"])
     } catch (error) {
         throw (error)
     }
 
 }
-exports.getFornecedoresBySubCategoriaFiltroOffset = function (subCategoria, tipoFiltro, filtro, offset) {
+exports.getFornecedoresBySubCategoriaFiltro = function (subCategoria, tipoFiltro, filtro, categoria) {
     try {
         console.log("subcategoria: ", subCategoria)
-        return db.query(`select * from fornecedor where subcategoria like $1 and ${tipoFiltro} ilike '%${filtro}%' offset ${offset} limit 20`, ["%" + subCategoria + "%"])
+        return db.query(`select * from fornecedor where subcategoria like $1 and ${tipoFiltro} ilike '%${filtro}%' and categoria like $2 limit 20`, ["%" + subCategoria + "%", "%" + categoria + "%"])
     } catch (error) {
         throw (error)
     }
 
 }
-exports.getFornecedoresBySubCategoriaAndSegmentoOffset = function (subCategoria, segmento, offset) {
+exports.getFornecedoresBySubCategoriaFiltroOffset = function (subCategoria, tipoFiltro, filtro, offset, categoria) {
     try {
         console.log("subcategoria: ", subCategoria)
-        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 limit 20 offset $3`, ["%" + subCategoria + "%", "%" + segmento + "%", offset])
+        return db.query(`select * from fornecedor where subcategoria like $1 and ${tipoFiltro} ilike '%${filtro}%' and categoria like $2 offset ${offset} limit 20`, ["%" + subCategoria + "%", "%" + categoria + "%"])
+    } catch (error) {
+        throw (error)
+    }
+
+}
+exports.getFornecedoresBySubCategoriaAndSegmentoOffset = function (subCategoria, segmento, offset, categoria) {
+    try {
+        console.log("subcategoria: ", subCategoria)
+        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 and categoria like $3 limit 20 offset $4`, ["%" + subCategoria + "%", "%" + segmento + "%", "%" + categoria + "%", offset])
     } catch (error) {
         throw (error)
     }
 }
-exports.getFornecedoresBySubCategoriaAndSegmentoOrdem = function (subCategoria, segmento, ordem) {
+exports.getFornecedoresBySubCategoriaAndSegmentoOrdem = function (subCategoria, segmento, ordem, categoria) {
     try {
         console.log("subcategoria: ", subCategoria)
-        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 order by ${ordem} limit 20`, ["%" + subCategoria + "%", "%" + segmento + "%"])
+        console.log("subcategoria: ", segmento)
+        console.log("subcategoria: ", ordem)
+        console.log("subcategoria: ", categoria)
+        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 and categoria like $3 order by ${ordem} limit 20`, ["%" + subCategoria + "%", "%" + segmento + "%", "%" + categoria + "%"])
     } catch (error) {
         throw (error)
     }
 }
-exports.getFornecedoresBySubCategoriaAndSegmentoOrdemOffset = function (subCategoria, segmento, ordem, offset) {
+exports.getFornecedoresBySubCategoriaAndSegmentoOrdemOffset = function (subCategoria, segmento, ordem, offset, categoria) {
     try {
         console.log("subcategoria: ", subCategoria)
-        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 order by ${ordem} offset $3 limit 20`, ["%" + subCategoria + "%", "%" + segmento + "%", offset])
+        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 and categoria like $3 order by ${ordem} offset $4 limit 20`, ["%" + subCategoria + "%", "%" + segmento + "%", "%" + categoria + "%", offset])
     } catch (error) {
         throw (error)
     }
 }
-exports.getFornecedoresBySubCategoriaAndSegmentoFiltro = function (subCategoria, segmento, tipoFiltro, filtro) {
+exports.getFornecedoresBySubCategoriaAndSegmentoFiltro = function (subCategoria, segmento, tipoFiltro, filtro, categoria) {
     try {
         console.log("subcategoria: ", subCategoria)
-        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 and ${tipoFiltro} ilike $3 limit 20`, ["%" + subCategoria + "%", "%" + segmento + "%", "%" + filtro + "%"])
+        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 and ${tipoFiltro} ilike $3 and categoria like $4 limit 20`, ["%" + subCategoria + "%", "%" + segmento + "%", "%" + filtro + "%", "%" + categoria + "%"])
     } catch (error) {
         throw (error)
     }
 }
-exports.getFornecedoresBySubCategoriaAndSegmentoFiltroOffset = function (subCategoria, segmento, tipoFiltro, filtro, offset) {
+exports.getFornecedoresBySubCategoriaAndSegmentoFiltroOffset = function (subCategoria, segmento, tipoFiltro, filtro, offset, categoria) {
     try {
         console.log("subcategoria: ", subCategoria)
-        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 and ${tipoFiltro} ilike $3 offset ${offset} limit 20`, ["%" + subCategoria + "%", "%" + segmento + "%", "%" + filtro + "%"])
+        return db.query(`select * from fornecedor where subcategoria like $1 and segmento like $2 and ${tipoFiltro} ilike $3 and categoria like $4 offset ${offset} limit 20`, ["%" + subCategoria + "%", "%" + segmento + "%", "%" + filtro + "%", "%" + categoria + "%"])
     } catch (error) {
         throw (error)
     }
 }
-exports.getFornecedoresDestaqueBySubCategoria = function (subCategoria) {
+exports.getFornecedoresDestaqueBySubCategoria = function (subCategoria, categoria) {
     try {
         console.log("categoria: ", subCategoria)
-        return db.query(`select * from fornecedor where subcategoria like $1 and planos = 'Pacote Estrelar' limit 20`, ["%" + subCategoria + "%"])
+        return db.query(`select * from fornecedor where subcategoria like $1 and planos = 'Pacote Estrelar' and categoria like $2 limit 20`, ["%" + subCategoria + "%", "%" + categoria + "%"])
     } catch (error) {
         throw (error)
     }
@@ -417,48 +420,27 @@ exports.getFornecedoresVip = function () {
     }
 }
 exports.postFornecedores = async function (fornecedor, idPessoa) {
-
-    //let id = await getIdByCnpj(fornecedor.cnpj)
-
-    let error = true
-    let result = null;
-
-    //if(id.length == 0){
     try {
         console.log("ultimo log antes do query")
-        result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, instagramLink, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao, cpf, sugest_subcategoria, galeria, dados_de_interesse, foto_de_fundo, formas_de_pagamento, descricao, cep, numero, complemento, status_da_conta, status_pagamento, planos) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31)', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco, false, true, idPessoa, false, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja, fornecedor.cep, fornecedor.numero, fornecedor.complemento, fornecedor.statusConta, fornecedor.statusPagamento, fornecedor.plano])
-        return { error: false, message: "Fornecedor cadastrado com sucesso", data: null }
-
-
+        const result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, instagramLink, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao, cpf, sugest_subcategoria, galeria, dados_de_interesse, foto_de_fundo, formas_de_pagamento, descricao, cep, numero, complemento, status_da_conta, status_pagamento, planos) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31) returning pk_id', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco, false, true, idPessoa, false, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja, fornecedor.cep, fornecedor.numero, fornecedor.complemento, fornecedor.statusConta, fornecedor.statusPagamento, fornecedor.plano])
+        return { error: false, message: "Fornecedor cadastrado com sucesso", data: result[0] }
     } catch (e) {
-
         console.log("houve erro:", e)
         await db.query("delete from pessoa where pk_id = $1", [idPessoa])
         return { error: true, message: "Erro ao cadastrar fornecedor", data: null }
     }
-
-
-
-
-    // }else{
-    console.log("já existe cnpj")
-    await db.query("delete from pessoa where pk_id = $1", [idPessoa])
-    return { error: true, message: "Este cnpj já existe no banco de dados" }
-    // }
 }
 exports.updateFornecedores = function (fornecedor) {
     try {
-        return db.query('update fornecedor set  nome_loja = $1, cnpj = $2, telefone = $3, instagram = $4, instagramLink = $5, endereco = $6, cidade = $7, palavras_chave = $8, categoria = $9, subcategoria = $10, segmento = $11, imagem = $12, preco = $13, localizacao = $14, cpf = $15, sugest_subcategoria = $16, galeria = $17, dados_de_interesse = $18, foto_de_fundo = $19, formas_de_pagamento = $20, descricao = $21, cep = $22, numero = $23, complemento = $24, status_da_conta = $25 where pk_id = $26', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja, fornecedor.cep, fornecedor.numero, fornecedor.complemento, fornecedor.statusConta, fornecedor.id])
+        return db.query('update fornecedor set  nome_loja = $1, cnpj = $2, telefone = $3, instagram = $4, instagramLink = $5, endereco = $6, cidade = $7, palavras_chave = $8, categoria = $9, subcategoria = $10, segmento = $11, imagem = $12, preco = $13, localizacao = $14, cpf = $15, sugest_subcategoria = $16, galeria = $17, dados_de_interesse = $18, foto_de_fundo = $19, formas_de_pagamento = $20, descricao = $21, cep = $22, numero = $23, complemento = $24  where pk_id = $25', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja, fornecedor.cep, fornecedor.numero, fornecedor.complemento, fornecedor.id])
     } catch (error) {
         throw (error)
     }
 }
-
-
 exports.updateFornecedorCompletarCadastro = function (fornecedor) {
     try {
         console.log("completar cadastro dentro do data: ", fornecedor)
-        return db.query('update fornecedor set galeria = $1, dados_de_interesse = $2, foto_de_fundo = $3, formas_de_pagamento = $4, descricao = $5, status_da_conta = $6 where fk_fornecedor_pessoa = $7', [fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricao, "ativo", fornecedor.fk_fornecedor_pessoa])
+        return db.query('update fornecedor set galeria = $1, dados_de_interesse = $2, foto_de_fundo = $3, formas_de_pagamento = $4, descricao = $5, status_da_conta = $6 where fk_fornecedor_pessoa = $7 returning pk_id', [fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricao, "ativo", fornecedor.fk_fornecedor_pessoa])
     } catch (error) {
         throw (error)
     }
@@ -525,6 +507,7 @@ exports.deleteEverythingFornecedor = async function (id, idPessoa) {
         await db.query('delete from produto where fk_produto_fornecedor = $1', [id])
         await db.query('delete from assinatura where fk_assinatura_fornecedor = $1', [id])
         await db.query('delete from cartao where fk_cartao_fornecedor = $1', [id])
+        await db.query('delete from cupom where fk_cupom_fornecedor = $1', [id])
         await db.query('delete from fornecedor where fk_fornecedor_pessoa = $1', [idPessoa])
         await db.query('delete from cliente where fk_cliente_pessoa = $1', [idPessoa])
         await db.query('delete from pessoa where pk_id = $1', [idPessoa])

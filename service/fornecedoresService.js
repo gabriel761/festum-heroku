@@ -2,6 +2,7 @@ const fornecedoresData = require('../data/fornecedoresData')
 const pessoaService = require('../service/pessoaService')
 const fornecedoresFunctions = require('../funtions/fornecedoresFunctions')
 const assinaturaData = require("../data/assinaturaData")
+const cupomData = require("../data/cupomData")
 
 
 exports.getFornecedores = async function (idCliente) {
@@ -11,7 +12,7 @@ exports.getFornecedores = async function (idCliente) {
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (e) {
-        console.log(e)
+        throw (e)
     }
 
 }
@@ -23,95 +24,161 @@ exports.getFornecedoresDestaque = async function (idCliente) {
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (e) {
-        console.log(e)
+        throw (e)
     }
 
 }
 
 exports.getFornecedoresOffset = async function (idCliente, offset) {
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresOffset(offset)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
 
-    let dataFornecedores = await fornecedoresData.getFornecedoresOffset(offset)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-
-    return dataFornecedores
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresSemDistancia = async function () {
-    let dataFornecedores = await fornecedoresData.getFornecedoresSemDistancia()
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresSemDistancia()
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.fornecedoresSemDistanciaPreCadastro = async function () {
-    let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastro()
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastro()
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.fornecedoresSemDistanciaPreCadastroComStatus = async function (statusConta) {
-    let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastroComStatus(statusConta)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastroComStatus(statusConta)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.fornecedoresSemDistanciaPreCadastroComStatusEPlano = async function (statusConta, plano) {
-    let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastroComStatusEPlano(statusConta, plano)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastroComStatusEPlano(statusConta, plano)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.fornecedoresSemDistanciaPreCadastroComPlano = async function (plano) {
-    let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastroComPlano(plano)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastroComPlano(plano)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.fornecedoresSemDistanciaPreCadastroComPlanoAsc = async function (plano) {
-    let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastroComPlanoAsc(plano)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.fornecedoresSemDistanciaPreCadastroComPlanoAsc(plano)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getIdFornecedorByIdFirebase = function (idFirebase) {
-    return fornecedoresData.getIdFornecedorByIdFirebase(idFirebase)
+    try {
+        return fornecedoresData.getIdFornecedorByIdFirebase(idFirebase)
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedorByIdFirebase = async function (idFirebase) {
-    let fornecedor = await fornecedoresData.getFornecedorByIdFirebase(idFirebase)
-    let assinatura = await assinaturaData.getAssinaturaByIdFornecedor(fornecedor[0].pk_id)
-    fornecedor = fornecedor[0]
-    if (assinatura.length > 0) {
-        assinatura = assinatura[0]
-        delete assinatura.pk_id
+    try {
+        let fornecedor = await fornecedoresData.getFornecedorByIdFirebase(idFirebase)
+        let assinatura = await assinaturaData.getAssinaturaByIdFornecedor(fornecedor[0].pk_id)
+        fornecedor = fornecedor[0]
+        if (assinatura.length > 0) {
+            assinatura = assinatura[0]
+            delete assinatura.pk_id
 
-        return { ...fornecedor, ...assinatura }
-    } else {
-        return fornecedor
+            return { ...fornecedor, ...assinatura }
+        } else {
+            return fornecedor
+        }
+
+    } catch (error) {
+        throw (error)
     }
-
-
 }
 exports.getFornecedorByEmail = function (email) {
-    return fornecedoresData.getFornecedorByEmail(email)
+    try {
+        return fornecedoresData.getFornecedorByEmail(email)
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedorAndPessoaByIdFirebase = function (idFirebase) {
-    return fornecedoresData.getFornecedorAndPessoaByIdFirebase(idFirebase)
+    try {
+        return fornecedoresData.getFornecedorAndPessoaByIdFirebase(idFirebase)
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.checkIfCnpjExists = async function (cnpj) {
-    let dataFornecedores = await fornecedoresData.getIdByCnpjExport(cnpj)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getIdByCnpjExport(cnpj)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 
 exports.getFornecedoresBySegmento = async function (segmento, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresBySegmento(segmento)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySegmento(segmento)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresByCategoria = async function (categoria, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresByCategoria(categoria)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresByCategoria(categoria)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresDestaqueByCategoria = async function (categoria, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresDestaqueByCategoria(categoria)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresDestaqueByCategoria(categoria)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresByCategoriaOffset = async function (categoria, idCliente, offset) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresByCategoriaOffset(categoria, offset)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresByCategoriaOffset(categoria, offset)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresByCategoriaOrdemOffset = async function (categoria, ordem, idCliente, offset) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresByCategoriaOrdemOffset(categoria, ordem, offset)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresByCategoriaOrdemOffset(categoria, ordem, offset)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresByCategoriaFiltroOffset = async function (categoria, tipoFiltro, filtro, idCliente, offset) {
     try {
@@ -123,27 +190,28 @@ exports.getFornecedoresByCategoriaFiltroOffset = async function (categoria, tipo
     }
 
 }
-exports.getFornecedoresBySubCategoria = async function (subCategoria, idCliente) {
+exports.getFornecedoresBySubCategoria = async function (subCategoria, categoria, idCliente) {
     try {
-        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoria(subCategoria)
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoria(subCategoria, categoria)
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (error) {
         throw (error)
     }
 }
-exports.getFornecedoresBySubCategoriaOffset = async function (subCategoria, idCliente, offset) {
+exports.getFornecedoresBySubCategoriaOffset = async function (subCategoria, idCliente, offset, categoria) {
     try {
-        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaOffset(subCategoria, offset)
+        
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaOffset(subCategoria, offset, categoria)
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (error) {
         throw (error)
     }
 },
-    exports.getFornecedoresBySubCategoriaOrdem = async function (subCategoria, ordem, idCliente) {
+    exports.getFornecedoresBySubCategoriaOrdem = async function (subCategoria, ordem, categoria, idCliente) {
         try {
-            let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaOrdem(subCategoria, ordem)
+            let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaOrdem(subCategoria, ordem, categoria)
             dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
             return dataFornecedores
         } catch (error) {
@@ -151,9 +219,9 @@ exports.getFornecedoresBySubCategoriaOffset = async function (subCategoria, idCl
         }
 
     }
-exports.getFornecedoresBySubCategoriaOrdemOffset = async function (subCategoria, ordem, offset, idCliente) {
+exports.getFornecedoresBySubCategoriaOrdemOffset = async function (subCategoria, ordem, offset, categoria, idCliente) {
     try {
-        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaOrdemOffset(subCategoria, ordem, offset)
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaOrdemOffset(subCategoria, ordem, offset, categoria)
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (error) {
@@ -161,9 +229,9 @@ exports.getFornecedoresBySubCategoriaOrdemOffset = async function (subCategoria,
     }
 
 }
-exports.getFornecedoresBySubCategoriaFiltro = async function (subCategoria, tipoFiltro, filtro, idCliente) {
+exports.getFornecedoresBySubCategoriaFiltro = async function (subCategoria, tipoFiltro, filtro,categoria, idCliente) {
     try {
-        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaFiltro(subCategoria, tipoFiltro, filtro)
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaFiltro(subCategoria, tipoFiltro, filtro, categoria)
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (error) {
@@ -171,9 +239,9 @@ exports.getFornecedoresBySubCategoriaFiltro = async function (subCategoria, tipo
     }
 
 }
-exports.getFornecedoresBySubCategoriaFiltroOffset = async function (subCategoria, tipoFiltro, filtro, offset, idCliente) {
+exports.getFornecedoresBySubCategoriaFiltroOffset = async function (subCategoria, tipoFiltro, filtro, offset, categoria, idCliente) {
     try {
-        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaFiltroOffset(subCategoria, tipoFiltro, filtro, offset)
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaFiltroOffset(subCategoria, tipoFiltro, filtro, offset, categoria)
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (error) {
@@ -191,9 +259,9 @@ exports.getFornecedoresBySubCategoriaAndSegmento = async function (subCategoria,
     }
 
 }
-exports.getFornecedoresBySubCategoriaAndSegmentoOffset = async function (subCategoria, segmento, offset, idCliente) {
+exports.getFornecedoresBySubCategoriaAndSegmentoOffset = async function (subCategoria, segmento, offset, categoria, idCliente) {
     try {
-        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaAndSegmentoOffset(subCategoria, segmento, offset)
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaAndSegmentoOffset(subCategoria, segmento, offset, categoria)
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (error) {
@@ -201,9 +269,9 @@ exports.getFornecedoresBySubCategoriaAndSegmentoOffset = async function (subCate
     }
 
 }
-exports.getFornecedoresBySubCategoriaAndSegmentoOrdem = async function (subCategoria, segmento, ordem, idCliente) {
+exports.getFornecedoresBySubCategoriaAndSegmentoOrdem = async function (subCategoria, segmento, ordem, categoria, idCliente) {
     try {
-        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaAndSegmentoOrdem(subCategoria, segmento, ordem)
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaAndSegmentoOrdem(subCategoria, segmento, ordem, categoria)
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (error) {
@@ -211,9 +279,19 @@ exports.getFornecedoresBySubCategoriaAndSegmentoOrdem = async function (subCateg
     }
 
 }
-exports.getFornecedoresBySubCategoriaAndSegmentoOrdemOffset = async function (subCategoria, segmento, ordem, offset, idCliente) {
+exports.getFornecedoresBySubCategoriaAndSegmentoOrdemOffset = async function (subCategoria, segmento, ordem, offset, categoria, idCliente) {
     try {
-        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaAndSegmentoOrdemOffset(subCategoria, segmento, ordem, offset)
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaAndSegmentoOrdemOffset(subCategoria, segmento, ordem, offset, categoria)
+       // dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
+
+}
+exports.getFornecedoresBySubCategoriaAndSegmentoFiltro = async function (subCategoria, segmento, tipoFiltro, filtro,categoria, idCliente) {
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaAndSegmentoFiltro(subCategoria, segmento, tipoFiltro, filtro, categoria)
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (error) {
@@ -221,9 +299,9 @@ exports.getFornecedoresBySubCategoriaAndSegmentoOrdemOffset = async function (su
     }
 
 }
-exports.getFornecedoresBySubCategoriaAndSegmentoFiltro = async function (subCategoria, segmento, tipoFiltro, filtro, idCliente) {
+exports.getFornecedoresBySubCategoriaAndSegmentoFiltroOffset = async function (subCategoria, segmento, tipoFiltro, filtro, offset,categoria, idCliente) {
     try {
-        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaAndSegmentoFiltro(subCategoria, segmento, tipoFiltro, filtro)
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaAndSegmentoFiltroOffset(subCategoria, segmento, tipoFiltro, filtro, offset, categoria)
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (error) {
@@ -231,80 +309,105 @@ exports.getFornecedoresBySubCategoriaAndSegmentoFiltro = async function (subCate
     }
 
 }
-exports.getFornecedoresBySubCategoriaAndSegmentoFiltroOffset = async function (subCategoria, segmento, tipoFiltro, filtro, offset, idCliente) {
+exports.getFornecedoresDestaqueBySubCategoria = async function (subCategoria, categoria, idCliente) {
     try {
-        let dataFornecedores = await fornecedoresData.getFornecedoresBySubCategoriaAndSegmentoFiltroOffset(subCategoria, segmento, tipoFiltro, filtro, offset)
+        let dataFornecedores = await fornecedoresData.getFornecedoresDestaqueBySubCategoria(subCategoria, categoria)
         dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
         return dataFornecedores
     } catch (error) {
         throw (error)
     }
-
-}
-exports.getFornecedoresDestaqueBySubCategoria = async function (subCategoria, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresDestaqueBySubCategoria(subCategoria)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
 }
 exports.getFornecedoresByOrdem = async function (ordem, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresByOrdem(ordem)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresByOrdem(ordem)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresByOrdemOffset = async function (ordem, offset, idCliente) {
-    let dataFornecedores
-    if (ordem == "distância") {
-        dataFornecedores = await fornecedoresData.getFornecedoresOffset(offset)
-        console.log("data fornecedores: ", dataFornecedores)
-        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-        dataFornecedores = fornecedoresFunctions.ordenarPorDistancia(dataFornecedores)
-    } else {
-        dataFornecedores = await fornecedoresData.getFornecedoresByOrdemOffset(ordem, offset)
-        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    try {
+        let dataFornecedores
+        if (ordem == "distância") {
+            dataFornecedores = await fornecedoresData.getFornecedoresOffset(offset)
+            console.log("data fornecedores: ", dataFornecedores)
+            dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+            dataFornecedores = fornecedoresFunctions.ordenarPorDistancia(dataFornecedores)
+        } else {
+            dataFornecedores = await fornecedoresData.getFornecedoresByOrdemOffset(ordem, offset)
+            dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
 
+        }
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
     }
-    return dataFornecedores
 }
 
 exports.getFornecedoresByNome = async function (nome, segmento, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresByNome(nome, segmento);
-
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresByNome(nome, segmento);
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresByNomeOrdem = async function (nome, ordem, idCliente) {
-    let dataFornecedores = null
-    if (ordem == "distância") {
-        dataFornecedores = await fornecedoresData.getFornecedoresByNome(nome)
-        console.log("data fornecedores: ", dataFornecedores)
-        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-        dataFornecedores = fornecedoresFunctions.ordenarPorDistancia(dataFornecedores)
-    } else {
-        dataFornecedores = await fornecedoresData.getFornecedoresByNomeOrdem(nome, ordem)
-        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+    try {
+        let dataFornecedores = null
+        if (ordem == "distância") {
+            dataFornecedores = await fornecedoresData.getFornecedoresByNome(nome)
+            console.log("data fornecedores: ", dataFornecedores)
+            dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+            dataFornecedores = fornecedoresFunctions.ordenarPorDistancia(dataFornecedores)
+        } else {
+            dataFornecedores = await fornecedoresData.getFornecedoresByNomeOrdem(nome, ordem)
+            dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
 
+        }
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
     }
-    return dataFornecedores
 
 }
 exports.getFornecedoresByNomeFiltro = async function (nome, filtro, tipoFiltro, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresByNomeFiltro(nome, filtro, tipoFiltro)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresByNomeFiltro(nome, filtro, tipoFiltro)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresByFiltroOffset = async function (filtro, tipoFiltro, offset, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresByFiltroOffset(filtro, tipoFiltro, offset)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresByFiltroOffset(filtro, tipoFiltro, offset)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresByFiltroCategoriaOffset = async function (filtro, tipoFiltro, categoria, offset, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresByFiltroCategoriaOffset(filtro, tipoFiltro, categoria, offset)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresByFiltroCategoriaOffset(filtro, tipoFiltro, categoria, offset)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresBySegmentoAndCategoria = async function (segmento, categoria, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoAndCategoria(segmento, categoria)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoAndCategoria(segmento, categoria)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresBySegmentoAndCategoriaOffset = async function (segmento, categoria, idCliente, offset) {
     try {
@@ -317,29 +420,49 @@ exports.getFornecedoresBySegmentoAndCategoriaOffset = async function (segmento, 
 
 }
 exports.getFornecedoresDestaqueBySegmentoAndCategoria = async function (segmento, categoria, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresDestaqueBySegmentoAndCategoria(segmento, categoria)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresDestaqueBySegmentoAndCategoria(segmento, categoria)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresBySegmentoAndCategoriaAndSubCategoria = async function (segmento, categoria, subcategoria, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoAndCategoriaAndSubCategoria(segmento, categoria, subcategoria)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoAndCategoriaAndSubCategoria(segmento, categoria, subcategoria)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresByNomeAndCategoria = async function (nome, categoria, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresByNomeAndCategoria(nome, categoria)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresByNomeAndCategoria(nome, categoria)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresByNomeCategoriaAndSegmento = async function (nome, categoria, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresByNomeCategoriaAndSegmento(nome, categoria)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresByNomeCategoriaAndSegmento(nome, categoria)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresBySegmentoNomeAndOrdem = async function (nome, ordem, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoNomeAndOrdem(nome, ordem)
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoNomeAndOrdem(nome, ordem)
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.getFornecedoresBySegmentoAndOrdemOffset = async function (ordem, segmento, offset, idCliente) {
     try {
@@ -362,12 +485,21 @@ exports.getFornecedoresBySegmentoAndFiltroOffset = async function (tipoFiltro, f
 
 }
 exports.getFornecedoresBySegmentoAndNome = async function (nome, segmento, idCliente) {
-    let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoAndNome(nome, segmento);
-    dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
-    return dataFornecedores
+    try {
+        let dataFornecedores = await fornecedoresData.getFornecedoresBySegmentoAndNome(nome, segmento);
+        dataFornecedores = await fornecedoresFunctions.calcularDistancia(dataFornecedores, idCliente)
+        return dataFornecedores
+    } catch (error) {
+        throw error
+    }
 }
 exports.getFornecedoresVip = function () {
-    return fornecedoresData.getFornecedoresVip()
+    try {
+
+        return fornecedoresData.getFornecedoresVip()
+    } catch (error) {
+        throw error
+    }
 }
 exports.postFornecedores = async function (fornecedor, id) {
     try {
@@ -380,21 +512,20 @@ exports.postFornecedores = async function (fornecedor, id) {
         if (fornecedor.subcategorias) {
             fornecedor.subcategorias = await fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
         }
-        console.log("segmento antes de cadastrar: ", fornecedor.segmentos)
-        console.log("categorias antes de cadastrar: ", fornecedor.categorias)
-        console.log("subcategorias antes de cadastrar: ", fornecedor.subcategorias)
-        return fornecedoresData.postFornecedores(fornecedor, id);
+        const resultPostFornecedor = await fornecedoresData.postFornecedores(fornecedor, id);
+        return resultPostFornecedor
     } catch (error) {
         throw error
     }
 
 }
-exports.updateFornecedores = function (fornecedor) {
+exports.updateFornecedores = async function (fornecedor) {
     try {
         fornecedor.preco = fornecedoresFunctions.tratarPreco(fornecedor.preco)
         fornecedor.segmentos = fornecedoresFunctions.tratarCategorias(fornecedor.segmentos)
         fornecedor.categorias = fornecedoresFunctions.tratarCategorias(fornecedor.categorias)
         fornecedor.subcategorias = fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
+        await cupomData.updateCupom(fornecedor.objCupom)
         return fornecedoresData.updateFornecedores(fornecedor);
     } catch (e) {
         console.log(e)
@@ -412,8 +543,15 @@ exports.updateFornecedoresNebulosa = async function (fornecedor) {
         console.log(e)
     }
 }
-exports.updateFornecedorCompletarCadastro = function (cadastro) {
-    return fornecedoresData.updateFornecedorCompletarCadastro(cadastro)
+exports.updateFornecedorCompletarCadastro = async function (cadastro) {
+    try {
+        const resultPostFornecedor = await fornecedoresData.updateFornecedorCompletarCadastro(cadastro)
+        cadastro.objCupom.fk_cupom_fornecedor = resultPostFornecedor[0].pk_id
+        cupomData.postCupom(cadastro.objCupom)
+        return resultPostFornecedor
+    } catch (error) {
+        throw (error)
+    }
 }
 exports.updateStatusPagamentoFornecedor = function (statusPagamento, fk_id) {
     try {

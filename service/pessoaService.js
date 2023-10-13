@@ -12,7 +12,12 @@ try {
 }
 
 exports.getPessoas = function () {
-    return pessoaData.getPessoas()
+    try {
+        return pessoaData.getPessoas()
+    } catch (error) {
+        throw(error)
+    }
+    
 }
 
 exports.getByEmail = function (pessoa) {
