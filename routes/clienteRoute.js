@@ -18,6 +18,7 @@ const assinaturaService = require("../service/assinaturaService")
 const pagamentosFunctions = require("../funtions/pagamentoFunctions")
 const logsData = require("../data/logsData")
 const CryptoJS = require("crypto-js");
+const telefoneFunctions = require("../funtions/telefoneFunctions")
 
 //rotas login
 
@@ -575,6 +576,16 @@ router.get('/fornecedorByIdPessoa/:id', middleware.decodeToken, async (req, res)
         const id = req.params.id
         const idFirebase = req.user.uid
         const fornecedores = await fornecedoresService.getFornecedorByIdPessoa(id, idFirebase);
+        res.json(fornecedores)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send(error.message)
+    }
+});
+router.get('/fornecedorByIdPessoaDL/:id', async (req, res) => {
+    try {
+        const id = req.params.id
+        const fornecedores = await fornecedoresService.getFornecedorByIdPessoaDL(id);
         res.json(fornecedores)
     } catch (error) {
         console.error(error)
@@ -1415,6 +1426,28 @@ router.get('/getProdutosFromIdFornecedorCombos/:idFornecedor', middleware.decode
         res.status(500).send(error.message)
     }
 })
+
+router.get('/getProdutosFromIdFornecedorProdutosDL/:idFornecedor', async (req, res) => {
+    try {
+        const idFornecedor = req.params.idFornecedor
+        const produtos = await produtosService.getProdutosFromIdFornecedorProdutos(idFornecedor)
+        res.json(produtos)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send(error.message)
+    }
+})
+router.get('/getProdutosFromIdFornecedorCombosDL/:idFornecedor', async (req, res) => {
+    try {
+        const idFornecedor = req.params.idFornecedor
+        const produtos = await produtosService.getProdutosFromIdFornecedorCombos(idFornecedor)
+        res.json(produtos)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send(error.message)
+    }
+})
+
 router.post('/addProduto', middleware.decodeToken, async (req, res) => {
     const produto = req.body
     try {
@@ -1727,6 +1760,17 @@ router.get('/getAssinaturaByIdFornecedor/:idFornecedor', middleware.decodeToken,
         res.status(500).send(error.message)
     }
 })
+router.get('/getAssinaturaByIdFornecedorDL/:idFornecedor', async (req, res) => {
+    try {
+        const idFornecedor = req.params.idFornecedor
+        console.log("idFornecedor: ", idFornecedor)
+        const result = await assinaturaService.getAssinaturaByIdFornecedor(idFornecedor)
+        res.status(200).json(result);
+    } catch (error) {
+        console.error(error)
+        res.status(500).send(error.message)
+    }
+})
 router.get('/deleteAssinaturaByIdUnico/:idUnico', middleware.decodeToken, async (req, res) => {
     try {
         const idUnico = req.params.idUnico
@@ -1808,6 +1852,7 @@ router.get('/levarAssinaturaIpagParaBD/:idAssinatura', async (req, res) => {
         res.status(500).send(error.message)
     }
 })
+
 
 
 module.exports = router

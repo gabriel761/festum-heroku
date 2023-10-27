@@ -515,3 +515,6 @@ exports.deleteEverythingFornecedor = async function (id, idPessoa) {
         console.log(e)
     }
 }
+
+
+
