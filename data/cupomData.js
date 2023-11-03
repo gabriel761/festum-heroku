@@ -16,3 +16,11 @@ exports.updateCupom = function (cupom) {
         throw ("Erro no update cupom: " + error.message)
     }
 }
+
+exports.getCupom = function (idFornecedor) {
+    try {
+        return db.query('select * from cupom where fk_cupom_fornecedor = $1', [idFornecedor])
+    }catch(error){
+        throw ("Erro ao pegar cupom: "+error.message);
+    }
+}

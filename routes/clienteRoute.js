@@ -19,6 +19,7 @@ const pagamentosFunctions = require("../funtions/pagamentoFunctions")
 const logsData = require("../data/logsData")
 const CryptoJS = require("crypto-js");
 const telefoneFunctions = require("../funtions/telefoneFunctions")
+const cupomService = require('../service/cupomService')
 
 //rotas login
 
@@ -1804,6 +1805,18 @@ router.get('/reativarAssinaturaByIdUnico/:idUnico', middleware.decodeToken, asyn
     }
 })
 
+// cupom de desconto
+
+router.get('/getCupom/:idFornecedor',middleware.decodeToken, async (req, res) => {
+    try{
+        const idFornecedor = req.params.idFornecedor
+        const result = await cupomService.getCupom(idFornecedor)
+        res.status(200).json(result) 
+    }catch(error){
+        res.status(500).send(error)
+    }
+})
+
 router.get('/levarAssinaturaIpagParaBD/:idAssinatura', async (req, res) => {
     try {
         console.log("pegar transacao")
@@ -1852,6 +1865,8 @@ router.get('/levarAssinaturaIpagParaBD/:idAssinatura', async (req, res) => {
         res.status(500).send(error.message)
     }
 })
+
+
 
 
 

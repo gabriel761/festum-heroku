@@ -20,14 +20,14 @@ exports.getIdByCnpjExport = (cnpj) => {
 }
 exports.getFornecedores = function () {
     try {
-        return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa, planos from fornecedor where status_da_conta = 'ativo' or status_da_conta = 'conta gratuita' limit 20 ");
+        return db.query("select nome_loja, categoria, imagem, localizacao, preco, tem_cupom, fk_fornecedor_pessoa, planos from fornecedor where status_da_conta = 'ativo' or status_da_conta = 'conta gratuita' limit 20 ");
     } catch (error) {
         throw (error)
     }
 }
 exports.getFornecedoresDestaque = function () {
     try {
-        return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa, planos from fornecedor where status_da_conta = 'ativo' limit 20 ");
+        return db.query("select nome_loja, categoria, imagem, localizacao, preco, tem_cupom, fk_fornecedor_pessoa, planos from fornecedor where status_da_conta = 'ativo' limit 20 ");
     } catch (error) {
         throw (error)
     }
@@ -35,7 +35,7 @@ exports.getFornecedoresDestaque = function () {
 
 exports.getFornecedoresOffset = function (offset) {
     try {
-        return db.query("select nome_loja, categoria, imagem, localizacao, preco, fk_fornecedor_pessoa, planos from fornecedor where status_da_conta = 'ativo' or status_da_conta = 'conta gratuita' limit 20 offset $1 ", [offset]);
+        return db.query("select nome_loja, categoria, imagem, localizacao, preco, tem_cupom, fk_fornecedor_pessoa, planos from fornecedor where status_da_conta = 'ativo' or status_da_conta = 'conta gratuita' limit 20 offset $1 ", [offset]);
     } catch (error) {
         throw (error)
     }
@@ -422,7 +422,7 @@ exports.getFornecedoresVip = function () {
 exports.postFornecedores = async function (fornecedor, idPessoa) {
     try {
         console.log("ultimo log antes do query")
-        const result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, instagramLink, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao, cpf, sugest_subcategoria, galeria, dados_de_interesse, foto_de_fundo, formas_de_pagamento, descricao, cep, numero, complemento, status_da_conta, status_pagamento, planos) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31) returning pk_id', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco, false, true, idPessoa, false, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja, fornecedor.cep, fornecedor.numero, fornecedor.complemento, fornecedor.statusConta, fornecedor.statusPagamento, fornecedor.plano])
+        const result = await db.query('insert into fornecedor ( nome_loja, cnpj, telefone, instagram, instagramLink, endereco, cidade, palavras_chave, categoria, subcategoria, segmento, imagem, preco, auth_adm, auth_pag, fk_fornecedor_pessoa, vip, localizacao, cpf, sugest_subcategoria, galeria, dados_de_interesse, foto_de_fundo, formas_de_pagamento, descricao, cep, numero, complemento, status_da_conta, status_pagamento, planos, tipo_telefone ) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12,$13,$14,$15,$16,$17,$18,$19,$20,$21,$22,$23,$24,$25,$26,$27,$28,$29,$30,$31,$32) returning pk_id', [fornecedor.nomeLoja, fornecedor.cnpj, fornecedor.tel, fornecedor.instagram, fornecedor.instagramLink, fornecedor.endereco, fornecedor.cidade, fornecedor.palavrasChave, fornecedor.categorias, fornecedor.subcategorias, fornecedor.segmentos, fornecedor.imagem, fornecedor.preco, false, true, idPessoa, false, fornecedor.localizacao, fornecedor.cpf, fornecedor.sugestSubcategoria, fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricaoLoja, fornecedor.cep, fornecedor.numero, fornecedor.complemento, fornecedor.statusConta, fornecedor.statusPagamento, fornecedor.plano, fornecedor.tipoTel])
         return { error: false, message: "Fornecedor cadastrado com sucesso", data: result[0] }
     } catch (e) {
         console.log("houve erro:", e)
@@ -440,7 +440,7 @@ exports.updateFornecedores = function (fornecedor) {
 exports.updateFornecedorCompletarCadastro = function (fornecedor) {
     try {
         console.log("completar cadastro dentro do data: ", fornecedor)
-        return db.query('update fornecedor set galeria = $1, dados_de_interesse = $2, foto_de_fundo = $3, formas_de_pagamento = $4, descricao = $5, status_da_conta = $6 where fk_fornecedor_pessoa = $7 returning pk_id', [fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricao, "ativo", fornecedor.fk_fornecedor_pessoa])
+        return db.query('update fornecedor set galeria = $1, dados_de_interesse = $2, foto_de_fundo = $3, formas_de_pagamento = $4, descricao = $5, status_da_conta = $6, tem_cupom = $8 where fk_fornecedor_pessoa = $7 returning pk_id', [fornecedor.galeria, fornecedor.dadosInteresse, fornecedor.fotoFundo, fornecedor.formaPagamento, fornecedor.descricao, "ativo", fornecedor.fk_fornecedor_pessoa, fornecedor.temCupom])
     } catch (error) {
         throw (error)
     }
