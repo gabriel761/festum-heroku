@@ -20,7 +20,9 @@ const logsData = require("../data/logsData")
 const CryptoJS = require("crypto-js");
 const telefoneFunctions = require("../funtions/telefoneFunctions")
 const cupomService = require('../service/cupomService')
-
+const firebaseAdmin = require('../firebase-admin-files/index')
+const gerarEmail = require('../funtions/gerarEmails')
+const enviarEmail = require('../funtions/enviarEmail')
 //rotas login
 
 router.post('/login-pessoa', async (req, res) => {
@@ -160,68 +162,8 @@ router.get('/teste', async (req, res) => {
 
 });
 
-// router.get("/testeEmailSend", async (req, res) => {
-//     const transporter = nodemailer.createTransport({
-//         host: "smtp.gmail.com",
-//         port: 587,
-//         secure: false,
-//         auth: {
-//             user: "jg.7651@gmail.com",
-//             pass: "tvmamspkhtueyapb"
-//         },
-//         tls: {
-//             rejectUnauthorized: false
-//         }
-//     })
-//     const mailSent = await transporter.sendMail({
-//         text: "Texto do email que vai ser o segundo teste do app festum",
-//         subject: "Teste do email do app festum",
-//         from: "festumbrasil@gmail.com",
-//         replyTo: "festumbrasil@gmail.com",
-//         to: "jg.7651@gmail.com"
-//     })
-//     console.log("mail sent: ", mailSent)
-//     res.json(mailSent)
-// })
-router.post("/orcamentoEmailSend", async (req, res) => {
-    const { nome, emailCliente, telefone, mensagem, emailFornecedor } = req.body
-    const body = req.body
-    console.log("email cliente: ", emailCliente)
-    console.log("email fornecedor: ", emailFornecedor)
-    try {
-        const transporter = nodemailer.createTransport({
-            host: "email-ssl.com.br",
-            port: 465,
-            secure: true,
-            // auth: {
-            //     user: "jg.7651@gmail.com",
-            //     pass: "tvmamspkhtueyapb"
-            // },
-            auth: {
-                user: "suporte@festum.com.br",
-                pass: "Gabi@123"
-            },
 
-        })
-        const mailSent = await transporter.sendMail({
-            text: `
-        Nome: ${nome} \n
-        Email: ${emailCliente} \n
-        Telefone: ${telefone} \n
-        Mensagem: ${mensagem} 
-        `,
-            subject: "Solicitação de orçamento app festum",
-            from: 'suporte@festum.com.br',
-            replyTo: emailCliente,
-            to: emailFornecedor
-        })
-        console.log("mail sent: ", mailSent)
-        res.json(body)
-    } catch (error) {
-        res.json(error)
-    }
 
-})
 
 router.get('/getUserTypeByUid', middleware.decodeToken, async (req, res) => {
     try {
@@ -1865,6 +1807,55 @@ router.get('/levarAssinaturaIpagParaBD/:idAssinatura', async (req, res) => {
         res.status(500).send(error.message)
     }
 })
+
+router.get('/sendEmailVerification/:email',  async (req, res) => {
+    try {
+        const emailFornecedor = req.params.email
+        const link = await firebaseAdmin.admin.auth().generateEmailVerificationLink(emailFornecedor, {
+            url: "https://festum-site.vercel.app/email-confirmado-app"
+        })
+        const url = new URL(link)
+        url.searchParams.set('lang', 'pt-br')
+        const emailHtml = gerarEmail.gerarEmailEndereco(url.toString())
+        enviarEmail.normalNoReply(emailFornecedor, "Verifição de email Festum", emailHtml)
+        res.status(200).send('email enviado com sucesso!')
+    } catch (error) {
+        console.log(error)
+        res.status(500)
+    }
+})
+
+router.get('/sendPasswordResetEmail/:email', async (req, res) => {
+    try {
+        const emailFornecedor = req.params.email
+        const link = await firebaseAdmin.admin.auth().generatePasswordResetLink(emailFornecedor, {
+            url: "https://festum-site.vercel.app/senha-confirmada-app"
+        })
+        const url = new URL(link)
+        url.searchParams.set('lang', 'pt-br')
+        const emailHtml = gerarEmail.gerarEmailRedefinicaoDeSenha(url.toString())
+        enviarEmail.normalNoReply(emailFornecedor, "Redefinição de senha Festum", emailHtml)
+        res.status(200).send('email enviado com sucesso!')
+    } catch (error) {
+        console.log(error)
+        res.status(500).send(error)
+    }
+})
+
+router.post("/orcamentoEmailSend", async (req, res) => {
+    try {
+        const { nome, emailCliente, telefone, mensagem, emailFornecedor } = req.body
+        const emailHtml = gerarEmail.gerarEmailOrcamento(nome, emailCliente, telefone, mensagem)
+        enviarEmail.orcamento( emailHtml, emailCliente, emailFornecedor)
+        res.status(200).send('email enviado com sucesso!')
+    } catch (error) {
+        console.log(error)
+        res.status(500).send(error)
+    }
+
+})
+
+
 
 
 
