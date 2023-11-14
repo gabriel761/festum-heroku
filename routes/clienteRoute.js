@@ -1312,8 +1312,10 @@ router.post('/callbackUrlIpag', async (req, res)=> {
     try{
         const cadastroIpag = req.body
         await logsData.insertLog(JSON.stringify(cadastroIpag))
+        res.json(cadastroIpag)
     }catch(e){
         console.log("erro no pagamento ipag callback: ", e)
+        res.json(e)
     }
 })
 
