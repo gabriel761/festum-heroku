@@ -1159,7 +1159,7 @@ router.get("/getFornecedorByEmail/:email", async (req, res) => {
 
 router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastroIpag = req.body
-    await logsData.insertLog(JSON.stringify(cadastroIpag))
+    await logsData.insertLog(JSON.stringify(cadastroIpag), 'webhook')
     //console.log("resultado ipag webhook: ",cadastroIpag.retorno[0])
     // if (cadastroIpag.retorno) {
     //     const resultEmail = await fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
@@ -1311,7 +1311,7 @@ res.json(cadastroIpag)
 router.post('/callbackUrlIpag', async (req, res)=> {
     try{
         const cadastroIpag = req.body
-        await logsData.insertLog(JSON.stringify(cadastroIpag))
+        await logsData.insertLog(JSON.stringify(cadastroIpag), 'callback')
         res.json(cadastroIpag)
     }catch(e){
         console.log("erro no pagamento ipag callback: ", e)
