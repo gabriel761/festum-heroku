@@ -1307,6 +1307,16 @@ res.json(cadastroIpag)
 
 })
 
+
+router.get('/callbackUrlIpag', async (req, res)=> {
+    try{
+        const cadastroIpag = req.body
+        await logsData.insertLog(JSON.stringify(cadastroIpag))
+    }catch(e){
+        console.log("erro no pagamento ipag callback: ", e)
+    }
+})
+
 //rotas produto
 router.get('/produtos', async (req, res) => {
     try {
