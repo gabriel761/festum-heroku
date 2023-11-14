@@ -1303,7 +1303,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     // } else {
     //     res.json(cadastroIpag)
     // }
-
+res.json(cadastroIpag)
 
 })
 
