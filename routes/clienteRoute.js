@@ -1308,7 +1308,7 @@ res.json(cadastroIpag)
 })
 
 
-router.get('/callbackUrlIpag', async (req, res)=> {
+router.post('/callbackUrlIpag', async (req, res)=> {
     try{
         const cadastroIpag = req.body
         await logsData.insertLog(JSON.stringify(cadastroIpag))
