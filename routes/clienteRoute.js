@@ -1377,10 +1377,10 @@ router.post('/callbackUrlIpag', async (req, res) => {
                 res.status(500).json({ message: "mais de um email encontrado" })
             }
         } else {
-            
             const textToEncript = cadastroIpag.status_pagamento + ""
-            const encryptStatusCode = CryptoJS.AES.encrypt(textToEncript, "Web033F1")
-            res.redirect('https://festum-site.vercel.app/form-precadastro-firebase' + "?code=" + encryptStatusCode)
+            const encryptStatusCode = await CryptoJS.AES.encrypt(textToEncript, "Web033F1")
+            //res.json(encryptStatusCode.toString())
+            res.redirect('https://festum-site.vercel.app/form-precadastro-firebase' + "?code=" + encryptStatusCode.toString())
         }
 
 
