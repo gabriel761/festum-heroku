@@ -1338,7 +1338,7 @@ router.post('/callbackUrlIpag', async (req, res) => {
                 }
 
             } else if (resultEmail.length == 1) {
-                res.status(500).json({ message: "email já existe no banco de dados", data:resultEmail })
+                //res.status(500).json({ message: "email já existe no banco de dados", data:resultEmail })
                 if (fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj)) {
                     if (cadastroIpag.retorno[0].status_pagamento == 8 || cadastroIpag.retorno[0].status_pagamento == 5) {
                         // update do status
