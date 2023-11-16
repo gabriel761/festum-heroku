@@ -531,6 +531,17 @@ exports.updateFornecedores = async function (fornecedor) {
         console.log(e)
     }
 }
+exports.updateFornecedoresSite = async function (fornecedor) {
+    try {
+        fornecedor.preco = fornecedoresFunctions.tratarPreco(fornecedor.preco)
+        fornecedor.segmentos = fornecedoresFunctions.tratarCategorias(fornecedor.segmentos)
+        fornecedor.categorias = fornecedoresFunctions.tratarCategorias(fornecedor.categorias)
+        fornecedor.subcategorias = fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
+        return fornecedoresData.updateFornecedoresSite(fornecedor);
+    } catch (e) {
+        console.log(e)
+    }
+}
 exports.updateFornecedoresNebulosa = async function (fornecedor) {
     try {
         fornecedor.preco = fornecedoresFunctions.tratarPreco(fornecedor.preco)

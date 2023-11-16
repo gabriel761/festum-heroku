@@ -1077,6 +1077,18 @@ router.post('/updateFornecedor', async (req, res) => {
     }
 
 });
+router.post('/updateFornecedorCompletarContaSite', async (req, res) => {
+    try {
+        const cadastro = req.body
+        console.log("update fornecedor: ", cadastro)
+        const resultFornecedor = await fornecedoresService.updateFornecedoresSite(cadastro);
+        res.json(resultFornecedor)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send(error.message)
+    }
+
+});
 router.post('/updateFornecedorNebulosa', async (req, res) => {
     try {
         const cadastro = req.body
