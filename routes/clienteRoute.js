@@ -1176,150 +1176,65 @@ router.get("/getFornecedorByEmail/:email", async (req, res) => {
 router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastroIpag = req.body
     await logsData.insertLog(JSON.stringify(cadastroIpag), 'webhook')
-    //console.log("resultado ipag webhook: ",cadastroIpag.retorno[0])
-    // if (cadastroIpag.retorno) {
-    //     const resultEmail = await fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
-    //     const fornecedorDB = resultEmail[0]
-    //     console.log("resultado do email: ", resultEmail)
-    //     const data_bloqueioDate = pagamentosFunctions.checarSePrecisaDeDataBloqueio(cadastroIpag.retorno[0].mensagem_transacao)
-    //     const cartaoIpag = { dadosCartao: JSON.stringify(cadastroIpag.retorno[0].cartao) , numero: cadastroIpag.retorno[0].cartao.numero, token: cadastroIpag.retorno[0].assinatura.card_token, bandeira: cadastroIpag.retorno[0].cartao.bandeira, fkCartaoFornecedor: fornecedorDB.pk_id}
-    //     const assinaturaIpag = { dadosAssinatura: JSON.stringify(cadastroIpag.retorno[0].assinatura), dataPrimeiraCobranca: new Date(), idAssinatura: cadastroIpag.retorno[0].assinatura.id + "", cardToken: cadastroIpag.retorno[0].assinatura.card_token, fkAssinaturaFornecedor: fornecedorDB.pk_id, dataBloqueio: data_bloqueioDate}
+try {
+    
 
-    //     if (resultEmail.length == 0) {
-    //         const cadastro = ipagFunctions.tratarDadosDoFornecedor(cadastroIpag.retorno[0].cliente)
-    //         cadastro.statusPagamento = cadastroIpag.retorno[0].mensagem_transacao
-    //         console.log("cadastro 2: ", cadastro)
+    if (cadastroIpag.resource == "subscriptions") {
+        // tratando status code e message
+        await logsData.insertLog(JSON.stringify(cadastroIpag))
+        const statusCode = cadastroIpag.attributes.last_transaction.attributes.status.code
+        const mensagemStatus = pagamentosFunctions.mensagemStatusContaIpag(statusCode)
+        console.log("status ipag: ", mensagemStatus)
+        const emailIpag = cadastroIpag.attributes.customer.attributes.email
+        const resultEmail = await fornecedoresService.getFornecedorByEmail(emailIpag)
+        const fornecedorDB = resultEmail[0]
+        const resultAssinatura = await assinaturaService.getAssinaturaByIdFornecedor(fornecedorDB.pk_id)
+        const assinaturaDB = resultAssinatura[0]
+        console.log("resultado da assinatura: ", !assinaturaDB && statusCode == 8)
+        if (!assinaturaDB && statusCode == 8) {
+            const assinaturaIpag = cadastroIpag
+            const assinaturaParaCriar = {
+                dadosAssinatura: JSON.stringify(assinaturaIpag),
+                dataPrimeiraCobranca: cadastroIpag.attributes.starting_date,
+                idUnico: cadastroIpag.id,
+                cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
+                fkAssinaturaFornecedor: fornecedorDB.pk_id,
+                profile_id: cadastroIpag.attributes.profile_id
+            }
+            console.log("assinatura para criar: ", assinaturaParaCriar)
+            await assinaturaService.postAssinatura(assinaturaParaCriar)
+            await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
+        } else if (!!assinaturaDB && statusCode == 8) {
+            const assinaturaIpag = cadastroIpag
+            const assinaturaParaUpdate = {
+                dadosAssinatura: JSON.stringify(assinaturaIpag),
+                idAssinatura: cadastroIpag.id + "",
+                dataBloqueio: null,
+                cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
+            }
+            await assinaturaService.updateAssinatura(assinaturaParaUpdate)
+            await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
+        } else if (!!assinaturaDB && statusCode != 8) {
+            const assinaturaIpag = cadastroIpag
+            const assinaturaParaUpdate = {
+                dadosAssinatura: JSON.stringify(assinaturaIpag),
+                idAssinatura: cadastroIpag.id + "",
+                idFornecedor: fornecedorDB.pk_id,
+                dataBloqueio: pagamentosFunctions.gerarDataBloqueio(),
+                cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
+            }
+            await assinaturaService.updateAssinatura(assinaturaParaUpdate)
+            await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
+        } else if (!assinaturaDB && statusCode != 8) {
+            await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
+        }
 
-    //         try {
-    //             const resultPessoa = await pessoaService.postPessoa(cadastro.nome, cadastro.sobrenome, cadastro.email, /*cadastro.firebaseId,*/ "fornecedor")
-    //             console.log("add fornecedor result pessoa: ", resultPessoa)
+        res.send(mensagemStatus)
 
-    //             if (!resultPessoa.error) {
-    //                 const resultFornecedor = await fornecedoresService.postFornecedores(cadastro, resultPessoa.data.id);
-    //                 if(!resultFornecedor.error){
-    //                     assinaturaService.postAssinatura(assinatura)
-    //                     pagamentoService.postCartao(cartaoIpag)
-    //                 }
-    //                 console.log("sucesso no cadastro do fornecedor")
-    //                 res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
-    //             } else {
-    //                 //res.json(resultPessoa)
-    //             }
-    //         } catch (e) {
-    //             console.log("fornecedor não foi cadastrado: ", e)
-    //             //res.json(e);
-    //         }
-    //     } else if (resultEmail.length == 1) {
-
-
-
-    //         if (fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj)) {
-
-    //             if (cadastroIpag.retorno[0].mensagem_transacao != "cancelado" && cadastroIpag.retorno[0].mensagem_transacao != "CANCELED") {
-    //                 // update do status
-    //                 console.log("webhook entrando no if que faz update no pagamento do fornecedor")
-    //                 try {
-    //                     await fornecedoresService.updateStatusPagamentoFornecedor(cadastroIpag.retorno[0].mensagem_transacao, fornecedorDB.fk_fornecedor_pessoa)
-    //                     const assinatura = await assinaturaService.getAssinaturaByIdFornecedor(fornecedorDB.pk_id).catch((e) => {throw("erro get assinatura fornecedor: "+ e)})
-    //                     const cartao = await pagamentoService.getCartaoByNumeroAndIdFornecedor(cartaoIpag.numero,fornecedorDB.pk_id).catch((e) => { throw ("erro get cartao fornecedor: "+ e) })
-    //                     console.log("cartao ta no db: ", cartao)
-    //                     if (!!assinatura) {
-    //                         await assinaturaService.updateAssinatura(assinaturaIpag).catch((e) => { throw ("erro no update assinatura: "+ e) })
-    //                     } else {
-    //                         await assinaturaService.postAssinatura(assinaturaIpag).catch((e) => { throw ("erro no post assinatura: "+ e) })
-    //                     }
-    //                     if (cartao.length == 0) {
-    //                         await pagamentoService.postCartao(cartaoIpag).catch((e) => { throw ("erro no post cartao: "+ e) })
-    //                     }
-
-    //                     res.redirect("https://festum-site.vercel.app/form-precadastro-firebase")
-    //                 } catch (error) {
-    //                     console.log(error)
-    //                 }
-
-
-    //             } else {
-    //                 // res.send("o status é cancelado:")
-    //                 res.json(cadastroIpag.retorno[0].mensagem_transacao)
-    //                 console.log("webhook entrando no else do status cancelado")
-    //             }
-
-    //         } else {
-    //             console.log("cpf ou cnpj vindo do ipag: "+ cadastroIpag.retorno[0].cliente.cpf_cnpj)
-    //             res.json({ cpf_cnpj: cadastroIpag.retorno[0].cliente.cpf_cnpj, cpf: fornecedorDB.cpf, condicional: fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj) })
-    //             console.log("webhook entrando no else onde o cpf ou cnpj não é igual ao do banco de dados")
-    //             //res.send( "erro: Existe uma conta com este email, mas os dados não estão coincidindo. Cheque os dados de sua conta no app festum")
-    //         }
-
-
-    //     } else {
-    //         // res.send("mais de um email cadastrado")
-    //     }
-    // } else {
-    //     res.redirect('https://festum-site.vercel.app/form-precadastro-firebase')
-    // }
-
-    // if (cadastroIpag.resource == "subscriptions") {
-    //     // tratando status code e message
-    //     await logsData.insertLog(JSON.stringify(cadastroIpag))
-    //     const statusCode = cadastroIpag.attributes.last_transaction.attributes.status.code
-    //     const mensagemStatus = pagamentosFunctions.mensagemStatusContaIpag(statusCode)
-    //     console.log("status ipag: ", mensagemStatus)
-    //     const emailIpag = cadastroIpag.attributes.customer.attributes.email
-    //     const resultEmail = await fornecedoresService.getFornecedorByEmail(emailIpag)
-    //     const fornecedorDB = resultEmail[0]
-    //     const resultAssinatura = await assinaturaService.getAssinaturaByIdFornecedor(fornecedorDB.pk_id)
-    //     const assinaturaDB = resultAssinatura[0]
-    //     console.log("resultado da assinatura: ", !assinaturaDB && statusCode == 8)
-    //     if (!assinaturaDB && statusCode == 8) {
-    //         const assinaturaIpag = cadastroIpag
-    //         const assinaturaParaCriar = {
-    //             dadosAssinatura: JSON.stringify(assinaturaIpag),
-    //             dataPrimeiraCobranca: cadastroIpag.attributes.starting_date,
-    //             idUnico: cadastroIpag.id,
-    //             cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
-    //             fkAssinaturaFornecedor: fornecedorDB.pk_id,
-    //             profile_id: cadastroIpag.attributes.profile_id
-    //         }
-    //         console.log("assinatura para criar: ", assinaturaParaCriar)
-    //         await assinaturaService.postAssinatura(assinaturaParaCriar)
-    //         await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
-    //     } else if (!!assinaturaDB && statusCode == 8) {
-    //         const assinaturaIpag = cadastroIpag
-    //         const assinaturaParaUpdate = {
-    //             dadosAssinatura: JSON.stringify(assinaturaIpag),
-    //             idAssinatura: cadastroIpag.id + "",
-    //             dataBloqueio: null,
-    //             cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
-    //         }
-    //         await assinaturaService.updateAssinatura(assinaturaParaUpdate)
-    //         await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
-    //     } else if (!!assinaturaDB && statusCode != 8) {
-    //         const assinaturaIpag = cadastroIpag
-    //         const assinaturaParaUpdate = {
-    //             dadosAssinatura: JSON.stringify(assinaturaIpag),
-    //             idAssinatura: cadastroIpag.id + "",
-    //             dataBloqueio: pagamentosFunctions.gerarDataBloqueio(),
-    //             cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
-    //         }
-    //         await assinaturaService.updateAssinatura(assinaturaParaUpdate)
-    //         await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
-    //     } else if (!assinaturaDB && statusCode != 8) {
-    //         await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
-    //     }
-
-    //     res.send(mensagemStatus)
-
-    // } else if (!cadastroIpag.resource) {
-
-    //     const textToEncript = cadastroIpag.status_pagamento + ""
-    //     const encryptStatusCode = CryptoJS.AES.encrypt(textToEncript, "Web033F1")
-    //     res.redirect('https://festum-site.vercel.app/form-precadastro-firebase' + "?code=" + encryptStatusCode)
-
-    // } else {
-    //     res.json(cadastroIpag)
-    // }
-    res.json(cadastroIpag)
+    }
+} catch (error) {
+    res.status(500).json(error)
+}
 
 })
 
