@@ -1320,7 +1320,7 @@ router.post('/callbackUrlIpag', async (req, res) => {
             const fornecedorDB = resultEmail[0]
             const data_bloqueioDate = null // pagamentosFunctions.checarSePrecisaDeDataBloqueio(cadastroIpag.retorno[0].mensagem_transacao)
             const cartaoIpag = { dadosCartao: JSON.stringify(cadastroIpag.retorno[0].cartao), numero: cadastroIpag.retorno[0].cartao.numero, token: cadastroIpag.retorno[0].assinatura.card_token, bandeira: cadastroIpag.retorno[0].cartao.bandeira, fkCartaoFornecedor: fornecedorDB?.pk_id }
-            const assinaturaIpag = { dadosAssinatura: JSON.stringify(cadastroIpag.retorno[0].assinatura), dataPrimeiraCobranca: new Date(), idAssinatura: cadastroIpag.retorno[0].assinatura.id + "", cardToken: cadastroIpag.retorno[0].assinatura.card_token, fkAssinaturaFornecedor: fornecedorDB?.pk_id, dataBloqueio: data_bloqueioDate }
+            const assinaturaIpag = { dadosAssinatura: JSON.stringify(cadastroIpag.retorno[0].assinatura), dataPrimeiraCobranca: new Date(), idUnico: cadastroIpag.retorno[0].assinatura.id + "", cardToken: cadastroIpag.retorno[0].assinatura.card_token, fkAssinaturaFornecedor: fornecedorDB?.pk_id, dataBloqueio: data_bloqueioDate }
             if (resultEmail.length == 0) {
                 try {
                     const cadastro = ipagFunctions.tratarDadosDoFornecedor(cadastroIpag.retorno[0].cliente)
@@ -1338,8 +1338,9 @@ router.post('/callbackUrlIpag', async (req, res) => {
                 }
 
             } else if (resultEmail.length == 1) {
+                //res.status(500).json({ message: "email já existe no banco de dados", data:resultEmail })
                 if (fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj)) {
-                    if (cadastroIpag.retorno[0].status_pagamento == 8) {
+                    if (cadastroIpag.retorno[0].status_pagamento == 8 || cadastroIpag.retorno[0].status_pagamento == 5) {
                         // update do status
                         console.log("webhook entrando no if que faz update no pagamento do fornecedor")
                         try {
@@ -1355,14 +1356,14 @@ router.post('/callbackUrlIpag', async (req, res) => {
                             if (cartao.length == 0) {
                                 await pagamentoService.postCartao(cartaoIpag).catch((e) => { throw ("erro no post cartao: " + e) })
                             }
-                            res.status(200).json("tudo certo!")
+                            res.status(200).json("Fornecedor atualizado com sucesso!")
                         } catch (error) {
                             res.status(500).json(error)
                         }
                     } else {
                         // res.send("o status é cancelado:")
                         res.status(500).json({ message: "status não é aprovado nem capturado", status_pagamento: cadastroIpag.retorno[0].status_pagamento })
-                        console.log("callback entrando no else do status cancelado")
+                        console.log("callback entrando no else do status não aprovado")
                     }
 
                 } else {
