@@ -1338,7 +1338,7 @@ router.post('/callbackUrlIpag', async (req, res) => {
                 }
 
             } else if (resultEmail.length == 1) {
-                //res.status(500).json({ message: "email já existe no banco de dados", data:resultEmail })
+                res.status(500).json({ message: "email já existe no banco de dados", data:resultEmail })
                 if (fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj)) {
                     if (cadastroIpag.retorno[0].status_pagamento == 8 || cadastroIpag.retorno[0].status_pagamento == 5) {
                         // update do status
@@ -1377,6 +1377,7 @@ router.post('/callbackUrlIpag', async (req, res) => {
                 res.status(500).json({ message: "mais de um email encontrado" })
             }
         } else {
+            
             const textToEncript = cadastroIpag.status_pagamento + ""
             const encryptStatusCode = CryptoJS.AES.encrypt(textToEncript, "Web033F1")
             res.redirect('https://festum-site.vercel.app/form-precadastro-firebase' + "?code=" + encryptStatusCode)
