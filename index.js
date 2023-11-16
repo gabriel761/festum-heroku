@@ -6,7 +6,9 @@ const bodyParser = require("body-parser")
 
  const port = process.env.PORT || 5000
  
+app.set('json spaces', 2)
  app.use(function (req, res, next) {
+     
 
     // Website you wish to allow to connect
     res.setHeader('Access-Control-Allow-Origin', '*');

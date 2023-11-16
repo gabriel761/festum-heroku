@@ -10,3 +10,43 @@ exports.tratarDadosDoFornecedor = function (fornecedorIpag){
     }
     return fornecedorReturn
 }
+
+exports.mensagemStatusContaIpag = (statusNumber) => {
+    if(typeof statusNumber == "string"){
+        statusNumber = parseInt(statusNumber)
+    }
+    switch (statusNumber) {
+        case 1:
+            return "Iniciado"
+            break;
+        case 2:
+            return "Boleto Impresso"
+            break;
+        case 3:
+            return "Cancelado"
+            break;
+        case 4:
+            return "Em análise"
+            break;
+        case 5:
+            return "Pré-Autorizado"
+            break;
+        case 6:
+            return "Autorizado Valor Parcial"
+            break;
+        case 7:
+            return "Recusado"
+            break;
+        case 8:
+            return "Aprovado e Capturado"
+            break;
+        case 9:
+            return "Chargeback"
+            break;
+        case 10:
+            return "Em Disputa"
+            break;
+        default:
+            return "Erro ao receber status"
+    }
+}
