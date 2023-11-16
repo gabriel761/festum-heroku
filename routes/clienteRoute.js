@@ -1904,6 +1904,22 @@ router.get('/sendEmailVerification/:email', async (req, res) => {
         res.status(500)
     }
 })
+router.get('/sendEmailVerificationSite/:email', async (req, res) => {
+    try {
+        const emailFornecedor = req.params.email
+        const link = await firebaseAdmin.admin.auth().generateEmailVerificationLink(emailFornecedor, {
+            url: "https://festum-site.vercel.app/email-confirmado"
+        })
+        const url = new URL(link)
+        url.searchParams.set('lang', 'pt-br')
+        const emailHtml = gerarEmail.gerarEmailEndereco(url.toString())
+        enviarEmail.normalNoReply(emailFornecedor, "Verifição de email Festum", emailHtml)
+        res.status(200).send('email enviado com sucesso!')
+    } catch (error) {
+        console.log(error)
+        res.status(500)
+    }
+})
 
 router.get('/sendPasswordResetEmail/:email', async (req, res) => {
     try {
