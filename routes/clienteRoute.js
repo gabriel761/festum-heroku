@@ -81,90 +81,7 @@ router.get('/pessoas', async (req, res) => {
     }
 });
 
-router.get('/teste', async (req, res) => {
-    console.log("ipag foi!!!!")
-    try {
-        const api = axios.default.create({
-            baseURL: 'https://api.ipag.com.br',
-            timeout: 3000,
-            auth: {
-                username: "festumbrasil@gmail.com",
-                password: "F043-B605F28B-77B89EF6-91CDC155-6012"
-            },
-            headers: {
-                "Content-Type": "application/json",
-                "x-api-version": 2
-            }
-        })
-        const responseCliente = await api.request({
-            url: "/service/resources/customers",
-            method: "POST",
-            data: {
-                "name": "João Gabriel Broder Palacios",
-                "cpf_cnpj": "160.355.617-64",
-                "email": "jg.7651@gmail.com",
-                "phone": "(21) 96018-3131",
-                "address": {
-                    "street": "Rua Luiz Paulistano",
-                    "number": "290",
-                    "district": "Recreio dos Bandeirantes",
-                    "complement": "",
-                    "city": "Rio de Janeiro",
-                    "state": "RJ",
-                    "zipcode": "22795-455"
-                }
-            }
-        })
-        const responseTokenCartao = await api.request({
-            url: "/service/resources/card_tokens",
-            method: "POST",
-            data: {
-                "card": {
-                    "holderName": "Joao Gabriel Broder Palacios",
-                    "number": "5502 0980 1208 2992",
-                    "expiryMonth": "11",
-                    "expiryYear": "2030",
-                    "cvv": "170"
-                },
-                "holder": {
-                    "name": "Joao Gabriel Broder Palacios",
-                    "cpfCnpj": "160.355.617-64",
-                    "mobilePhone": "(21) 96018-3131",
-                    "birthdate": "1995-07-09",
-                    "address": {
-                        "street": "Rua Luiz Paulistano",
-                        "number": "290",
-                        "district": "Recreio dos Bandeirantes",
-                        "city": "Rio de Janeiro",
-                        "state": "RJ",
-                        "zipcode": "22795455"
-                    }
-                }
-            }
-        })
-        const responseAssinatura = await api.request({
-            url: "/service/resources/subscriptions",
-            method: "POST",
-            data: {
-                "is_active": true,
-                "profile_id": "Gabriel3",
-                "plan_id": 2562,
-                "customer_id": responseCliente.data.id,
-                "starting_date": "2023-05-10",
-                // "closing_date": "0000-00-00",
-                "callback_url": "https://malhariaoceanica.com.br/",
-                "creditcard_token": responseTokenCartao.data.token
-            }
-        })
 
-        console.log("response assinatura: ", responseAssinatura.data)
-        res.json(responseAssinatura.data)
-    } catch (e) {
-        console.log("erro ipag: ", e)
-        res.json(e)
-    }
-
-});
 
 
 
@@ -1773,51 +1690,74 @@ router.get('/getCupom/:idFornecedor', middleware.decodeToken, async (req, res) =
     }
 })
 
-router.get('/testesIpag/:idAssinatura', async (req, res) => {
-    try {
-        console.log("pegar transacao")
-        const idAssinatura = req.params.idAssinatura
-        // const api = axios.create({
-        //     baseURL: 'https://sandbox.ipag.com.br',
-        //     timeout: 6000,
-        //     auth: {
-        //         username: "jg.7651@gmail.com",
-        //         password: "426B-10A599EA-0BD38435-FF3843BD-05BE"
-        //     },
-        //     headers: {
-        //         "Content-Type": "application/json",
-        //         "x-api-version": 2
-        //     }
-        // }) 
-        const api = axios.create({
-            baseURL: 'https://api.ipag.com.br',
-            timeout: 3000,
-            auth: {
-                username: "festumbrasil@gmail.com",
-                password: "F043-B605F28B-77B89EF6-91CDC155-6012"
-            },
-            headers: {
-                "Content-Type": "application/json",
-                "x-api-version": 2
-            }
-        })
-        // const resultSubscriptionIpag = await api.request({
-        //     url: "/service/resources/webhooks?id="+idAssinatura,
-        //     method: "DELETE"
-        // })
-        // const resultSubscriptionIpag = await api.request({
-        //     url: "/service/resources/webhooks",
-        //     method: "GET"
-        // })
-        const resultSubscriptionIpag = await api.request({
-            url: "/service/resources/transactions?id=" + idAssinatura,
-            method: "GET"
-        })
-        res.json(resultSubscriptionIpag.data, null, 2)
-    } catch (error) {
-        res.status(500).send(error.message)
-    }
-})
+// router.get('/testesIpag', async (req, res) => {
+//     try {
+//         console.log("pegar transacao")
+//         const idAssinatura = req.params.idAssinatura
+//         // const api = axios.create({
+//         //     baseURL: 'https://sandbox.ipag.com.br',
+//         //     timeout: 6000,
+//         //     auth: {
+//         //         username: "jg.7651@gmail.com",
+//         //         password: "426B-10A599EA-0BD38435-FF3843BD-05BE"
+//         //     },
+//         //     headers: {
+//         //         "Content-Type": "application/json",
+//         //         "x-api-version": 2
+//         //     }
+//         // }) 
+//         const api = axios.create({
+//             baseURL: 'https://api.ipag.com.br',
+//             timeout: 3000,
+//             auth: {
+//                 username: "festumbrasil@gmail.com",
+//                 password: "F043-B605F28B-77B89EF6-91CDC155-6012"
+//             },
+//             headers: {
+//                 "Content-Type": "application/json",
+//                 "x-api-version": 2
+//             }
+//         })
+//         // const resultSubscriptionIpag = await api.request({
+//         //     url: "/service/resources/webhooks?id="+idAssinatura,
+//         //     method: "DELETE"
+//         // })
+//         // const resultSubscriptionIpag = await api.request({
+//         //     url: "/service/resources/webhooks",
+//         //     method: "GET"
+//         // })
+//         const resultSubscriptionIpag = await api.request({
+//             url: "/service/resources/webhooks",
+//             method: "GET",
+//             // data: {
+//             //     "http_method": "POST",
+//             //     "url": "https://festum-heroku-production.up.railway.app/webhookPlanoEstrelarIpag",
+//             //     "description": "Webhook para receber atualizações automáticas de assinatura",
+//             //     "actions": [
+//             //         "PaymentLinkPaymentSucceeded",
+//             //         "PaymentLinkPaymentFailed",
+//             //         "SubscriptionPaymentSucceeded",
+//             //         "SubscriptionPaymentFailed",
+//             //         "ChargePaymentSucceeded",
+//             //         "ChargePaymentFailed",
+//             //         "TransactionCreated",
+//             //         "TransactionWaitingPayment",
+//             //         "TransactionCanceled",
+//             //         "TransactionPreAuthorized",
+//             //         "TransactionCaptured",
+//             //         "TransactionDenied",
+//             //         "TransactionDisputed",
+//             //         "TransactionChargedback",
+//             //         "TransferPaymentSucceeded",
+//             //         "TransferPaymentFailed"
+//             //     ]
+//             // }
+//         })
+//         res.json(resultSubscriptionIpag.data, null, 2)
+//     } catch (error) {
+//         res.status(500).send(error.message)
+//     }
+// })
 
 router.get('/sendEmailVerification/:email', async (req, res) => {
     try {
