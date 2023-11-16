@@ -1310,10 +1310,10 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
 
 
 router.post('/callbackUrlIpag', async (req, res) => {
-    await logsData.insertLog(JSON.stringify(cadastroIpag), 'callback')
+    
     try {
         const cadastroIpag = req.body
-       
+        await logsData.insertLog(JSON.stringify(cadastroIpag), 'callback')
         if (!!cadastroIpag.retorno) {
             
             const resultEmail = await fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
