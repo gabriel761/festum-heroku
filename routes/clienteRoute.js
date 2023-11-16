@@ -1310,7 +1310,7 @@ router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
 
 
 router.post('/callbackUrlIpag', async (req, res) => {
-    //await logsData.insertLog(JSON.stringify(cadastroIpag), 'callback')
+    await logsData.insertLog(JSON.stringify(cadastroIpag), 'callback')
     try {
         const cadastroIpag = req.body
        
