@@ -525,7 +525,12 @@ exports.updateFornecedores = async function (fornecedor) {
         fornecedor.segmentos = fornecedoresFunctions.tratarCategorias(fornecedor.segmentos)
         fornecedor.categorias = fornecedoresFunctions.tratarCategorias(fornecedor.categorias)
         fornecedor.subcategorias = fornecedoresFunctions.tratarCategorias(fornecedor.subcategorias)
-        await cupomData.updateCupom(fornecedor.objCupom)
+        if (fornecedor.newCupom) {
+            await cupomData.postCupom(fornecedor.objCupom)
+        }else{
+            await cupomData.updateCupom(fornecedor.objCupom)
+        } 
+        
         return fornecedoresData.updateFornecedores(fornecedor);
     } catch (e) {
         console.log(e)
