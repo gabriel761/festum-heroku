@@ -1689,6 +1689,15 @@ router.get('/getCupom/:idFornecedor', middleware.decodeToken, async (req, res) =
         res.status(500).send(error)
     }
 })
+router.get('/getCupomDL/:idFornecedor', async (req, res) => {
+    try {
+        const idFornecedor = req.params.idFornecedor
+        const result = await cupomService.getCupom(idFornecedor)
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(500).send(error)
+    }
+})
 
 // router.get('/testesIpag', async (req, res) => {
 //     try {
@@ -1722,37 +1731,23 @@ router.get('/getCupom/:idFornecedor', middleware.decodeToken, async (req, res) =
 //         //     url: "/service/resources/webhooks?id="+idAssinatura,
 //         //     method: "DELETE"
 //         // })
-//         // const resultSubscriptionIpag = await api.request({
-//         //     url: "/service/resources/webhooks",
-//         //     method: "GET"
-//         // })
 //         const resultSubscriptionIpag = await api.request({
 //             url: "/service/resources/webhooks",
-//             method: "GET",
-//             // data: {
-//             //     "http_method": "POST",
-//             //     "url": "https://festum-heroku-production.up.railway.app/webhookPlanoEstrelarIpag",
-//             //     "description": "Webhook para receber atualizações automáticas de assinatura",
-//             //     "actions": [
-//             //         "PaymentLinkPaymentSucceeded",
-//             //         "PaymentLinkPaymentFailed",
-//             //         "SubscriptionPaymentSucceeded",
-//             //         "SubscriptionPaymentFailed",
-//             //         "ChargePaymentSucceeded",
-//             //         "ChargePaymentFailed",
-//             //         "TransactionCreated",
-//             //         "TransactionWaitingPayment",
-//             //         "TransactionCanceled",
-//             //         "TransactionPreAuthorized",
-//             //         "TransactionCaptured",
-//             //         "TransactionDenied",
-//             //         "TransactionDisputed",
-//             //         "TransactionChargedback",
-//             //         "TransferPaymentSucceeded",
-//             //         "TransferPaymentFailed"
-//             //     ]
-//             // }
+//             method: "GET"
 //         })
+//         // const resultSubscriptionIpag = await api.request({
+//         //     url: "/service/resources/webhooks",
+//         //     method: "POST",
+//         //     data: {
+//         //         "http_method": "POST",
+//         //         "url": "https://festum-heroku-production.up.railway.app/webhookPlanoEstrelarIpag",
+//         //         "description": "Webhook para receber atualizações automáticas de assinatura",
+//         //         "actions": [
+//         //             "SubscriptionPaymentSucceeded",
+//         //             "SubscriptionPaymentFailed",
+//         //         ]
+//         //     }
+//         // })
 //         res.json(resultSubscriptionIpag.data, null, 2)
 //     } catch (error) {
 //         res.status(500).send(error.message)
