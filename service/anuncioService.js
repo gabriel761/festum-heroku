@@ -9,7 +9,10 @@ exports.updateAnuncio = function (anucio) {
 exports.getAnuncioTipo = async function (tipoAnuncio) {
 
     let anunciosResult = await anuncioData.getAnuncioTipo(tipoAnuncio)
+    console.log("anuncios length: ", anunciosResult.length)
+    
     if(anunciosResult.length == 0){
+        console.log("condicional funcionou: ", tipoAnuncio)
       anunciosResult = await  anuncioFestumData.getAnuncioTipoFestum(tipoAnuncio)
     }
     return anunciosResult

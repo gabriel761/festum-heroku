@@ -10,9 +10,9 @@ const pgp = require('pg-promise')();
 
 const db = pgp({
     user: 'postgres',
-    password: 'w4IwZ82zpgX8jqWPS02f',
-    host: "containers-us-west-61.railway.app",
-    port: 6408,
+    password: 'e63133c5fG5cc36bE1FgCDFcbdFaE6b1',
+    host: "monorail.proxy.rlwy.net",
+    port: 44630,
     database: 'railway',
     ssl: {
         rejectUnauthorized: false
