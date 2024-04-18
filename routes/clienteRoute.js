@@ -29,6 +29,17 @@ const assert = require('assert')
 
 //rotas login
 
+router.post("/login-firebase", async (req, res) => {
+    try {
+        const credentials = req.body
+        console.log("credentials: ", credentials)
+        
+        res.end()
+    } catch (error) {
+        res.status(500).json(error)
+    }
+})
+
 router.post('/login-pessoa', async (req, res) => {
     try {
         const pessoa = await pessoaService.loginPessoa(req.body)
@@ -1434,6 +1445,7 @@ router.get("/deleteEverythingFornecedorSite/:id/:idPessoa", async (req, res) => 
 router.post('/addAnuncio', middleware.decodeToken, async (req, res) => {
     try {
         const anuncio = req.body
+        console.log("dados anuncio:", anuncio)
         await anuncioService.postAnuncio(anuncio)
         res.json({ error: false, message: "anuncio criado com sucesso", data: null })
     } catch (error) {
@@ -1756,7 +1768,7 @@ router.get('/getCupomDL/:idFornecedor', async (req, res) => {
 
 router.get('/sendEmailVerification/:email', async (req, res) => {
     try {
-        const emailFornecedor = req.params.email
+        const emailFornecedor = req.params.email;
         const link = await firebaseAdmin.admin.auth().generateEmailVerificationLink(emailFornecedor, {
             url: "https://festum-site.vercel.app/email-confirmado-app"
         })

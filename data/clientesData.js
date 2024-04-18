@@ -57,8 +57,8 @@ exports.getLocationByFirebaseId = function (idCliente) {
 }
 exports.postCliente = async function (cliente, idPessoa) {
     try {
-            await db.query('insert into cliente ( data_nascimento, cpf, telefone, tipo_telefone, instagram, endereco, auth_adm, auth_pag, fk_cliente_pessoa, imagem_perfil, localizacao) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11)', [cliente.dataNasc, cliente.cpf, cliente.tel, cliente.tipoTel, cliente.instagram, cliente.endereco, false, true, idPessoa, cliente.imagem, cliente.localizacao])
-           
+            const result = await db.query('insert into cliente ( data_nascimento, cpf, telefone, tipo_telefone, instagram, endereco, auth_adm, auth_pag, fk_cliente_pessoa, imagem_perfil, localizacao) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11) returning pk_id', [cliente.dataNasc, cliente.cpf, cliente.tel, cliente.tipoTel, cliente.instagram, cliente.endereco, false, true, idPessoa, cliente.imagem, cliente.localizacao])
+            return { error: false, message: "Cliente cadastrado com sucesso", data: result[0] }
     } catch (error) {
         console.log("erro ao cadastrar cliente: ", error)
         throw (error)

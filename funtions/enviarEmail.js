@@ -8,8 +8,8 @@ const createEmailTransport = () => {
             port: 465,
             secure: true,
             auth: {
-                user: "suporte@festum.com.br",
-                pass: "Gabi@123"
+                user: "contato@festum.com.br",
+                pass: "Aplicativo@123"
             },
 
         })
