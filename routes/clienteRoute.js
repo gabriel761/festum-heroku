@@ -1833,6 +1833,7 @@ router.post("/appleInAppPurchase", async (req, res) => {
     try {
         const body = req.body
         await logsData.insertLog(JSON.stringify(body), 'apple webhook')
+        res.json(body)
     }catch(error){
         console.log(error)
     }
