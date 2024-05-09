@@ -29,17 +29,6 @@ const assert = require('assert')
 
 //rotas login
 
-router.post("/login-firebase", async (req, res) => {
-    try {
-        const credentials = req.body
-        console.log("credentials: ", credentials)
-        
-        res.end()
-    } catch (error) {
-        res.status(500).json(error)
-    }
-})
-
 router.post('/login-pessoa', async (req, res) => {
     try {
         const pessoa = await pessoaService.loginPessoa(req.body)
@@ -102,6 +91,18 @@ router.get('/getUserTypeByUid', middleware.decodeToken, async (req, res) => {
         const uid = req.user.uid
         console.log("uid: ", uid)
         const userType = await pessoaService.getUserTypeByUid(uid)
+        console.log("user type: ", userType);
+        res.json(userType)
+    } catch (error) {
+        console.error(error)
+        res.status(500).send(error.message)
+    }
+})
+router.get('/getUserByUid', middleware.decodeToken, async (req, res) => {
+    try {
+        const uid = req.user.uid
+        console.log("uid: ", uid)
+        const userType = await pessoaService.getUserByUid(uid)
         console.log("user type: ", userType);
         res.json(userType)
     } catch (error) {
@@ -1103,13 +1104,13 @@ router.get("/getFornecedorByEmail/:email", async (req, res) => {
 
 router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastroIpag = req.body
-    await logsData.insertLog(JSON.stringify(cadastroIpag), 'webhook')
+   // await logsData.insertLog(JSON.stringify(cadastroIpag), 'webhook')
 try {
     
 
     if (cadastroIpag.resource == "subscriptions") {
         // tratando status code e message
-        await logsData.insertLog(JSON.stringify(cadastroIpag))
+       // await logsData.insertLog(JSON.stringify(cadastroIpag))
         const statusCode = cadastroIpag.attributes.last_transaction.attributes.status.code
         const mensagemStatus = pagamentosFunctions.mensagemStatusContaIpag(statusCode)
         console.log("status ipag: ", mensagemStatus)
@@ -1171,7 +1172,7 @@ router.post('/callbackUrlIpag', async (req, res) => {
     
     try {
         const cadastroIpag = req.body
-        await logsData.insertLog(JSON.stringify(cadastroIpag), 'callback')
+        //await logsData.insertLog(JSON.stringify(cadastroIpag), 'callback')
         if (!!cadastroIpag.retorno) {
             
             const resultEmail = await fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
@@ -1828,6 +1829,16 @@ router.post("/orcamentoEmailSend", async (req, res) => {
     }
 
 })
+router.post("/appleInAppPurchase", async (req, res) => {
+    try {
+        const body = req.body
+        await logsData.insertLog(JSON.stringify(body), 'apple webhook')
+    }catch(error){
+        console.log(error)
+    }
+})
+    
+
 
 
 

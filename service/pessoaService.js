@@ -54,3 +54,6 @@ exports.updateFirebaseId = function (idFirebase, email) {
 exports.getUserTypeByUid = function (uid) {
     return pessoaData.getUserTypeByUid(uid)
 }
+exports.getUserByUid = function (uid) {
+    return pessoaData.getUserByUid(uid)
+}

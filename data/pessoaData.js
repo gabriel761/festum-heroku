@@ -61,6 +61,13 @@ exports.getUserTypeByUid = function (uid) {
         throw (error)
     }
 }
+exports.getUserByUid = function (uid) {
+    try {
+        return db.query("select * from pessoa where id_firebase = $1", [uid])
+    } catch (error) {
+        throw (error)
+    }
+}
 exports.updateEmail = function (email, idFirebase) {
     try {
         console.log("email: ", email)
