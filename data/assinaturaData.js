@@ -2,7 +2,7 @@ const db = require('../infra/database')
 
 exports.postAssinatura = function (assinatura) {
     try {
-        return db.query(`insert into assinatura (dados_assinatura, data_primeira_cobranca, id, card_token, data_contagem_bloqueio, fk_assinatura_fornecedor, profile_id) values($1,$2,$3,$4,$5,$6,$7)`, [assinatura.dadosAssinatura, assinatura.dataPrimeraCobranca, assinatura.idUnico, assinatura.cardToken, null, assinatura.fkAssinaturaFornecedor, assinatura.profile_id])
+        return db.query(`insert into assinatura (dados_assinatura, data_primeira_cobranca, id, card_token, data_contagem_bloqueio, fk_assinatura_fornecedor, profile_id, tipo_assinatura) values($1,$2,$3,$4,$5,$6,$7,$8)`, [assinatura.dadosAssinatura, assinatura.dataPrimeraCobranca, assinatura.idUnico, assinatura.cardToken, null, assinatura.fkAssinaturaFornecedor, assinatura.profile_id, assinatura.tipoAssinatura])
     } catch (error) {
         throw (error)
     }
@@ -11,7 +11,7 @@ exports.postAssinatura = function (assinatura) {
 exports.updateAssinatura = function (assinatura) {
     console.log("update assinatura: ",assinatura)
     try {
-        return db.query(`update assinatura set dados_assinatura = $1, card_token = $2, data_contagem_bloqueio = $3, cancelado = $4 where fk_assinatura_fornecedor = $5 `, [assinatura.dadosAssinatura, assinatura.cardToken, assinatura.dataBloqueio, assinatura.cancelado, assinatura.idFornecedor])
+        return db.query(`update assinatura set dados_assinatura = $1, card_token = $2, data_contagem_bloqueio = $3, cancelado = $4, tipo_assinatura = $5  where fk_assinatura_fornecedor = $6 `, [assinatura.dadosAssinatura, assinatura.cardToken, assinatura.dataBloqueio, assinatura.cancelado, assinatura.idFornecedor, assinatura.tipoAssinatura])
     } catch (error) {
         throw (error)
     }
