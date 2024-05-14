@@ -1040,7 +1040,7 @@ router.post('/updateFornecedorCompletarCadastro', async (req, res) => {
         res.status(500).send(error.message)
     }
 });
-router.post('/updateStatusPagamentoFornecedor', middleware.decodeToken, async (req, res) => {
+router.post('/updateStatusPagamentoFornecedor',  async (req, res) => {
     try {
         const { status_pagamento } = req.body
         const uid = req.user.uid
