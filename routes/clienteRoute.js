@@ -1636,7 +1636,7 @@ router.post('/updateAssinatura', async (req, res) => {
 })
 
 
-router.get('/getAssinaturaByIdFornecedor/:idFornecedor', middleware.decodeToken, async (req, res) => {
+router.get('/getAssinaturaByIdFornecedor/:idFornecedor', async (req, res) => {
     try {
         const idFornecedor = req.params.idFornecedor
         console.log("idFornecedor: ", idFornecedor)
@@ -1658,7 +1658,7 @@ router.get('/getAssinaturaByIdFornecedorDL/:idFornecedor', async (req, res) => {
         res.status(500).send(error.message)
     }
 })
-router.get('/deleteAssinaturaByIdUnico/:idUnico', middleware.decodeToken, async (req, res) => {
+router.get('/deleteAssinaturaByIdUnico/:idUnico', async (req, res) => {
     try {
         const idUnico = req.params.idUnico
         console.log("idUnico: ", idUnico)
@@ -1669,7 +1669,7 @@ router.get('/deleteAssinaturaByIdUnico/:idUnico', middleware.decodeToken, async 
     }
 })
 
-router.get('/cancelarAssinaturaByIdUnico/:idUnico', middleware.decodeToken, async (req, res) => {
+router.get('/cancelarAssinaturaByIdUnico/:idUnico', async (req, res) => {
     try {
         const idUnico = req.params.idUnico
         console.log("idUnico: ", idUnico)
@@ -1680,7 +1680,7 @@ router.get('/cancelarAssinaturaByIdUnico/:idUnico', middleware.decodeToken, asyn
     }
 })
 
-router.get('/reativarAssinaturaByIdUnico/:idUnico', middleware.decodeToken, async (req, res) => {
+router.get('/reativarAssinaturaByIdUnico/:idUnico', async (req, res) => {
     try {
         const idUnico = req.params.idUnico
         console.log("idUnico: ", idUnico)
