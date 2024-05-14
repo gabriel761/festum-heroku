@@ -1441,7 +1441,7 @@ router.get("/deleteEverythingFornecedorSite/:id/:idPessoa", async (req, res) => 
 })
 
 // rotas anuncio
-router.post('/addAnuncio', middleware.decodeToken, async (req, res) => {
+router.post('/addAnuncio', async (req, res) => {
     try {
         const anuncio = req.body
         console.log("dados anuncio:", anuncio)
