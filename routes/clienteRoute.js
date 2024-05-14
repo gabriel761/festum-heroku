@@ -1042,12 +1042,10 @@ router.post('/updateFornecedorCompletarCadastro', async (req, res) => {
 });
 router.post('/updateStatusPagamentoFornecedor',  async (req, res) => {
     try {
-        const { status_pagamento } = req.body
-        const uid = req.user.uid
-        console.log("status pagamento: ", status_pagamento, "uid: ", uid)
-        const fornecedor = await fornecedoresService.getFornecedorByIdFirebase(uid)
-        console.log("fornecedor: ", fornecedor)
-        await fornecedoresService.updateStatusPagamentoFornecedor(status_pagamento, fornecedor.fk_fornecedor_pessoa)
+        const { status_pagamento, fk_fornecedor_pessoa } = req.body
+        //const uid = req.user.uid
+       // const fornecedor = await fornecedoresService.getFornecedorByIdFirebase(uid)
+        await fornecedoresService.updateStatusPagamentoFornecedor(status_pagamento, fk_fornecedor_pessoa)
         console.log("update de pagamento funcionou");
         res.json("funcionou")
     } catch (error) {
