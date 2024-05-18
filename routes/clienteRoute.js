@@ -25,7 +25,8 @@ const gerarEmail = require('../funtions/gerarEmails')
 const enviarEmail = require('../funtions/enviarEmail')
 const apiIpag = require('../api/apiIpag')
 const crypto = require('crypto')
-const assert = require('assert')
+const assert = require('assert');
+const ipagPagamentos = require('../service/ipagService');
 
 //rotas login
 
@@ -1040,11 +1041,11 @@ router.post('/updateFornecedorCompletarCadastro', async (req, res) => {
         res.status(500).send(error.message)
     }
 });
-router.post('/updateStatusPagamentoFornecedor',  async (req, res) => {
+router.post('/updateStatusPagamentoFornecedor', async (req, res) => {
     try {
         const { status_pagamento, fk_fornecedor_pessoa } = req.body
         //const uid = req.user.uid
-       // const fornecedor = await fornecedoresService.getFornecedorByIdFirebase(uid)
+        // const fornecedor = await fornecedoresService.getFornecedorByIdFirebase(uid)
         await fornecedoresService.updateStatusPagamentoFornecedor(status_pagamento, fk_fornecedor_pessoa)
         console.log("update de pagamento funcionou");
         res.json("funcionou")
@@ -1102,77 +1103,77 @@ router.get("/getFornecedorByEmail/:email", async (req, res) => {
 
 router.post('/webhookPlanoEstrelarIpag', async (req, res) => {
     const cadastroIpag = req.body
-   // await logsData.insertLog(JSON.stringify(cadastroIpag), 'webhook')
-try {
-    
+    // await logsData.insertLog(JSON.stringify(cadastroIpag), 'webhook')
+    try {
 
-    if (cadastroIpag.resource == "subscriptions") {
-        // tratando status code e message
-       // await logsData.insertLog(JSON.stringify(cadastroIpag))
-        const statusCode = cadastroIpag.attributes.last_transaction.attributes.status.code
-        const mensagemStatus = pagamentosFunctions.mensagemStatusContaIpag(statusCode)
-        console.log("status ipag: ", mensagemStatus)
-        const emailIpag = cadastroIpag.attributes.customer.attributes.email
-        const resultEmail = await fornecedoresService.getFornecedorByEmail(emailIpag)
-        const fornecedorDB = resultEmail[0]
-        const resultAssinatura = await assinaturaService.getAssinaturaByIdFornecedor(fornecedorDB.pk_id)
-        const assinaturaDB = resultAssinatura[0]
-        console.log("resultado da assinatura: ", !assinaturaDB && statusCode == 8)
-        if (!assinaturaDB && statusCode == 8) {
-            const assinaturaIpag = cadastroIpag
-            const assinaturaParaCriar = {
-                dadosAssinatura: JSON.stringify(assinaturaIpag),
-                dataPrimeiraCobranca: cadastroIpag.attributes.starting_date,
-                idUnico: cadastroIpag.id,
-                cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
-                fkAssinaturaFornecedor: fornecedorDB.pk_id,
-                profile_id: cadastroIpag.attributes.profile_id
+
+        if (cadastroIpag.resource == "subscriptions") {
+            // tratando status code e message
+            // await logsData.insertLog(JSON.stringify(cadastroIpag))
+            const statusCode = cadastroIpag.attributes.last_transaction.attributes.status.code
+            const mensagemStatus = pagamentosFunctions.mensagemStatusContaIpag(statusCode)
+            console.log("status ipag: ", mensagemStatus)
+            const emailIpag = cadastroIpag.attributes.customer.attributes.email
+            const resultEmail = await fornecedoresService.getFornecedorByEmail(emailIpag)
+            const fornecedorDB = resultEmail[0]
+            const resultAssinatura = await assinaturaService.getAssinaturaByIdFornecedor(fornecedorDB.pk_id)
+            const assinaturaDB = resultAssinatura[0]
+            console.log("resultado da assinatura: ", !assinaturaDB && statusCode == 8)
+            if (!assinaturaDB && statusCode == 8) {
+                const assinaturaIpag = cadastroIpag
+                const assinaturaParaCriar = {
+                    dadosAssinatura: JSON.stringify(assinaturaIpag),
+                    dataPrimeiraCobranca: cadastroIpag.attributes.starting_date,
+                    idUnico: cadastroIpag.id,
+                    cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
+                    fkAssinaturaFornecedor: fornecedorDB.pk_id,
+                    profile_id: cadastroIpag.attributes.profile_id
+                }
+                console.log("assinatura para criar: ", assinaturaParaCriar)
+                await assinaturaService.postAssinatura(assinaturaParaCriar)
+                await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
+            } else if (!!assinaturaDB && statusCode == 8) {
+                const assinaturaIpag = cadastroIpag
+                const assinaturaParaUpdate = {
+                    dadosAssinatura: JSON.stringify(assinaturaIpag),
+                    idAssinatura: cadastroIpag.id + "",
+                    dataBloqueio: null,
+                    cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
+                }
+                await assinaturaService.updateAssinatura(assinaturaParaUpdate)
+                await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
+            } else if (!!assinaturaDB && statusCode != 8) {
+                const assinaturaIpag = cadastroIpag
+                const assinaturaParaUpdate = {
+                    dadosAssinatura: JSON.stringify(assinaturaIpag),
+                    idAssinatura: cadastroIpag.id + "",
+                    idFornecedor: fornecedorDB.pk_id,
+                    dataBloqueio: pagamentosFunctions.gerarDataBloqueio(),
+                    cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
+                }
+                await assinaturaService.updateAssinatura(assinaturaParaUpdate)
+                await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
+            } else if (!assinaturaDB && statusCode != 8) {
+                await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
             }
-            console.log("assinatura para criar: ", assinaturaParaCriar)
-            await assinaturaService.postAssinatura(assinaturaParaCriar)
-            await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
-        } else if (!!assinaturaDB && statusCode == 8) {
-            const assinaturaIpag = cadastroIpag
-            const assinaturaParaUpdate = {
-                dadosAssinatura: JSON.stringify(assinaturaIpag),
-                idAssinatura: cadastroIpag.id + "",
-                dataBloqueio: null,
-                cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
-            }
-            await assinaturaService.updateAssinatura(assinaturaParaUpdate)
-            await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
-        } else if (!!assinaturaDB && statusCode != 8) {
-            const assinaturaIpag = cadastroIpag
-            const assinaturaParaUpdate = {
-                dadosAssinatura: JSON.stringify(assinaturaIpag),
-                idAssinatura: cadastroIpag.id + "",
-                idFornecedor: fornecedorDB.pk_id,
-                dataBloqueio: pagamentosFunctions.gerarDataBloqueio(),
-                cardToken: cadastroIpag.attributes.last_transaction.attributes.card.token,
-            }
-            await assinaturaService.updateAssinatura(assinaturaParaUpdate)
-            await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
-        } else if (!assinaturaDB && statusCode != 8) {
-            await fornecedoresService.updateStatusPagamentoFornecedor(mensagemStatus, fornecedorDB.fk_fornecedor_pessoa)
+
+            res.send(mensagemStatus)
+
         }
-
-        res.send(mensagemStatus)
-
+    } catch (error) {
+        res.status(500).json(error)
     }
-} catch (error) {
-    res.status(500).json(error)
-}
 
 })
 
 
 router.post('/callbackUrlIpag', async (req, res) => {
-    
+
     try {
         const cadastroIpag = req.body
         //await logsData.insertLog(JSON.stringify(cadastroIpag), 'callback')
         if (!!cadastroIpag.retorno) {
-            
+
             const resultEmail = await fornecedoresService.getFornecedorByEmail(cadastroIpag.retorno[0].cliente.email)
             const fornecedorDB = resultEmail[0]
             const data_bloqueioDate = null // pagamentosFunctions.checarSePrecisaDeDataBloqueio(cadastroIpag.retorno[0].mensagem_transacao)
@@ -1195,7 +1196,7 @@ router.post('/callbackUrlIpag', async (req, res) => {
                 }
 
             } else if (resultEmail.length == 1) {
-                
+
                 if (fornecedorDB.cpf && (fornecedorDB.cpf == cadastroIpag.retorno[0].cliente.cpf_cnpj || fornecedorDB.cnpj == cadastroIpag.retorno[0].cliente.cpf_cnpj)) {
                     if (cadastroIpag.retorno[0].status_pagamento == 8 || cadastroIpag.retorno[0].status_pagamento == 5) {
                         // update do status
@@ -1235,9 +1236,9 @@ router.post('/callbackUrlIpag', async (req, res) => {
             }
         } else {
             const textToEncript = cadastroIpag.status_pagamento + ""
-            const encrypted = 'JHCgjsdbdjb03JdAo'+textToEncript+'Hgahk2jsdh234fkj52Ga87d5f'
+            const encrypted = 'JHCgjsdbdjb03JdAo' + textToEncript + 'Hgahk2jsdh234fkj52Ga87d5f'
             var finalText = encrypted
-            res.redirect('https://festum-site.vercel.app/form-precadastro-firebase' + "?code=" + finalText )
+            res.redirect('https://festum-site.vercel.app/form-precadastro-firebase' + "?code=" + finalText)
         }
 
 
@@ -1765,6 +1766,59 @@ router.get('/getCupomDL/:idFornecedor', async (req, res) => {
 //     }
 // })
 
+
+router.post("/ipagRequestTokenizarCartao", async (req, res) => {
+    try {
+        const data = req.body
+        const result = await ipagPagamentos.ipagRequestTokenizarCartao(data)
+        console.log(result)
+        res.status(200).json(result)
+    } catch (error) {
+        console.log("erro ao tokenizar cartao",error)
+        res.status(500).json(error.mesage)
+    }
+
+})
+router.post("/checarCartaoAntesDoPagamento", async (req, res) => {
+    try {
+        const data = req.body
+        const result = await ipagPagamentos.checarCartaoAntesDoPagamento(data)
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(500).json(error.mesage)
+    }
+})
+router.put("/ipagRequestAlterarCartaoDaAssinatura", async (req, res) => {
+    try {
+        const data = req.body
+        const result = await ipagPagamentos.ipagRequestAlterarCartaoDaAssinatura(data)
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(500).json(error.mesage)
+    }
+})
+router.put("/ipagRequestAtivarAssinatura/:idAssinatura", async (req, res) => {
+    try {
+        const idAssinatura = req.params.idAssinatura
+        const result = await ipagPagamentos.ipagRequestAtivarAssinatura(idAssinatura)
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(500).json(error.mesage)
+    }
+})
+router.post("/ipagRequestCriarClienteEAssinaturaUsandoToken", async (req, res) => {
+    try {
+        const data = req.body
+        console.log("data criar cliente e assinatura:", data)
+        const result = await ipagPagamentos.ipagRequestCriarClienteEAssinaturaUsandoToken(data)
+        res.status(200).json(result)
+    } catch (error) {
+        console.log(error)
+        res.status(500).json(error.mesage)
+    }
+})
+
+
 router.get('/sendEmailVerification/:email', async (req, res) => {
     try {
         const emailFornecedor = req.params.email;
@@ -1832,11 +1886,11 @@ router.post("/appleInAppPurchase", async (req, res) => {
         const body = req.body
         await logsData.insertLog(JSON.stringify(body), 'apple webhook')
         res.end()
-    }catch(error){
+    } catch (error) {
         console.log(error)
     }
 })
-    
+
 
 
 

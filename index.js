@@ -26,6 +26,7 @@ app.set('json spaces', 2)
     // Pass to next layer of middleware
     next();
 });
+app.options('*', cors());
 app.use(express.json())
 app.use(express.urlencoded({extended:false}))
 
