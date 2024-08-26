@@ -9,7 +9,7 @@ const createEmailTransport = () => {
             secure: true,
             auth: {
                 user: "contato@festum.com.br",
-                pass: "Aplicativo@123"
+                pass: "Aplicativo@1990"
             },
 
         })
@@ -26,8 +26,8 @@ exports.normalNoReply = async (emailFornecedor, subject, html) => {
         const mailSent = await transporter.sendMail({
             html: html,
             subject: subject,
-            from: 'suporte@festum.com.br',
-            replyTo: 'suporte@festum.com.br',
+            from: 'contato@festum.com.br',
+            replyTo: 'contato@festum.com.br',
             to: emailFornecedor
         })
     } catch (error) {
@@ -41,7 +41,7 @@ exports.orcamento = async (html, emailCliente, emailFornecedor) => {
         const mailSent = await transporter.sendMail({
             html:html,
             subject: "Solicitação de orçamento Festum",
-            from: 'suporte@festum.com.br',
+            from: 'contato@festum.com.br',
             replyTo: emailCliente,
             to: emailFornecedor
         })
