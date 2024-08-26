@@ -9,7 +9,7 @@ const createEmailTransport = () => {
             secure: true,
             auth: {
                 user: "contato@festum.com.br",
-                pass: "Aplicativo@123"
+                pass: "Aplicativo@1990"
             },
 
         })
