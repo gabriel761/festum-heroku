@@ -49,7 +49,7 @@ exports.checarCartaoAntesDoPagamento = async (data) => {
                 "type": "card",
                 "method": cartaoTokenizado.attributes.card.brand,
                 "installments": "1",
-                "capture": false,
+                "capture": true,
                 "card": {
                     "holder": cartao.nome,
                     "number": cartao.nrCartao,
