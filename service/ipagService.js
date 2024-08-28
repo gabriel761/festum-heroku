@@ -2,6 +2,7 @@ const apiIpagImport = require('../api/apiIpag')
 const apiIpag = apiIpagImport.api
 exports.ipagRequestTokenizarCartao = async (data) => {
     const {cartao, fornecedor, endereco} = data
+    console.log("cartao nascimento: ", cartao.nascimento)
     try {
         const responseTokenCartao = await apiIpag.request({
             url: "/service/resources/card_tokens",
@@ -149,7 +150,7 @@ exports.ipagRequestCriarClienteEAssinaturaUsandoToken = async (data) => {
                 "callback_url": "https://festum-heroku-production.up.railway.app/webhookPlanoEstrelarIpag",
                 "creditcard_token": cartao.token
             }
-        }).catch((e) => { throw (e.response.data.message) })
+        }).catch((e) => { console.log("Erro ao criar assinatura", e.response.message);throw (e.response.data.message) })
         return { objCliente: responseCliente.data, objAssinatura: responseAssinatura.data };
     } catch (error) {
         throw (error)
