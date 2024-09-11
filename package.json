@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "axios": "^0.26.1",
+    "back-end": "file:",
     "body-parser": "^1.19.2",
     "cors": "^2.8.5",
     "crypto-js": "^4.1.1",
