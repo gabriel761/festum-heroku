@@ -2,33 +2,34 @@
  "engines": {
   "node": "22.13.x",
   "npm": "10.x"
-},
-  "dependencies": {
-    "axios": "^1.13.2",
-    "back-end": "file:",
-    "body-parser": "^1.19.2",
-    "cors": "^2.8.5",
-    "crypto-js": "^4.1.1",
-    "express": "^4.17.3",
-    "firebase-admin": "^13.6.0",
-    "geolib": "^3.3.3",
-    "jest": "^27.5.1",
-    "lodash": "^4.17.21",
-    "nodemailer": "^7.0.12",
-    "nodemon": "^3.1.11",
-    "pg-promise": "^12.3.0",
-    "protobufjs": "^8.0.0",
-    "resend": "^6.9.1"
-  },
-  "name": "back-end",
-  "version": "1.0.0",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "dev": "nodemon index.js"
-  },
-  "author": "",
-  "license": "ISC",
-  "description": ""
+ },
+ "dependencies": {
+  "axios": "^1.13.2",
+  "back-end": "file:",
+  "body-parser": "^1.19.2",
+  "cors": "^2.8.5",
+  "crypto-js": "^4.1.1",
+  "express": "^4.17.3",
+  "firebase-admin": "^13.6.0",
+  "geolib": "^3.3.3",
+  "jest": "^27.5.1",
+  "lodash": "^4.17.21",
+  "nodemailer": "^7.0.12",
+  "nodemon": "^3.1.11",
+  "pg-promise": "^12.3.0",
+  "pg-query-stream": "^4.12.0",
+  "protobufjs": "^8.0.0",
+  "resend": "^6.9.1"
+ },
+ "name": "back-end",
+ "version": "1.0.0",
+ "main": "index.js",
+ "scripts": {
+  "test": "echo \"Error: no test specified\" && exit 1",
+  "start": "node index.js",
+  "dev": "nodemon index.js"
+ },
+ "author": "",
+ "license": "ISC",
+ "description": ""
 }
