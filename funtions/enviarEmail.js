@@ -1,4 +1,8 @@
 const nodemailer = require("nodemailer")
+const {Resend} = require("resend")
+
+
+const resend = new Resend('re_a1xEgRi9_NFXUtay2h17JquwZeGTaakAZ');
 
 
 const createEmailTransport = () => {
@@ -21,32 +25,32 @@ const createEmailTransport = () => {
 
 
 exports.normalNoReply = async (emailFornecedor, subject, html) => {
-    try {
-        const transporter = createEmailTransport()
-        const mailSent = await transporter.sendMail({
-            html: html,
+    
+        const { data, error } = await resend.emails.send({
+            from: 'Festum <no-reply@webvanguardtests.com.br>',
+            to: [emailFornecedor],
             subject: subject,
-            from: 'contato@festum.com.br',
-            replyTo: 'contato@festum.com.br',
-            to: emailFornecedor
-        })
-    } catch (error) {
-        throw (error)
+            html: html,
+        });
+    if (error) {
+        throw new Error(`Failed to send email: ${error.message}`);
     }
+    console.log({ data });
+    
 }
 
 exports.orcamento = async (html, emailCliente, emailFornecedor) => {
-    try {
-        const transporter = createEmailTransport()
-        const mailSent = await transporter.sendMail({
-            html:html,
-            subject: "Solicitação de orçamento Festum",
-            from: 'contato@festum.com.br',
-            replyTo: emailCliente,
-            to: emailFornecedor
-        })
-       
-    } catch (error) {
-        throw(error)
+    const { data, error } = await resend.emails.send({
+        from: 'Festum <no-reply@webvanguardtests.com.br>', // domínio verificado
+        to: [emailCliente],
+        reply_to: emailFornecedor,
+        subject: 'Solicitação de Orçamento pelo app Festum',
+        html,
+    });
+
+    if (error) {
+        throw new Error(`Failed to send email: ${error.message}`);
     }
-}
+
+    console.log({ data });
+};

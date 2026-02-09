@@ -1625,7 +1625,7 @@ router.post('/updateAssinatura', async (req, res) => {
     try {
         const assinatura = req.body
         console.log("assinatura: ", assinatura)
-        const result = await assinaturaService.updateAssinatura(assinatura);
+        const result = await assinaturaService.updateAssinatura(assinatura)
         res.status(200).json(result);
     } catch (error) {
         console.log("error: ", error.message)
@@ -1673,7 +1673,7 @@ router.get('/cancelarAssinaturaByIdUnico/:idUnico', async (req, res) => {
         const idUnico = req.params.idUnico
         console.log("idUnico: ", idUnico)
         const result = await assinaturaService.cancelarAssinaturaByIdUnico(idUnico)
-        res.status(200).json(result);
+        res.status(200).json(result)
     } catch (error) {
         res.status(500).send(error.message)
     }
@@ -1766,7 +1766,15 @@ router.get('/getCupomDL/:idFornecedor', async (req, res) => {
 //     }
 // })
 
-
+router.get('/planobyid/:idPlano', async (req, res) => {
+    try {
+        const idPlano = req.params.idPlano
+        const result = await ipagPagamentos.pegarPlanoIpagPorId(idPlano)
+        res.status(200).json(result)
+    } catch (error) {
+        res.status(500).json(error.mesage)
+    }
+})
 router.post("/ipagRequestTokenizarCartao", async (req, res) => {
     try {
         const data = req.body

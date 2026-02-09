@@ -2,7 +2,7 @@ const apiIpagImport = require('../api/apiIpag')
 const apiIpag = apiIpagImport.api
 exports.ipagRequestTokenizarCartao = async (data) => {
     const {cartao, fornecedor, endereco} = data
-    console.log("cartao nascimento: ", cartao.nascimento)
+    console.log("cartao nascimento: ", cartao)
     try {
         const responseTokenCartao = await apiIpag.request({
             url: "/service/resources/card_tokens",
@@ -34,15 +34,68 @@ exports.ipagRequestTokenizarCartao = async (data) => {
         })
         return responseTokenCartao.data
     } catch (e) {
-        console.log("erro tokenizando cartao: ", e?.response?.data?.message)
+        console.log("erro tokenizando cartao: ", e?.response?.data?.message); 
         throw (e)
     }
 }  
 
+exports.pegarPlanoIpagPorId = async (idPlano) => {
+    const response = await apiIpag.request({
+        url: `/service/resources/plans?id=${idPlano}`,
+        method: "GET"
+    })
+    return response.data
+}
+
+exports.pagamentoSimples = async (data) => {
+    const {cartao, fornecedor, endereco} = data
+    const paymentObj = {
+        "amount": submitValuesRef.current.preco_anuncio,
+        "callback_url": "https://festum-heroku-production.up.railway.app/webhookPlanoEstrelarIpag",
+        "payment": {
+            "type": "card",
+            "method": cartaoTokenizado.attributes.card.brand,
+            "installments": "1",
+            "capture": true,
+            "card": {
+                "holder": cartao.nome,
+                "number": cartao.nrCartao,
+                "expiry_month": cartao.validadeMonth,
+                "expiry_year": cartao.validadeYear,
+                "cvv": cartao.cvv
+                //"token": cartao.token
+            }
+        },
+        "customer": {
+            "name": fornecedor.nome + " " + fornecedor.sobrenome,
+            "cpf_cnpj": !!fornecedor.cnpj ? fornecedor.cnpj : fornecedor.cpf,
+            "email": fornecedor.email,
+            "phone": fornecedor.telefone,
+            "billing_address": {
+                "street": endereco.current.rua,
+                "city": endereco.current.cidade,
+                "number": endereco.current.numero,
+                "district": endereco.current.bairro,
+                "state": endereco.current.uf,
+                "complement": endereco.current.complemento,
+                "zipcode": endereco.current.cep
+            }
+        }
+    }
+    const responseIpag = await apiIpag.request({
+        url: "/service/payment",
+        method: 'POST',
+        data: paymentObj
+
+    })
+    return responseIpag.data
+
+}
+
 exports.checarCartaoAntesDoPagamento = async (data) => {
-    const {cartao, cartaoTokenizado, fornecedorFromDB, enderecoFromCep} = data
+   
     try {
-        setIsLoadingPayment(true)
+        const { cartao, cartaoTokenizado, fornecedor, endereco } = data
         const paymentObj = {
             "amount": "1.00",
             "callback_url": "https://festum-heroku-production.up.railway.app/webhookPlanoEstrelarIpag",
@@ -61,18 +114,18 @@ exports.checarCartaoAntesDoPagamento = async (data) => {
                 }
             },
             "customer": {
-                "name": fornecedorFromDB.nome + " " + fornecedorFromDB.sobrenome,
-                "cpf_cnpj": !!fornecedorFromDB.cnpj ? fornecedorFromDB.cnpj : fornecedorFromDB.cpf,
-                "email": fornecedorFromDB.email,
-                "phone": fornecedorFromDB.telefone,
+                "name": fornecedor.nome + " " + fornecedor.sobrenome,
+                "cpf_cnpj": !!fornecedor.cnpj ? fornecedor.cnpj : fornecedor.cpf,
+                "email": fornecedor.email,
+                "phone": fornecedor.telefone,
                 "billing_address": {
-                    "street": enderecoFromCep.rua,
-                    "city": enderecoFromCep.cidade,
-                    "number": enderecoFromCep.numero,
-                    "district": enderecoFromCep.bairro,
-                    "state": enderecoFromCep.uf,
-                    "complement": enderecoFromCep.complemento,
-                    "zipcode": enderecoFromCep.cep
+                    "street": endereco.rua,
+                    "city": endereco.cidade,
+                    "number": endereco.numero,
+                    "district": endereco.bairro,
+                    "state": endereco.uf,
+                    "complement": endereco.complemento,
+                    "zipcode": endereco.cep
                 }
             }
         }
@@ -86,6 +139,7 @@ exports.checarCartaoAntesDoPagamento = async (data) => {
         })
         return responseIpag.data
     }catch(e){
+        console.error("erro checando cartao antes do pagamento: ", e)
         throw e
     }
 }

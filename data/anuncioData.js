@@ -1,9 +1,9 @@
 const db = require('../infra/database')
-exports.postAnuncio = function (anuncio) {
+exports.postAnuncio = async function (anuncio) {
     try {
-        return db.query('insert into anuncio (titulo, tipo_anuncio, preco_anuncio, para_fornecedor, imagem, status, id_produto, id_fornecedor_link, fk_anuncio_fornecedor, data_inicio, data_final, duracao_plano ) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)', [anuncio.titulo, anuncio.tipoAnuncio, anuncio.preco_anuncio, false, anuncio.imagem, anuncio.status, anuncio.idProduto, anuncio.idFornecedor, anuncio.idFornecedor, anuncio.dataInicio, anuncio.dataFinal, anuncio.duracaoPlano])
+        await db.query('insert into anuncio (titulo, tipo_anuncio, preco_anuncio, para_fornecedor, imagem, status, id_produto, id_fornecedor_link, fk_anuncio_fornecedor, data_inicio, data_final, duracao_plano ) values($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)', [anuncio.titulo, anuncio.tipoAnuncio, anuncio.preco_anuncio, false, anuncio.imagem, anuncio.status, anuncio.idProduto, anuncio.idFornecedor, anuncio.idFornecedor, anuncio.dataInicio, anuncio.dataFinal, anuncio.duracaoPlano])
     } catch (error) {
-        throw (error)
+        console.log("post anuncio database",error.message)
     }
 }
 exports.updateAnuncio = function (anuncio) {

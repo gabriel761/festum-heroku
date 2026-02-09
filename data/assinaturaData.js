@@ -34,7 +34,7 @@ exports.deleteAssinaturaByIdUnico = function (idUnico) {
 }
 exports.cancelarAssinaturaByIdUnico = function (idUnico) {
     try {
-        return db.query(`update assinatura set cancelado = true where id = $1`, [idUnico])
+        return db.query(`update assinatura set cancelado = true where id = $1`, [idUnico]);
     } catch (error) {
         throw (error)
     }

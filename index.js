@@ -38,5 +38,5 @@ app.use('/', router)
 
 app.listen(port, () => {
     console.log("listening to port:: "+ port)
-    console.log("deploy teste ")
+    console.log("deploy teste ");
 })
